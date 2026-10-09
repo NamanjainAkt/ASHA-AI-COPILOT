@@ -780,3 +780,26 @@ Append-only chronological record. Entries are prefixed `## [YYYY-MM-DD] <op> | <
   - Updated `tests/sync_idempotency_test.py` to use `limit=500` avoiding pagination boundary clipping on local databases with >100 entries.
 - Documented findings in `wiki/analyses/qwen-model-download-and-packaging-2026-10.md` and indexed in `wiki/index.md`.
 - Full test pass: All 82 tests green across all 6 test suites; mobile TypeScript typecheck clean (0 errors).
+
+## [2026-10-10] merge-feat | Merge Developer 1 (Frontend Dashboard SPA) & Developer 2 (Supervisor Backend & Soft-Delete API)
+
+- Branch: `testing-supervisor`.
+- **Developer 1 (Frontend / Dashboard SPA)**:
+  - React 18 + Vite SPA built in `apps/dashboard/` (`dist/` production assets).
+  - Bilingual (`hi`/`en`) toggle with instantaneous UI translations.
+  - 5 interactive views: Triage & Surveillance, Beneficiary Directory, Clinical Screenings, Referrals & Actions, Field Workers & Devices.
+  - Interactive modals: `PatientModal`, `FollowupModal`, `WorkerModal` with form validations.
+  - Zero hardcoded mock data — 100% dynamically backed by FastAPI backend with 15s polling and Page Visibility pause.
+  - Client and server CSV export capabilities.
+- **Developer 2 (Backend & Invariants)**:
+  - Enforced monotonic soft-delete invariant across `patients`, `screenings`, `followups`, and `workers` (`is_deleted=1`, `deleted_at=ISO`).
+  - Added tombstone recording into `sync_events` on delete operations for zero-conflict client replication.
+  - Implemented workers endpoints: `GET /workers`, `GET /workers/{id}`, `POST /workers`, `PATCH /workers/{id}`, `DELETE /workers/{id}` with catchment metrics (`screening_count`).
+  - Implemented streaming CSV export: `GET /dashboard/export/csv?type=triage|patients|followups` with RFC 4180 compliance.
+  - Filtered soft-deleted entities from active queries, triage view, worker lists, and dashboard counts.
+- **Verification**:
+  - `tests/supervisor_api_test.py`: 15/15 tests PASSED.
+  - `tests/sync_idempotency_test.py`: 13/13 tests PASSED.
+  - `tests/clinical_rules_test.js`: 18/18 tests PASSED.
+  - `npm run build --workspace=@asha/dashboard`: Built cleanly with 0 TypeScript/Vite errors.
+  - Visual browser test (`browser_subagent`): Verified end-to-end rendering of dashboard at `http://localhost:8000/dashboard` with 0 console errors.

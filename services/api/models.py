@@ -30,10 +30,28 @@ class PatientCreate(BaseModel):
     consent_obtained: Optional[bool] = None
     created_at: Optional[str] = None
     sync_status: Optional[Literal["pending", "synced", "failed"]] = "synced"
+    is_deleted: Optional[bool] = False
+    deleted_at: Optional[str] = None
+
+class PatientUpdate(BaseModel):
+    name: Optional[str] = None
+    age: Optional[int] = None
+    sex: Optional[Literal["female", "male", "other"]] = None
+    phone: Optional[str] = None
+    phone_owner: Optional[Literal["self", "spouse", "parent", "neighbor", "other"]] = None
+    village: Optional[str] = None
+    hamlet_tola: Optional[str] = None
+    household_id: Optional[str] = None
+    relationship_to_head: Optional[str] = None
+    abha_id: Optional[str] = None
+    disability_access_needs: Optional[str] = None
+    consent_obtained: Optional[bool] = None
 
 class PatientResponse(PatientCreate):
     updated_at: str
     sync_status: Literal["pending", "synced", "failed"] = "synced"
+    is_deleted: bool = False
+    deleted_at: Optional[str] = None
 
 class ScreeningCreate(BaseModel):
     id: str = Field(..., description="Client-generated UUID")
@@ -47,10 +65,14 @@ class ScreeningCreate(BaseModel):
     confirmed: bool = True
     created_at: Optional[str] = None
     sync_status: Optional[Literal["pending", "synced", "failed"]] = "synced"
+    is_deleted: Optional[bool] = False
+    deleted_at: Optional[str] = None
 
 class ScreeningResponse(ScreeningCreate):
     updated_at: str
     sync_status: Literal["pending", "synced", "failed"] = "synced"
+    is_deleted: bool = False
+    deleted_at: Optional[str] = None
 
 class FollowUpCreate(BaseModel):
     id: str = Field(..., description="Client-generated UUID")
@@ -68,9 +90,11 @@ class FollowUpCreate(BaseModel):
     notes: Optional[str] = None
     created_at: Optional[str] = None
     sync_status: Optional[Literal["pending", "synced", "failed"]] = "synced"
+    is_deleted: Optional[bool] = False
+    deleted_at: Optional[str] = None
 
 class FollowUpUpdate(BaseModel):
-    status: Literal["pending", "completed", "cancelled"]
+    status: Optional[Literal["pending", "completed", "cancelled"]] = None
     destination: Optional[Literal["sub_center", "phc", "chc", "sub_district_hospital", "district_hospital"]] = None
     urgency: Optional[Literal["immediate", "urgent", "routine"]] = None
     facility_reached: Optional[bool] = None
@@ -81,6 +105,30 @@ class FollowUpUpdate(BaseModel):
 class FollowUpResponse(FollowUpCreate):
     updated_at: str
     sync_status: Literal["pending", "synced", "failed"] = "synced"
+    is_deleted: bool = False
+    deleted_at: Optional[str] = None
+
+class WorkerCreate(BaseModel):
+    id: str = Field(..., description="Worker ID")
+    name: str
+    role: Literal["asha", "supervisor", "anm", "admin"] = "asha"
+    phone: Optional[str] = None
+    village: str
+    sub_center: Optional[str] = None
+    created_at: Optional[str] = None
+
+class WorkerUpdate(BaseModel):
+    name: Optional[str] = None
+    role: Optional[Literal["asha", "supervisor", "anm", "admin"]] = None
+    phone: Optional[str] = None
+    village: Optional[str] = None
+    sub_center: Optional[str] = None
+
+class WorkerResponse(WorkerCreate):
+    is_deleted: bool = False
+    deleted_at: Optional[str] = None
+    screening_count: Optional[int] = 0
+    last_sync_time: Optional[str] = None
 
 class SyncRecordItem(BaseModel):
     client_record_id: str

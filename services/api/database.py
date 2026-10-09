@@ -171,6 +171,18 @@ def init_db():
         except sqlite3.OperationalError:
             cursor.execute(f"ALTER TABLE followups ADD COLUMN {col_name} {col_type}")
 
+    # Schema migrations for soft-delete support (Developer 2 Invariant)
+    soft_delete_tables = ["patients", "screenings", "followups", "workers"]
+    for tbl in soft_delete_tables:
+        try:
+            cursor.execute(f"SELECT is_deleted FROM {tbl} LIMIT 1")
+        except sqlite3.OperationalError:
+            cursor.execute(f"ALTER TABLE {tbl} ADD COLUMN is_deleted INTEGER NOT NULL DEFAULT 0")
+        try:
+            cursor.execute(f"SELECT deleted_at FROM {tbl} LIMIT 1")
+        except sqlite3.OperationalError:
+            cursor.execute(f"ALTER TABLE {tbl} ADD COLUMN deleted_at TEXT")
+
     # Seed default users
     cursor.execute("SELECT COUNT(*) FROM users")
     if cursor.fetchone()[0] == 0:
