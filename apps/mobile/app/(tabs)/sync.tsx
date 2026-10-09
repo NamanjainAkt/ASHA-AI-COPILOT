@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
+  TextInput,
   Alert
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -23,9 +24,14 @@ export default function PendingSyncScreen() {
   const [isSyncing, setIsSyncing] = useState(false);
   const [backendUrl, setBackendUrl] = useState(syncService.getBackendUrl());
   const [lastSyncTime, setLastSyncTime] = useState<string | null>(null);
+  const [isTestingConnection, setIsTestingConnection] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState<'idle' | 'testing' | 'success' | 'error'>('idle');
+  const [connectionMsg, setConnectionMsg] = useState<string | null>(null);
 
   const loadQueue = async () => {
     try {
+      const currentUrl = await syncService.initBackendUrl();
+      setBackendUrl(currentUrl);
       const items = await syncQueueRepository.getPending();
       setPendingItems(items);
       const status = await syncService.getStatus();
@@ -41,8 +47,50 @@ export default function PendingSyncScreen() {
     }, [])
   );
 
+  const handleSaveUrl = () => {
+    const trimmed = (backendUrl || '').trim().replace(/\/+$/, '');
+    if (!trimmed) {
+      Alert.alert(t.error, language === 'hi' ? 'कृपया मान्य URL दर्ज करें।' : 'Please enter a valid URL.');
+      return;
+    }
+    syncService.setBackendUrl(trimmed);
+    setBackendUrl(trimmed);
+    Alert.alert(t.success, t.urlSavedSuccess);
+  };
+
+  const handleResetDefaultUrl = () => {
+    const defaultUrl = syncService.getDefaultBackendUrl();
+    setBackendUrl(defaultUrl);
+    syncService.setBackendUrl(defaultUrl);
+    setConnectionStatus('idle');
+    setConnectionMsg(null);
+  };
+
+  const handleTestConnection = async () => {
+    const trimmed = (backendUrl || '').trim().replace(/\/+$/, '');
+    if (!trimmed) {
+      Alert.alert(t.error, language === 'hi' ? 'कृपया मान्य URL दर्ज करें।' : 'Please enter a valid URL.');
+      return;
+    }
+    setIsTestingConnection(true);
+    setConnectionStatus('testing');
+    setConnectionMsg(null);
+    const res = await syncService.testConnection(trimmed);
+    setIsTestingConnection(false);
+    if (res.success) {
+      setConnectionStatus('success');
+      setConnectionMsg(t.connectionSuccess);
+    } else {
+      setConnectionStatus('error');
+      setConnectionMsg(`${t.connectionFailed} (${res.message})`);
+    }
+  };
+
   const handleSyncNow = async () => {
-    syncService.setBackendUrl(backendUrl);
+    const trimmed = (backendUrl || '').trim().replace(/\/+$/, '');
+    if (trimmed) {
+      syncService.setBackendUrl(trimmed);
+    }
     setIsSyncing(true);
 
     const result = await syncService.triggerSync();
@@ -127,6 +175,96 @@ export default function PendingSyncScreen() {
               <Text style={styles.countNumber}>{followupCount}</Text>
               <Text style={styles.countLabel}>{t.followupsDue}</Text>
             </View>
+          </View>
+        </View>
+
+        {/* Server Endpoint Configuration Card */}
+        <View style={styles.serverCard}>
+          <View style={styles.serverHeaderRow}>
+            <View style={styles.serverIconCircle}>
+              <Ionicons name="server-outline" size={18} color={Colors.primary} />
+            </View>
+            <View style={styles.serverTitleCol}>
+              <Text style={styles.serverCardTitle}>{t.serverConfigTitle}</Text>
+              <Text style={styles.serverCardSub}>{t.serverConfigSub}</Text>
+            </View>
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Ionicons name="link-outline" size={16} color={Colors.textMuted} style={styles.inputIcon} />
+            <TextInput
+              style={styles.urlInput}
+              value={backendUrl}
+              onChangeText={(text) => {
+                setBackendUrl(text);
+                if (connectionStatus !== 'idle') {
+                  setConnectionStatus('idle');
+                  setConnectionMsg(null);
+                }
+              }}
+              placeholder={t.serverUrlPlaceholder}
+              placeholderTextColor={Colors.textMuted}
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="url"
+            />
+          </View>
+
+          {/* Connection Status Indicator */}
+          {connectionMsg ? (
+            <View style={[
+              styles.statusBanner,
+              connectionStatus === 'success' ? styles.statusBannerSuccess : styles.statusBannerError
+            ]}>
+              <Ionicons
+                name={connectionStatus === 'success' ? 'checkmark-circle' : 'alert-circle'}
+                size={16}
+                color={connectionStatus === 'success' ? Colors.success : Colors.danger}
+              />
+              <Text style={[
+                styles.statusBannerText,
+                { color: connectionStatus === 'success' ? Colors.success : Colors.danger }
+              ]}>
+                {connectionMsg}
+              </Text>
+            </View>
+          ) : null}
+
+          {/* Action Buttons Row */}
+          <View style={styles.serverActionsRow}>
+            <TouchableOpacity
+              style={styles.testBtn}
+              onPress={handleTestConnection}
+              disabled={isTestingConnection}
+              activeOpacity={0.8}
+            >
+              {isTestingConnection ? (
+                <ActivityIndicator size="small" color={Colors.primary} />
+              ) : (
+                <>
+                  <Ionicons name="pulse-outline" size={14} color={Colors.primary} />
+                  <Text style={styles.testBtnText}>{t.testConnectionBtn}</Text>
+                </>
+              )}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.resetBtn}
+              onPress={handleResetDefaultUrl}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="refresh-outline" size={14} color={Colors.textSecondary} />
+              <Text style={styles.resetBtnText}>{t.resetUrlBtn}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.saveUrlBtn}
+              onPress={handleSaveUrl}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="save-outline" size={14} color={Colors.surface} />
+              <Text style={styles.saveUrlBtnText}>{t.saveUrlBtn}</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -287,6 +425,135 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     marginTop: 1,
     textAlign: 'center',
+  },
+  serverCard: {
+    backgroundColor: Colors.surface,
+    borderRadius: 14,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    marginBottom: Spacing.sm + 4,
+  },
+  serverHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 10,
+  },
+  serverIconCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: Colors.surfaceContainer,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  serverTitleCol: {
+    flex: 1,
+  },
+  serverCardTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: Colors.textPrimary,
+  },
+  serverCardSub: {
+    fontSize: 11,
+    color: Colors.textSecondary,
+    marginTop: 1,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.background,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    height: 42,
+    marginBottom: 8,
+  },
+  inputIcon: {
+    marginRight: 6,
+  },
+  urlInput: {
+    flex: 1,
+    fontSize: 12,
+    color: Colors.textPrimary,
+    paddingVertical: 0,
+  },
+  statusBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  statusBannerSuccess: {
+    backgroundColor: Colors.successLight,
+  },
+  statusBannerError: {
+    backgroundColor: Colors.dangerLight,
+  },
+  statusBannerText: {
+    fontSize: 11,
+    fontWeight: '600',
+    flex: 1,
+  },
+  serverActionsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  testBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+    height: 36,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.primaryLight,
+    backgroundColor: Colors.primaryLight,
+  },
+  testBtnText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: Colors.primary,
+  },
+  resetBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+    height: 36,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    backgroundColor: Colors.background,
+  },
+  resetBtnText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: Colors.textSecondary,
+  },
+  saveUrlBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+    height: 36,
+    paddingHorizontal: 14,
+    borderRadius: 8,
+    backgroundColor: Colors.primary,
+  },
+  saveUrlBtnText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: Colors.surface,
   },
   syncBtn: {
     flexDirection: 'row',

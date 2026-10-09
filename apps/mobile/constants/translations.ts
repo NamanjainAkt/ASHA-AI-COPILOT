@@ -120,6 +120,15 @@ export const Translations = {
     syncNowBtn: 'सर्वर पर सिंक करें',
     syncAllReady: 'सभी रिकॉर्ड्स सर्वर पर सिंक हो चुके हैं',
     pendingItemsCount: 'अपलोड हेतु शेष',
+    serverConfigTitle: 'सर्वर कनेक्शन (Server URL)',
+    serverConfigSub: 'सुपरवाइज़र पोर्टल / बैकएंड एपीआई का पता',
+    serverUrlPlaceholder: 'उदा. http://192.168.1.100:8000 या https://...',
+    saveUrlBtn: 'सहेजें',
+    resetUrlBtn: 'डिफ़ॉल्ट (8000)',
+    testConnectionBtn: 'कनेक्शन जांचें',
+    urlSavedSuccess: 'सर्वर का पता सुरक्षित कर लिया गया है।',
+    connectionSuccess: 'सर्वर से संपर्क सफल रहा!',
+    connectionFailed: 'सर्वर से संपर्क नहीं हो सका।',
 
     // Profile
     profileHeader: 'कार्यकर्ता प्रोफाइल',
@@ -342,6 +351,15 @@ export const Translations = {
     syncNowBtn: 'Sync to Server',
     syncAllReady: 'All records are synchronized with server',
     pendingItemsCount: 'items queued',
+    serverConfigTitle: 'Server Connection (API URL)',
+    serverConfigSub: 'Supervisor Portal / Backend API address',
+    serverUrlPlaceholder: 'e.g. http://192.168.1.100:8000 or https://...',
+    saveUrlBtn: 'Save',
+    resetUrlBtn: 'Default (8000)',
+    testConnectionBtn: 'Test Connection',
+    urlSavedSuccess: 'Server address saved successfully.',
+    connectionSuccess: 'Server connection verified!',
+    connectionFailed: 'Cannot connect to server.',
 
     // Profile
     profileHeader: 'Worker Profile',

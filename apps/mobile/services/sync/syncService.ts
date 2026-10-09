@@ -22,12 +22,61 @@ class SyncService {
   private lastError: string | null = null;
 
   private authToken: string | null = null;
+  private urlInitialized = false;
+
+  async initBackendUrl(): Promise<string> {
+    if (!this.urlInitialized) {
+      try {
+        const saved = await getAppState('backend_url');
+        if (saved && saved.trim()) {
+          this.backendUrl = saved.trim().replace(/\/+$/, '');
+        }
+      } catch (err) {
+        logger.warn('SyncService', 'Failed to read persisted backend_url', { error: String(err) });
+      }
+      this.urlInitialized = true;
+    }
+    return this.backendUrl;
+  }
 
   setBackendUrl(url: string) {
-    if (url.startsWith('http://') && !url.includes('127.0.0.1') && !url.includes('localhost')) {
-      logger.warn('SyncService', 'Using unencrypted HTTP for remote sync endpoint', { url });
+    const trimmed = (url || '').trim().replace(/\/+$/, '');
+    if (!trimmed) return;
+    if (trimmed.startsWith('http://') && !trimmed.includes('127.0.0.1') && !trimmed.includes('localhost')) {
+      logger.warn('SyncService', 'Using unencrypted HTTP for remote sync endpoint', { url: trimmed });
     }
-    this.backendUrl = url;
+    this.backendUrl = trimmed;
+    this.urlInitialized = true;
+    setAppState('backend_url', trimmed).catch(() => {});
+  }
+
+  getDefaultBackendUrl(): string {
+    return 'http://127.0.0.1:8000';
+  }
+
+  async testConnection(url?: string): Promise<{ success: boolean; message: string }> {
+    const targetUrl = (url || this.backendUrl).trim().replace(/\/+$/, '');
+    if (!targetUrl) {
+      return { success: false, message: 'URL cannot be empty' };
+    }
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      const res = await fetch(`${targetUrl}/health`, {
+        method: 'GET',
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+      if (res.ok) {
+        return { success: true, message: 'Server connected successfully' };
+      }
+      return { success: false, message: `Server HTTP ${res.status}` };
+    } catch (err: any) {
+      if (err.name === 'AbortError') {
+        return { success: false, message: 'Connection timed out (5s)' };
+      }
+      return { success: false, message: err.message || 'Cannot reach server' };
+    }
   }
 
   setAuthToken(token: string | null) {
@@ -39,6 +88,7 @@ class SyncService {
   }
 
   async getStatus(): Promise<SyncStatusReport> {
+    await this.initBackendUrl();
     const pendingCount = await syncQueueRepository.getQueueCount();
     if (this.lastSyncTime === null) {
       try {
@@ -62,6 +112,7 @@ class SyncService {
     this.lastError = null;
 
     try {
+      await this.initBackendUrl();
       const pendingItems = await syncQueueRepository.getPending();
       // ISS-153: Do not touch lastSyncTime on empty queue
       if (pendingItems.length === 0) {

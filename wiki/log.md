@@ -786,3 +786,21 @@ Append-only chronological record. Entries are prefixed `## [YYYY-MM-DD] <op> | <
   - All 32 multilingual model harness tests passed (`tests/model_harness_test.js`).
   - All 4 route smoke tests passed (`tests/route_smoke_test.js`).
 
+## [2026-10-10] feat | Manual Configurable Server Endpoint & Connection Test on Sync Screen
+
+- **Mobile Sync Screen (`apps/mobile/app/(tabs)/sync.tsx`)**:
+  - Added dedicated Server Endpoint Configuration Card (`serverCard`) above the Sync action button.
+  - Interactive `TextInput` with auto-capitalization disabled and URL keyboard allowing workers or testers to configure any local IP (e.g., `http://192.168.1.100:8000`) or remote supervisor endpoint.
+  - Action buttons: "Test Connection" (`testConnectionBtn`) with live health check against `/health`, "Reset Default" (`resetUrlBtn`) restoring `http://127.0.0.1:8000`, and "Save" (`saveUrlBtn`).
+  - Automatic persistence to SQLite `app_state` table (`backend_url` key) so the customized URL survives app restarts.
+- **Sync Service (`apps/mobile/services/sync/syncService.ts`)**:
+  - Added `initBackendUrl()` to asynchronously hydrate persisted `backend_url` on service startup and prior to queue pulls/pushes.
+  - Implemented `testConnection(url?)` with 5-second `AbortController` timeout to prevent UI freezes.
+  - Auto-normalizes URLs by trimming leading/trailing whitespace and trailing slashes.
+- **Bilingual Translations (`apps/mobile/constants/translations.ts`)**:
+  - Added Hindi and English keys for `serverConfigTitle`, `serverConfigSub`, `serverUrlPlaceholder`, `saveUrlBtn`, `resetUrlBtn`, `testConnectionBtn`, `urlSavedSuccess`, `connectionSuccess`, and `connectionFailed`.
+- **Verification**:
+  - `npx tsc --noEmit --project apps/mobile/tsconfig.json` clean (0 errors).
+  - All test suites green (Clinical rules: 18/18, Sync idempotency: 13/13, Edge cases: 15/15, Route smoke: 4/4).
+
+
