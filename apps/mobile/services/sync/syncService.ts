@@ -24,14 +24,39 @@ class SyncService {
   private authToken: string | null = null;
 
   setBackendUrl(url: string) {
-    if (url.startsWith('http://') && !url.includes('127.0.0.1') && !url.includes('localhost')) {
-      logger.warn('SyncService', 'Using unencrypted HTTP for remote sync endpoint', { url });
+    const cleanUrl = url.trim().replace(/\/+$/, '');
+    if (cleanUrl.startsWith('http://') && !cleanUrl.includes('127.0.0.1') && !cleanUrl.includes('localhost')) {
+      logger.warn('SyncService', 'Using unencrypted HTTP for remote sync endpoint', { url: cleanUrl });
     }
-    this.backendUrl = url;
+    this.backendUrl = cleanUrl;
+    this.authToken = null;
   }
 
   setAuthToken(token: string | null) {
     this.authToken = token;
+  }
+
+  async ensureAuthToken(): Promise<string | null> {
+    if (this.authToken) return this.authToken;
+    try {
+      const res = await fetch(`${this.backendUrl}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: 'asha',
+          password: 'password123',
+          role: 'asha'
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        this.authToken = data.access_token;
+        return this.authToken;
+      }
+    } catch (err) {
+      logger.warn('SyncService', 'Auto login failed', { err });
+    }
+    return null;
   }
 
   getBackendUrl(): string {
@@ -107,6 +132,8 @@ class SyncService {
         records
       };
 
+      await this.ensureAuthToken();
+
       const headers: Record<string, string> = {
         'Content-Type': 'application/json'
       };
@@ -115,11 +142,25 @@ class SyncService {
       }
 
       // Perform HTTP Push to FastAPI /sync/push
-      const response = await fetch(`${this.backendUrl}/sync/push`, {
+      let response = await fetch(`${this.backendUrl}/sync/push`, {
         method: 'POST',
         headers,
         body: JSON.stringify(payload)
       });
+
+      if (response.status === 401) {
+        // Retry once with new token
+        this.authToken = null;
+        await this.ensureAuthToken();
+        if (this.authToken) {
+          headers['Authorization'] = `Bearer ${this.authToken}`;
+          response = await fetch(`${this.backendUrl}/sync/push`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(payload)
+          });
+        }
+      }
 
       if (!response.ok) {
         throw new Error(`Server returned HTTP ${response.status}`);

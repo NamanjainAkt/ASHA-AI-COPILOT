@@ -812,3 +812,11 @@ Append-only chronological record. Entries are prefixed `## [YYYY-MM-DD] <op> | <
 - Established active public HTTPS tunnel routing to port 8000: `https://plymouth-holiday-cups-passage.trycloudflare.com`.
 - Verified live dashboard metrics over the tunnel: Total Patients = 0, Screenings = 0, High Risk Alerts = 0.
 
+## [2026-10-10] fix | Mobile Sync Auto-Authentication & Cloudflare CORS Support
+
+- Added automatic JWT authentication (`ensureAuthToken`) in `apps/mobile/services/sync/syncService.ts` before pushing records to `/sync/push`.
+- Added automatic retry on 401 with refreshed token and trailing slash trimming in `setBackendUrl()`.
+- Updated CORS middleware in `services/api/main.py` with `allow_origin_regex=r".*"` to seamlessly accept mobile app sync requests over Cloudflare tunnel URLs.
+- Verified end-to-end sync over active Cloudflare tunnel (`https://temporary-reproduced-kerry-clothes.trycloudflare.com`) with HTTP 200 OK.
+
+
