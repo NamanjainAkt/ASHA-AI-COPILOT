@@ -630,6 +630,16 @@ Append-only chronological record. Entries are prefixed `## [YYYY-MM-DD] <op> | <
 - Complete monorepo verification: `tsc 0`, Clinical Rules 13/13, Sync Idempotency 12/12,
   Multilingual Model Harness 32/32, Route Smoke 4/4 (61/61 checks green).
 
+## [2026-10-09] test | 15-Case Edge Cases & Clinical Safety Suite (EDGE_CASES.md)
+
+- Implemented and verified comprehensive 15-case clinical edge case harness: `tests/edge_cases_test.js` (15/15 checks green).
+- Documented full safety specifications, boundary defenses, and failure mode preventions in root `EDGE_CASES.md`.
+- Four audited categories:
+  1. Physiological Boundaries (extreme 280/170 BP, inverted 80/120 BP, extreme glucose >600 mg/dL, exact threshold transitions 139/89 vs 140/90 vs 180/110, fasting vs random glucose branching).
+  2. Multilingual NLP (bidirectional Devanagari negation detection for 'भी नहीं', pure Devanagari numerals ०-९, spoken Hindi compound numbers, Hinglish 'dawa band' adherence).
+  3. Maternal & Obstetric Protocols (male pregnancy biological contradiction, fetal movement <24w guard, unmentioned gestational age missing-data advisory, edema qualified by BP).
+  4. Missing Data & Anti-Hallucination (empty vitals fail-safe, compounding multi-danger sign triage sorting).
+- Enhanced `multilingualExtractor.ts` with Devanagari 'भी नहीं' and Hinglish 'dawa band' triggers.
 ## [2026-10-09] refactor | Switch to Android Native SpeechRecognizer & Purge Whisper
 
 - Replaced Whisper Tiny/Base runtime and onnxruntime with Android's built-in `SpeechRecognizer`.
