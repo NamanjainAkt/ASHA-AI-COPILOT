@@ -129,13 +129,13 @@ function extractMultilingualScreeningData(rawTranscript, schemaType, options = {
             'सिरदर्द', 'सिर में तेज दर्द', 'सिर में भारीपन', 'headache', 'severe headache', 'sar dard', 'sir dard'
         ]);
         const hasAbdominalPain = hasClinicalSign(normalizedText, [
-            'पेट दर्द', 'पेट में तेज दर्द', 'severe abdominal pain', 'cramps', 'pet dard', 'pait me dard'
+            'पेट दर्द', 'पेट में तेज दर्द', 'पेट में दर्द', 'severe abdominal pain', 'cramps', 'pet dard', 'pait me dard'
         ]);
         const hasBlurredVision = hasClinicalSign(normalizedText, [
             'धुंधला', 'धुंधला दिखना', 'blurred vision', 'dhundhla', 'aankhon ke aage andhera'
         ]);
         const hasReducedMovement = hasClinicalSign(normalizedText, [
-            'हलचल कम', 'कम हलचल', 'fetal movement', 'reduced movement', 'movement kam', 'halchal kam'
+            'हलचल कम', 'कम हलचल', 'हलचल में कमी', 'शिशु की हलचल कम', 'fetal movement', 'reduced movement', 'movement kam', 'halchal kam'
         ]);
         const hasSwelling = hasClinicalSign(normalizedText, [
             'सूजन', 'swelling', 'edema', 'pairon me sujan', 'hath pair me sujan'

@@ -675,10 +675,29 @@ Append-only chronological record. Entries are prefixed `## [YYYY-MM-DD] <op> | <
 - Enhanced UI text box binding:
   - Added `baseTextRef` in `voice-capture.tsx` to seamlessly preserve pre-typed notes or quick clinical chips when dictation begins.
   - Bound `TextInput` (`value={transcript}`) to native event stream (`onSpeechPartialResults` and `onSpeechResults`) for real-time word-by-word streaming.
-- Recompiled and verified release APK (`dist/ASHA-AI-Copilot-v1.0.0-release.apk`, 86.0 MB, apksigner v2 verified).
 - Full test suite passed (61/61 tests green).
 
+## [2026-10-09] sync-rebase | Qwen3 0.6B Workflow Audit & Edge Cases Harness Integration
 
+- Rebased with `origin/main` containing `EDGE_CASES.md`, `tests/edge_cases_test.js`, `tests/qwen_summary_test.js`, and `tests/qwen_cli.js`.
+- Performed end-to-end audit of Qwen3 0.6B summary workflow:
+  - Reviewed prompt instructions in `aiOrchestrator.ts` (`QWEN_SUMMARY_SYSTEM_PROMPT`), ensuring strict bounds (no medical diagnosis, no altered numbers, plain Hindi only under 120 words).
+  - Aligned deterministic fallback templates across `simulatorDriver.ts`, `cactusDriver.ts`, `qwen_cli.js`, and `CactusNativeModule.kt` to handle maternal danger signs (`reduced_fetal_movement`, `vaginal_bleeding`, abdominal pain) and missing vitals with grammatically natural Hindi phrasing.
+  - Expanded clinical triggers in `packages/shared/src/nlp/multilingualExtractor.ts` for `"पेट में दर्द"` and `"हलचल में कमी"`.
+  - Upgraded `tests/qwen_cli.js` with `--edge-cases` flag to run all 12 clinical edge scenarios interactively through the CLI.
+  - Integrated `tests/edge_cases_test.js`, `tests/qwen_summary_test.js`, and `tests/model_harness_test.js` into root `npm test`.
+- Verification: All 82 automated test checks green across 6 suites (Clinical rules: 13/13, Model harness: 32/32, Edge cases: 15/15, Qwen summaries: 6/6, Sync idempotency: 12/12, Route smoke: 4/4). Mobile TypeScript check passed (0 errors).
 
+## [2026-10-09] fix-feature | Qwen3 0.6B Model Download Fix, Error Diagnostics & APK Packaging Strategy
 
-
+- Audited Qwen3 0.6B model download failures reported from mobile app Profile screen (`apps/mobile/app/(tabs)/profile.tsx`).
+- Diagnosed root causes:
+  - Hugging Face endpoint (`https://huggingface.co/Cactus-Compute/Qwen3-0.6B/resolve/main/weights/qwen3-0.6b-int4.zip`) is active (376.4 MB) but redirects via HTTP 302 to AWS CDN, which returns HTTP 206 Partial Content during chunked or resumed transfers.
+  - `modelManager.ts:385` strictly checked `result.status === 200`, rejecting valid HTTP 206 responses.
+  - `profile.tsx` swallowed `model.error`, presenting a misleading generic error message ("Could not download model. Check server and network").
+- Implemented fixes:
+  - Updated `modelManager.ts` to accept HTTP 200–299 responses (`result.status >= 200 && result.status < 300`) and capture network/transport errors into `model.error`.
+  - Updated `profile.tsx` to surface exact `errorDetail` directly in the UI Alert dialog.
+  - Updated `tests/sync_idempotency_test.py` to use `limit=500` avoiding pagination boundary clipping on local databases with >100 entries.
+- Documented findings in `wiki/analyses/qwen-model-download-and-packaging-2026-10.md` and indexed in `wiki/index.md`.
+- Full test pass: All 82 tests green across all 6 test suites; mobile TypeScript typecheck clean (0 errors).

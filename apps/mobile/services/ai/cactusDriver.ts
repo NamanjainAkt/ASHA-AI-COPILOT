@@ -159,20 +159,40 @@ function deterministicSummary(payload: SummaryPromptPayload): string {
       const weekText = preg.gestational_age_weeks ? ` (${preg.gestational_age_weeks} सप्ताह गर्भवती)` : '';
       return `${pName}${weekText} को रक्तस्राव${painText} की शिकायत है। यह उच्च जोखिम (Maternal Danger Sign) स्थिति है। तत्काल 108 एम्बुलेंस के माध्यम से सीएचसी/अस्पताल रेफरल करें।`;
     }
+    if (preg.reduced_fetal_movement) {
+      const weekText = preg.gestational_age_weeks ? ` (${preg.gestational_age_weeks} सप्ताह)` : '';
+      return `${pName}${weekText} में गर्भस्थ शिशु की हलचल में कमी दर्ज की गई है। तत्काल निकटतम स्वास्थ्य केंद्र पर जांच कराएं।`;
+    }
+    if (triggeredRules.some((r) => r.priority === 'high' || r.priority === 'medium')) {
+      const issues = triggeredRules.map((r) => r.reason_hi || r.reason).join(' ');
+      const weekText = preg.gestational_age_weeks ? ` (${preg.gestational_age_weeks} सप्ताह)` : '';
+      return `${pName}${weekText} की प्रसव पूर्व जांच में जोखिम लक्षण पाए गए। ${issues} तत्काल रेफरल एवं फॉलो-अप की अनुशंसा है।`;
+    }
     return `${pName} का नियमित प्रसव पूर्व स्वास्थ्य परीक्षण संपन्न हुआ। कोई आपातकालीन खतरे का लक्षण नहीं पाया गया।`;
   }
 
   if (payload.data.ncd) {
     const ncd = payload.data.ncd;
-    const bpStr = ncd.bp_systolic && ncd.bp_diastolic ? `${ncd.bp_systolic}/${ncd.bp_diastolic} mmHg` : 'दर्ज नहीं';
-    const glucoseStr = ncd.blood_glucose ? `${ncd.blood_glucose} mg/dL` : 'जांच शेष';
+    const bpStr = ncd.bp_systolic && ncd.bp_diastolic ? `${ncd.bp_systolic}/${ncd.bp_diastolic} mmHg` : null;
+    const glucoseStr = ncd.blood_glucose ? `${ncd.blood_glucose} mg/dL` : null;
 
     if (triggeredRules.some((r) => r.priority === 'high' || r.priority === 'medium')) {
       const issues = triggeredRules.map((r) => r.reason_hi || r.reason).join(' ');
-      return `${pName} का रक्तचाप ${bpStr} एवं शुगर ${glucoseStr} दर्ज किया गया। ${issues} 7 दिनों में फॉलो-अप एवं पीएचसी रेफरल की अनुशंसा है।`;
+      const vitalsParts: string[] = [];
+      if (bpStr) vitalsParts.push(`रक्तचाप ${bpStr}`);
+      if (glucoseStr) vitalsParts.push(`शुगर ${glucoseStr}`);
+      const vitalsText = vitalsParts.length > 0 ? `${vitalsParts.join(' एवं ')} दर्ज किया गया। ` : '';
+      return `${pName} का ${vitalsText}${issues} 7 दिनों में फॉलो-अप एवं पीएचसी रेफरल की अनुशंसा है।`;
     }
 
-    return `${pName} की एनसीडी जांच पूर्ण हुई। रक्तचाप ${bpStr} और शुगर ${glucoseStr} सामान्य सीमा में हैं।`;
+    if (bpStr && glucoseStr) {
+      return `${pName} की एनसीडी जांच पूर्ण हुई। रक्तचाप ${bpStr} और शुगर ${glucoseStr} सामान्य सीमा में हैं।`;
+    } else if (bpStr) {
+      return `${pName} की एनसीडी जांच पूर्ण हुई। रक्तचाप ${bpStr} सामान्य सीमा में है (शुगर जांच शेष)।`;
+    } else if (glucoseStr) {
+      return `${pName} की एनसीडी जांच पूर्ण हुई। शुगर ${glucoseStr} सामान्य सीमा में है (रक्तचाप जांच शेष)।`;
+    }
+    return `${pName} की एनसीडी जांच पूर्ण हुई (रक्तचाप एवं शुगर जांच शेष)।`;
   }
 
   return `${pName} की सामान्य जांच रिकॉर्ड की गई और स्थानीय डेटाबेस में सुरक्षित सहेज ली गई।`;

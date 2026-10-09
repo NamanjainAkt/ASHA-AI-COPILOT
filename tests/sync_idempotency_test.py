@@ -160,13 +160,13 @@ seed_data = seed_res.json()
 assert "initialized" in seed_data.get("message", "")
 
 # Verify seed fixtures p-001, s-001, f-001 are present
-p1_res = client.get("/patients", headers=headers)
+p1_res = client.get("/patients?limit=500", headers=headers)
 assert any(p["id"] == "p-001" for p in p1_res.json()), "Patient p-001 must exist after seed"
 
-s1_res = client.get("/screenings", headers=headers)
+s1_res = client.get("/screenings?limit=500", headers=headers)
 assert any(s["id"] == "s-001" for s in s1_res.json()), "Screening s-001 must exist after seed"
 
-f1_res = client.get("/followups", headers=headers)
+f1_res = client.get("/followups?limit=500", headers=headers)
 assert any(f["id"] == "f-001" for f in f1_res.json()), "Followup f-001 must exist after seed"
 
 # Verify /dashboard/summary counts match seed fixtures

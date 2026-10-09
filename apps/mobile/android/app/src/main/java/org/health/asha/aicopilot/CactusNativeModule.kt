@@ -539,15 +539,19 @@ class CactusNativeModule(private val reactContext: ReactApplicationContext) :
                 val weeks = preg?.optInt("gestational_age_weeks", 0) ?: 0
                 val bleeding = preg?.optBoolean("vaginal_bleeding", false) ?: false
                 val headache = preg?.optBoolean("severe_headache", false) ?: false
+                val abdominal = preg?.optBoolean("severe_abdominal_pain", false) ?: false
+                val reducedFetal = preg?.optBoolean("reduced_fetal_movement", false) ?: false
 
-                sb.append("गर्भवती लाभार्थी $beneficiary ($weeks सप्ताह)")
-                if (bleeding || headache || flags.isNotEmpty()) {
+                val weekStr = if (weeks > 0) " ($weeks सप्ताह)" else ""
+                sb.append("गर्भवती लाभार्थी $beneficiary$weekStr")
+                if (bleeding || abdominal) {
+                    val painText = if (abdominal) " एवं पेट दर्द" else ""
+                    sb.append(" को रक्तस्राव$painText की शिकायत है। यह उच्च जोखिम (Maternal Danger Sign) स्थिति है। तत्काल 108 एम्बुलेंस के माध्यम से सीएचसी/अस्पताल रेफरल करें।")
+                } else if (reducedFetal) {
+                    sb.append(" में गर्भस्थ शिशु की हलचल में कमी दर्ज की गई है। तत्काल निकटतम स्वास्थ्य केंद्र पर जांच कराएं।")
+                } else if (flags.isNotEmpty()) {
                     sb.append(" में जोखिम के लक्षण पाए गए: ")
-                    val signs = mutableListOf<String>()
-                    if (bleeding) signs.add("रक्तस्राव")
-                    if (headache) signs.add("गंभीर सिरदर्द")
-                    if (signs.isEmpty() && flags.isNotEmpty()) signs.addAll(flags)
-                    sb.append(signs.joinToString(", "))
+                    sb.append(flags.joinToString(", "))
                     sb.append("। तत्काल प्राथमिक स्वास्थ्य केंद्र (PHC) / ANM को रेफरल एवं फॉलो-अप आवश्यक है।")
                 } else {
                     sb.append(" का स्वास्थ्य सामान्य है। कोई गंभीर खतरे के लक्षण नहीं मिले। नियमित प्रसवपूर्व जांच जारी रखें।")
@@ -555,19 +559,19 @@ class CactusNativeModule(private val reactContext: ReactApplicationContext) :
             } else {
                 val ncd = data?.optJSONObject("ncd")
                 val sys = ncd?.optInt("bp_systolic", 0) ?: 0
-                val dia = ncd?.optInt("dia_systolic", 0) ?: (ncd?.optInt("bp_diastolic", 0) ?: 0)
+                val dia = ncd?.optInt("bp_diastolic", 0) ?: 0
                 val glu = ncd?.optInt("blood_glucose", 0) ?: 0
 
                 val vitals = mutableListOf<String>()
                 if (sys > 0 && dia > 0) vitals.add("रक्तचाप $sys/$dia mmHg")
-                if (glu > 0) vitals.add("ब्लड शुगर $glu mg/dL")
+                if (glu > 0) vitals.add("शुगर $glu mg/dL")
 
-                sb.append("लाभार्थी $beneficiary का परीक्षण: ")
+                sb.append("लाभार्थी $beneficiary: ")
                 if (vitals.isNotEmpty()) {
                     sb.append(vitals.joinToString(", "))
                     sb.append(" दर्ज किया गया। ")
                 } else {
-                    sb.append("संकेतक दर्ज किए गए। ")
+                    sb.append("एनसीडी संकेतक दर्ज किए गए। ")
                 }
 
                 if (flags.isNotEmpty()) {
@@ -575,7 +579,15 @@ class CactusNativeModule(private val reactContext: ReactApplicationContext) :
                     sb.append(flags.joinToString(", "))
                     sb.append("। डॉक्टर से परामर्श एवं नियमित दवा/निगरानी की सलाह दी गई।")
                 } else {
-                    sb.append("सभी प्राथमिक नैदानिक संकेतक सामान्य सीमा में हैं।")
+                    if (sys > 0 && dia > 0 && glu > 0) {
+                        sb.append("रक्तचाप और शुगर दोनों सामान्य सीमा में हैं।")
+                    } else if (sys > 0 && dia > 0) {
+                        sb.append("रक्तचाप सामान्य सीमा में है (शुगर जांच शेष)।")
+                    } else if (glu > 0) {
+                        sb.append("शुगर सामान्य सीमा में है (रक्तचाप जांच शेष)।")
+                    } else {
+                        sb.append("जांच पूर्ण हुई।")
+                    }
                 }
             }
 

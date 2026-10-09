@@ -10,7 +10,7 @@
   "scripts": {
     "start:mobile": "npm run start --workspace=@asha/mobile",
     "start:dashboard": "npm run start --workspace=@asha/dashboard",
-    "test": "npm run build --workspace=@asha/shared && node tests/clinical_rules_test.js && python tests/sync_idempotency_test.py && node tests/route_smoke_test.js",
+    "test": "npm run build --workspace=@asha/shared && node tests/clinical_rules_test.js && node tests/model_harness_test.js && node tests/edge_cases_test.js && node tests/qwen_summary_test.js && python tests/sync_idempotency_test.py && node tests/route_smoke_test.js",
     "api:start": "python -m services.api.main",
     "postinstall": "node scripts/patch-expo-router.js",
     "android": "npm run android --workspace=@asha/mobile",

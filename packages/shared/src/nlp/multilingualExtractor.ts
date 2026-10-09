@@ -158,7 +158,7 @@ export function extractMultilingualScreeningData(
     ]);
 
     const hasAbdominalPain = hasClinicalSign(normalizedText, [
-      'पेट दर्द', 'पेट में तेज दर्द', 'severe abdominal pain', 'cramps', 'pet dard', 'pait me dard'
+      'पेट दर्द', 'पेट में तेज दर्द', 'पेट में दर्द', 'severe abdominal pain', 'cramps', 'pet dard', 'pait me dard'
     ]);
 
     const hasBlurredVision = hasClinicalSign(normalizedText, [
@@ -166,7 +166,7 @@ export function extractMultilingualScreeningData(
     ]);
 
     const hasReducedMovement = hasClinicalSign(normalizedText, [
-      'हलचल कम', 'कम हलचल', 'fetal movement', 'reduced movement', 'movement kam', 'halchal kam'
+      'हलचल कम', 'कम हलचल', 'हलचल में कमी', 'शिशु की हलचल कम', 'fetal movement', 'reduced movement', 'movement kam', 'halchal kam'
     ]);
 
     const hasSwelling = hasClinicalSign(normalizedText, [
