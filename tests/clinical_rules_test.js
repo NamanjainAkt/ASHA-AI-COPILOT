@@ -295,6 +295,100 @@ const {
   pass('Fasting (126) vs Random (200) glucose protocol threshold branching verified (ISS-205)');
 }
 
+// Test 14: CBAC Waist Circumference Protocol Evaluation (>= 85 cm)
+{
+  const normalWaist = {
+    screening_type: 'ncd',
+    cbac: { waist_circumference_cm: 80 }
+  };
+  const normalRules = evaluateRules(normalWaist);
+  assert(!normalRules.some(r => r.ruleId === 'RULE_CBAC_WAIST_CIRCUMFERENCE'), 'Waist 80 cm must not trigger CBAC waist rule');
+
+  const elevatedWaist = {
+    screening_type: 'ncd',
+    cbac: { waist_circumference_cm: 88 }
+  };
+  const elevatedRules = evaluateRules(elevatedWaist);
+  const waistRule = elevatedRules.find(r => r.ruleId === 'RULE_CBAC_WAIST_CIRCUMFERENCE');
+  assert(waistRule, 'Waist 88 cm must trigger CBAC waist circumference rule');
+  assert.strictEqual(waistRule.priority, 'medium');
+  pass('CBAC Waist Circumference evaluation verified (>= 85 cm -> medium priority)');
+}
+
+// Test 15: Common Visit Questionnaire - Missed Medication Evaluation
+{
+  const missedMedsData = {
+    screening_type: 'general',
+    common_visit: {
+      visit_purpose: 'Follow-up',
+      missed_medication_doses: true,
+      missed_medication_reason: 'Medicine finished'
+    }
+  };
+  const rules = evaluateRules(missedMedsData);
+  const missedRule = rules.find(r => r.ruleId === 'RULE_COMMON_VISIT_MISSED_MEDS');
+  assert(missedRule, 'Reported missed medications must trigger RULE_COMMON_VISIT_MISSED_MEDS');
+  assert.strictEqual(missedRule.priority, 'medium');
+  pass('Module B Common Visit missed medication evaluation verified');
+}
+
+// Test 16: Pregnancy Convulsions / Eclampsia Emergency Rule
+{
+  const convulsionData = {
+    screening_type: 'pregnancy',
+    pregnancy: {
+      pregnancy_status: 'pregnant',
+      gestational_age_weeks: 30,
+      convulsions: true
+    }
+  };
+  const rules = evaluateRules(convulsionData);
+  const convRule = rules.find(r => r.ruleId === 'RULE_PREG_CONVULSIONS');
+  assert(convRule, 'Pregnancy convulsions must trigger RULE_PREG_CONVULSIONS');
+  assert.strictEqual(convRule.priority, 'high');
+  assert(convRule.nextWorkflow.includes('108'), 'Next workflow must recommend immediate 108 ambulance referral');
+  pass('Pregnancy convulsions / eclampsia emergency rule verified (high priority)');
+}
+
+// Test 17: Pregnancy Leaking Fluid / PROM Danger Sign
+{
+  const leakingData = {
+    screening_type: 'pregnancy',
+    pregnancy: {
+      pregnancy_status: 'pregnant',
+      gestational_age_weeks: 34,
+      leaking_fluid: true
+    }
+  };
+  const rules = evaluateRules(leakingData);
+  const leakRule = rules.find(r => r.ruleId === 'RULE_PREG_LEAKING_FLUID');
+  assert(leakRule, 'Pregnancy leaking fluid must trigger RULE_PREG_LEAKING_FLUID');
+  assert.strictEqual(leakRule.priority, 'high');
+  pass('Pregnancy leaking fluid (PROM) danger sign verified (high priority)');
+}
+
+// Test 18: PNC & Newborn Danger Signs and Birth Weight
+{
+  const newbornDangerData = {
+    screening_type: 'pnc',
+    visit_type: 'pnc',
+    pnc_child: {
+      poor_feeding_or_sucking: true,
+      fast_breathing_or_indrawing: true,
+      birth_weight_kg: 1.7
+    }
+  };
+  const rules = evaluateRules(newbornDangerData);
+  const dangerRule = rules.find(r => r.ruleId === 'RULE_PNC_NEWBORN_DANGER');
+  assert(dangerRule, 'Newborn danger signs must trigger RULE_PNC_NEWBORN_DANGER');
+  assert.strictEqual(dangerRule.priority, 'high');
+
+  const lbwRule = rules.find(r => r.ruleId === 'RULE_PNC_LOW_BIRTH_WEIGHT');
+  assert(lbwRule, 'Birth weight 1.7 kg (< 1.8 kg) must trigger high priority low birth weight rule');
+  assert.strictEqual(lbwRule.priority, 'high');
+  pass('PNC newborn danger signs and severe low birth weight verified (high priority)');
+}
+
 console.log('----------------------------------------------------');
 console.log(`ALL CLINICAL RULE TESTS PASSED (${passCount}/${passCount})`);
 console.log('----------------------------------------------------');

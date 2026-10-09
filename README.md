@@ -64,6 +64,15 @@ npm run start:mobile
 - Press `w` for Expo Web preview in your browser.
 - Press `i` for iOS Simulator.
 
+To build and install the Android development app directly from the repository root:
+```bash
+npx expo run:android apps/mobile
+```
+The `apps/mobile` argument is required when invoking Expo directly from the monorepo root;
+without it, Expo targets the root project instead of the mobile workspace. If port 8081 is
+already occupied, use `npx expo run:android --port 8082 apps/mobile` (`--port` goes before
+the project directory).
+
 ### 3. Run Automated Verification Tests
 ```bash
 # Clinical Rule & Validation Suite

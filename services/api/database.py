@@ -46,8 +46,14 @@ def init_db():
         age INTEGER CHECK (age IS NULL OR (age >= 0 AND age <= 130)),
         sex TEXT NOT NULL CHECK (sex IN ('female', 'male', 'other')),
         phone TEXT,
+        phone_owner TEXT,
         village TEXT NOT NULL,
+        hamlet_tola TEXT,
         household_id TEXT,
+        relationship_to_head TEXT,
+        abha_id TEXT,
+        disability_access_needs TEXT,
+        consent_obtained INTEGER DEFAULT 1,
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL,
         sync_status TEXT NOT NULL DEFAULT 'synced' CHECK (sync_status IN ('pending', 'synced', 'failed'))
@@ -76,6 +82,11 @@ def init_db():
         priority TEXT NOT NULL CHECK (priority IN ('low', 'medium', 'high', 'critical')),
         due_date TEXT,
         status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'completed', 'cancelled')),
+        destination TEXT,
+        urgency TEXT,
+        facility_reached INTEGER DEFAULT 0,
+        responsible_person TEXT,
+        outcome TEXT,
         notes TEXT,
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL,
@@ -130,6 +141,35 @@ def init_db():
         cursor.execute("SELECT notes FROM followups LIMIT 1")
     except sqlite3.OperationalError:
         cursor.execute("ALTER TABLE followups ADD COLUMN notes TEXT")
+
+    # Schema migrations for extended patient fields
+    patient_columns = [
+        ("phone_owner", "TEXT"),
+        ("hamlet_tola", "TEXT"),
+        ("relationship_to_head", "TEXT"),
+        ("abha_id", "TEXT"),
+        ("disability_access_needs", "TEXT"),
+        ("consent_obtained", "INTEGER DEFAULT 1"),
+    ]
+    for col_name, col_type in patient_columns:
+        try:
+            cursor.execute(f"SELECT {col_name} FROM patients LIMIT 1")
+        except sqlite3.OperationalError:
+            cursor.execute(f"ALTER TABLE patients ADD COLUMN {col_name} {col_type}")
+
+    # Schema migrations for extended followup fields
+    followup_columns = [
+        ("destination", "TEXT"),
+        ("urgency", "TEXT"),
+        ("facility_reached", "INTEGER DEFAULT 0"),
+        ("responsible_person", "TEXT"),
+        ("outcome", "TEXT"),
+    ]
+    for col_name, col_type in followup_columns:
+        try:
+            cursor.execute(f"SELECT {col_name} FROM followups LIMIT 1")
+        except sqlite3.OperationalError:
+            cursor.execute(f"ALTER TABLE followups ADD COLUMN {col_name} {col_type}")
 
     # Seed default users
     cursor.execute("SELECT COUNT(*) FROM users")

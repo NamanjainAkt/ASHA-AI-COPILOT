@@ -156,10 +156,17 @@ def create_patient(patient: PatientCreate, current_user: dict = Depends(get_curr
 
     # Idempotent insert or update
     cursor.execute("""
-        INSERT OR REPLACE INTO patients (id, name, age, sex, phone, village, household_id, created_at, updated_at, sync_status)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT OR REPLACE INTO patients (
+            id, name, age, sex, phone, phone_owner, village, hamlet_tola,
+            household_id, relationship_to_head, abha_id, disability_access_needs,
+            consent_obtained, created_at, updated_at, sync_status
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
-        patient.id, patient.name, patient.age, patient.sex, patient.phone, patient.village, patient.household_id, created_at, now, sync_status
+        patient.id, patient.name, patient.age, patient.sex, patient.phone, patient.phone_owner,
+        patient.village, patient.hamlet_tola, patient.household_id, patient.relationship_to_head,
+        patient.abha_id, patient.disability_access_needs, 0 if patient.consent_obtained is False else 1,
+        created_at, now, sync_status
     ))
     conn.commit()
     conn.close()
@@ -170,8 +177,14 @@ def create_patient(patient: PatientCreate, current_user: dict = Depends(get_curr
         age=patient.age,
         sex=patient.sex,
         phone=patient.phone,
+        phone_owner=patient.phone_owner,
         village=patient.village,
+        hamlet_tola=patient.hamlet_tola,
         household_id=patient.household_id,
+        relationship_to_head=patient.relationship_to_head,
+        abha_id=patient.abha_id,
+        disability_access_needs=patient.disability_access_needs,
+        consent_obtained=patient.consent_obtained,
         created_at=created_at,
         updated_at=now,
         sync_status=sync_status
@@ -327,8 +340,12 @@ def create_followup(followup: FollowUpCreate, current_user: dict = Depends(get_c
     sync_status = followup.sync_status or "synced"
 
     cursor.execute("""
-        INSERT OR REPLACE INTO followups (id, patient_id, screening_id, reason, priority, due_date, status, notes, created_at, updated_at, sync_status)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT OR REPLACE INTO followups (
+            id, patient_id, screening_id, reason, priority, due_date, status,
+            destination, urgency, facility_reached, responsible_person, outcome,
+            notes, created_at, updated_at, sync_status
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         followup.id,
         followup.patient_id,
@@ -337,6 +354,11 @@ def create_followup(followup: FollowUpCreate, current_user: dict = Depends(get_c
         followup.priority,
         followup.due_date,
         followup.status,
+        followup.destination,
+        followup.urgency,
+        1 if followup.facility_reached else 0,
+        followup.responsible_person,
+        followup.outcome,
         followup.notes or "",
         created_at,
         now,
@@ -353,6 +375,11 @@ def create_followup(followup: FollowUpCreate, current_user: dict = Depends(get_c
         priority=followup.priority,
         due_date=followup.due_date,
         status=followup.status,
+        destination=followup.destination,
+        urgency=followup.urgency,
+        facility_reached=followup.facility_reached,
+        responsible_person=followup.responsible_person,
+        outcome=followup.outcome,
         notes=followup.notes or "",
         created_at=created_at,
         updated_at=now,
@@ -364,15 +391,42 @@ def update_followup(followup_id: str, update: FollowUpUpdate, current_user: dict
     conn = get_db()
     cursor = conn.cursor()
     now = datetime.utcnow().isoformat()
-    # ISS-212: Persist notes with COALESCE
+    # ISS-212: Persist notes and actions with COALESCE
     cursor.execute("""
         UPDATE followups
-        SET status = ?, notes = COALESCE(?, notes), updated_at = ?
+        SET status = ?,
+            destination = COALESCE(?, destination),
+            urgency = COALESCE(?, urgency),
+            facility_reached = COALESCE(?, facility_reached),
+            responsible_person = COALESCE(?, responsible_person),
+            outcome = COALESCE(?, outcome),
+            notes = COALESCE(?, notes),
+            updated_at = ?
         WHERE id = ?
-    """, (update.status, update.notes, now, followup_id))
+    """, (
+        update.status,
+        update.destination,
+        update.urgency,
+        1 if update.facility_reached else (0 if update.facility_reached is False else None),
+        update.responsible_person,
+        update.outcome,
+        update.notes,
+        now,
+        followup_id
+    ))
     conn.commit()
     conn.close()
-    return {"id": followup_id, "status": update.status, "notes": update.notes, "updated_at": now}
+    return {
+        "id": followup_id,
+        "status": update.status,
+        "destination": update.destination,
+        "urgency": update.urgency,
+        "facility_reached": update.facility_reached,
+        "responsible_person": update.responsible_person,
+        "outcome": update.outcome,
+        "notes": update.notes,
+        "updated_at": now
+    }
 
 # --- SYNC (ISS-005, ISS-123, ISS-155, ISS-208, ISS-209) ---
 @app.post("/sync/push", response_model=SyncPushResponse)
@@ -430,16 +484,26 @@ def sync_push(req: SyncPushRequest, current_user: dict = Depends(get_current_use
                     rec_sync_status = "synced"
 
                 cursor.execute("""
-                    INSERT OR REPLACE INTO patients (id, name, age, sex, phone, village, household_id, created_at, updated_at, sync_status)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    INSERT OR REPLACE INTO patients (
+                        id, name, age, sex, phone, phone_owner, village, hamlet_tola,
+                        household_id, relationship_to_head, abha_id, disability_access_needs,
+                        consent_obtained, created_at, updated_at, sync_status
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, (
                     eid,
                     payload.get("name", "Unknown"),
                     payload.get("age"),
                     payload.get("sex", "other"),
                     payload.get("phone"),
+                    payload.get("phone_owner"),
                     payload.get("village", "Unknown"),
+                    payload.get("hamlet_tola"),
                     payload.get("household_id"),
+                    payload.get("relationship_to_head"),
+                    payload.get("abha_id"),
+                    payload.get("disability_access_needs"),
+                    0 if payload.get("consent_obtained") is False else 1,
                     payload.get("created_at", now),
                     now,
                     rec_sync_status
@@ -495,8 +559,12 @@ def sync_push(req: SyncPushRequest, current_user: dict = Depends(get_current_use
                     priority_val = "medium"
 
                 cursor.execute("""
-                    INSERT OR REPLACE INTO followups (id, patient_id, screening_id, reason, priority, due_date, status, notes, created_at, updated_at, sync_status)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    INSERT OR REPLACE INTO followups (
+                        id, patient_id, screening_id, reason, priority, due_date, status,
+                        destination, urgency, facility_reached, responsible_person, outcome,
+                        notes, created_at, updated_at, sync_status
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, (
                     eid,
                     pid,
@@ -505,6 +573,11 @@ def sync_push(req: SyncPushRequest, current_user: dict = Depends(get_current_use
                     priority_val,
                     payload.get("due_date", now[:10]),
                     payload.get("status", "pending"),
+                    payload.get("destination"),
+                    payload.get("urgency"),
+                    1 if payload.get("facility_reached") else 0,
+                    payload.get("responsible_person"),
+                    payload.get("outcome"),
                     payload.get("notes", ""),
                     payload.get("created_at", now),
                     now,

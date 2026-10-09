@@ -54,11 +54,17 @@ against a stale build** and there is no CI step that rebuilds first.
 | :--- | :--- | :--- |
 | Backend | `python -m services.api.main` | The documented `python services/api/main.py` **fails** — see [[sources/backend-api]] |
 | Mobile (dev) | `npm run start:mobile` | → `expo start` in `apps/mobile` |
-| Mobile (Android) | `npm run android` | → `expo run:android` in `apps/mobile` (`--workspace=@asha/mobile`) |
+| Mobile (Android) | `npm run android` or `npx expo run:android apps/mobile` | The positional directory is required when invoking Expo directly from the monorepo root; bare `npx expo run:android` targets the root project. |
 | Shared build | `npm run build --workspace=@asha/shared` | Must be run manually after editing `packages/shared/src` |
 | Clinical tests | `node tests/clinical_rules_test.js` | Runs against `dist/` |
 | Sync tests | `python tests/sync_idempotency_test.py` | Needs `httpx`, which is missing from `requirements.txt` |
 | Typecheck | `npx tsc --noEmit --project apps/mobile/tsconfig.json` | Verified clean 2026-10-06 |
+
+The root `android` npm script delegates to `@asha/mobile` (`package.json:16`), but a direct
+`npx expo run:android` starts Expo in the current directory and bypasses that script. The mobile
+workspace declares `index.js` as its entry point (`apps/mobile/package.json:4`), which loads
+Expo Router (`apps/mobile/index.js:1`); pass `apps/mobile` to the direct CLI command so it uses
+that project instead of the monorepo root.
 
 `npm test` (`package.json:13`) runs `npm run test --workspaces --if-present`, which covers
 **neither** suite — no workspace defines a `test` script.
