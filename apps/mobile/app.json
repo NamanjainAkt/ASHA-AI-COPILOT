@@ -1,0 +1,57 @@
+{
+  "expo": {
+    "name": "ASHA AI Copilot",
+    "slug": "asha-ai-copilot",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "asha-copilot",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": false,
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0F766E"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "org.health.asha.aicopilot",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "ASHA AI Copilot needs microphone access to record patient screening consultations locally in Hindi."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0F766E"
+      },
+      "package": "org.health.asha.aicopilot",
+      "permissions": [
+        "RECORD_AUDIO",
+        "INTERNET",
+        "ACCESS_NETWORK_STATE"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "router": {
+        "root": "./app"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      "expo-secure-store",
+      [
+        "expo-av",
+        {
+          "microphonePermission": "ASHA AI Copilot requires microphone access for offline speech-to-text screening."
+        }
+      ]
+    ]
+  }
+}

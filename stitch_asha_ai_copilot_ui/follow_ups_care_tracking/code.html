@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><title>ASHA AI Copilot</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-primary-fixed-variant": "#00504a", "on-secondary-container": "#006f64", "inverse-surface": "#293040", "primary": "#005c55", "surface-container-high": "#e1e8fd", "error": "#ba1a1a", "tertiary-fixed-dim": "#ffb690", "on-secondary-fixed": "#00201c", "secondary": "#006b5f", "on-primary-container": "#a3faef", "surface-tint": "#006a63", "on-secondary-fixed-variant": "#005048", "primary-container": "#0f766e", "error-container": "#ffdad6", "on-secondary": "#ffffff", "on-tertiary-container": "#ffe6da", "surface": "#f9f9ff", "on-tertiary": "#ffffff", "inverse-primary": "#80d5cb", "on-tertiary-fixed": "#341100", "on-error": "#ffffff", "secondary-fixed-dim": "#4fdbc8", "tertiary-fixed": "#ffdbca", "surface-container-low": "#f1f3ff", "surface-container-highest": "#dce2f7", "inverse-on-surface": "#edf0ff", "on-background": "#141b2b", "on-primary-fixed": "#00201d", "primary-fixed-dim": "#80d5cb", "background": "#f9f9ff", "on-primary": "#ffffff", "outline": "#6e7977", "on-error-container": "#93000a", "on-tertiary-fixed-variant": "#783200", "primary-fixed": "#9cf2e8", "outline-variant": "#bdc9c6", "on-surface-variant": "#3e4947", "surface-dim": "#d3daef", "surface-container": "#e9edff", "surface-bright": "#f9f9ff", "tertiary-container": "#af4c00", "tertiary": "#893a00", "surface-container-lowest": "#ffffff", "secondary-fixed": "#71f8e4", "secondary-container": "#6df5e1", "on-surface": "#141b2b", "surface-variant": "#dce2f7" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-lg": "1.5rem", "space-sm": "0.5rem", "margin": "1rem", "space-md": "1rem", "space-xl": "2rem", "space-xs": "0.25rem", "gutter": "1rem" }, fontFamily: { "headline-md": ["Inter"], "label-lg": ["Inter"], "label-md": ["Inter"], "label-sm": ["Inter"], "body-lg": ["Inter"], "body-sm": ["Inter"], "body-md": ["Inter"], "headline-lg-mobile": ["Inter"], "headline-lg": ["Inter"], "headline-sm": ["Inter"] }, fontSize: { "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "label-lg": ["16px", { "lineHeight": "22px", "fontWeight": "600" }], "label-md": ["14px", { "lineHeight": "18px", "fontWeight": "500" }], "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "body-lg": ["17px", { "lineHeight": "26px", "fontWeight": "400" }], "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "body-md": ["15px", { "lineHeight": "22px", "fontWeight": "400" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }], "headline-lg": ["30px", { "lineHeight": "38px", "fontWeight": "700" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }] } } } };</script><style>@layer base{html,body{width:100%;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-background font-body-md text-body-md text-on-surface antialiased flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-24 px-margin flex flex-col justify-between py-space-xs"><div class="flex items-center justify-between w-full h-7 px-space-xs bg-surface-container-low rounded-full"><div class="flex items-center gap-space-xs"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary-fixed opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span></span><span class="material-symbols-outlined text-[15px] text-primary">cloud_done</span><span class="font-label-sm text-label-sm text-primary font-medium tracking-tight">Online &amp; Synced · सुरक्षित</span></div><span class="font-label-sm text-label-sm text-on-surface-variant font-normal">18 सुरक्षित</span></div><div class="flex items-center justify-between gap-space-xs h-12"><div class="flex items-center gap-space-xs min-w-0"><img alt="ASHA AI Copilot Logo" class="h-8 w-auto object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1Vq4SSf0E5MYN0M12rUTOrGWBFt1BSjzjn9UwsMMAaO-Fe4K-DA2hoMZEWlmyxQ99KID1XbmbbKczn9d0zrDTbSD4hFYeIR4g0iUXpfxWZ0aK4eAwa1aeNKzWXyzL5x7GePGPeIIzw3OAj3ikm8RY5-Hj4HPVMobv_Ntu5mH6seDYK0fDlTX5d_2ONMg2B3QDfnY8f53fKGb26Bk2OgQkBSxPNO9s3Q8vokmwmCGzraJ1PxZq6UPlOdVW_R"/><div class="flex flex-col truncate"><span class="font-headline-sm text-headline-sm text-primary truncate leading-tight">आशा Copilot</span><span class="font-label-sm text-label-sm text-on-surface-variant truncate -mt-0.5">Gramin Swasthya · Follow Ups</span></div></div><div class="flex items-center gap-space-xs flex-shrink-0"><button aria-label="Language Toggle Hindi English" class="min-h-[44px] px-space-sm py-1 bg-surface-container rounded-full flex items-center justify-center gap-1 text-primary hover:bg-surface-container-high transition-colors"><span class="font-label-sm text-label-sm font-bold">हिंदी</span><span class="font-label-sm text-label-sm text-outline">/</span><span class="font-label-sm text-label-sm text-on-surface-variant">EN</span></button><button aria-label="Worker Profile" class="min-w-[44px] min-h-[44px] flex items-center justify-center p-0.5 rounded-full hover:bg-surface-container transition-colors"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvUGzPR6Obe507243yp8_5kMJVvtncXLYjgtLl_At-6SWMzL_TnJ29UQVi3Stdl1PSvtmaUWZYI6Qm9IMxmIl2bhCVQdS9X4FPYTAaUkzwnDkPja074jeX_6JH9IAKtYmJu1_cDNgocaURXslEf4CwAV-TsnhHW8Of8nGy24Nhtgz_ZTPk0lTHLetioIfiKWeXSwKgE4QLEqvN_Lb56xJ4PJ1YkooLTaLIDQEpXR1SXg4atGwWYJ-7vw"/></button></div></div></div></header><main class="flex flex-col relative w-full pt-24 pb-28 px-margin bg-background min-h-screen"><div class="flex flex-col w-full gap-space-md">
+<!-- Dynamic Audio Prompt & Village Route Card -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container rounded-xl shadow-sm">
+<div class="flex items-center gap-space-sm min-w-0">
+<button aria-label="Listen to daily itinerary in Hindi" class="w-12 h-12 rounded-full bg-primary-container text-on-primary flex items-center justify-center shrink-0 active:scale-95 transition-transform shadow-sm" id="btn-audio-guide">
+<span class="material-symbols-outlined text-[26px]">volume_up</span>
+</button>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-label-md text-label-md text-primary font-bold">आज की कार्ययोजना</span>
+<span class="text-label-sm font-label-sm text-outline">· Day Plan</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">2 अतिदेय मरीज प्राथमिकता पर हैं (2 High Priority)</p>
+</div>
+</div>
+<span class="px-2.5 py-1 bg-surface-container-highest text-on-surface-variant rounded-full font-label-sm text-label-sm shrink-0">
+      रामपुर वार्ड 3
+    </span>
+</div>
+<!-- Top Segmented Tabs (PRD D.8) -->
+<div class="grid grid-cols-3 gap-1.5 p-1 bg-surface-container-low rounded-xl" role="tablist">
+<!-- Tab 1: Overdue (Selected Active) -->
+<button aria-selected="true" class="tab-btn flex flex-col items-center justify-center min-h-[56px] py-1 px-1 rounded-lg bg-surface-container-lowest text-primary shadow-sm transition-all" data-target="overdue" role="tab">
+<div class="flex items-center gap-1">
+<span class="font-label-md text-label-md font-bold leading-tight">अतिदेय</span>
+<span class="w-2 h-2 rounded-full bg-error inline-block"></span>
+</div>
+<div class="flex items-center gap-1">
+<span class="font-label-sm text-[11px] text-error font-bold">Overdue (2)</span>
+</div>
+</button>
+<!-- Tab 2: Due Today -->
+<button aria-selected="false" class="tab-btn flex flex-col items-center justify-center min-h-[56px] py-1 px-1 rounded-lg text-on-surface-variant hover:bg-surface-container transition-all" data-target="due-today" role="tab">
+<div class="flex items-center gap-1">
+<span class="font-label-md text-label-md font-medium leading-tight">आज के देय</span>
+<span class="w-2 h-2 rounded-full bg-tertiary-container inline-block"></span>
+</div>
+<div class="flex items-center gap-1">
+<span class="font-label-sm text-[11px] text-tertiary font-bold">Due Today (5)</span>
+</div>
+</button>
+<!-- Tab 3: Completed -->
+<button aria-selected="false" class="tab-btn flex flex-col items-center justify-center min-h-[56px] py-1 px-1 rounded-lg text-on-surface-variant hover:bg-surface-container transition-all" data-target="completed" role="tab">
+<div class="flex items-center gap-1">
+<span class="font-label-md text-label-md font-medium leading-tight">पूर्ण</span>
+<span class="material-symbols-outlined text-[14px] text-secondary">check_circle</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="font-label-sm text-[11px] text-secondary font-bold">Done (14)</span>
+</div>
+</button>
+</div>
+<!-- Horizontal Filter Chips -->
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 -mx-margin px-margin">
+<button class="filter-chip shrink-0 min-h-[44px] px-3.5 rounded-full bg-secondary-container text-on-secondary-container font-label-md text-label-md font-bold flex items-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">check</span>
+<span>सभी गाँव (All)</span>
+</button>
+<button class="filter-chip shrink-0 min-h-[44px] px-3.5 rounded-full bg-surface-container-lowest text-on-surface-variant font-label-md text-label-md flex items-center gap-1 shadow-sm active:bg-surface-container">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+<span>रामपुर</span>
+</button>
+<button class="filter-chip shrink-0 min-h-[44px] px-3.5 rounded-full bg-surface-container-lowest text-error font-label-md text-label-md flex items-center gap-1 shadow-sm active:bg-surface-container">
+<span class="material-symbols-outlined text-[18px]">emergency</span>
+<span>उच्च जोखिम (High Risk)</span>
+</button>
+<button class="filter-chip shrink-0 min-h-[44px] px-3.5 rounded-full bg-surface-container-lowest text-primary font-label-md text-label-md flex items-center gap-1 shadow-sm active:bg-surface-container">
+<span class="material-symbols-outlined text-[18px]">vaccines</span>
+<span>टीकाकरण (Vaccines)</span>
+</button>
+</div>
+<!-- Follow-up Patient Cards Section -->
+<div class="flex flex-col gap-space-sm" id="patient-card-stack">
+<!-- Card 1: Overdue 2 Days - High Risk (Red Accent Left Bar) -->
+<div class="relative bg-surface-container-lowest rounded-xl p-space-sm shadow-sm overflow-hidden flex flex-col gap-space-sm pl-4">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-error"></div>
+<div class="flex items-start justify-between gap-space-xs">
+<div class="flex items-center gap-space-xs min-w-0">
+<div class="w-12 h-12 rounded-full bg-error-container text-on-error-container flex items-center justify-center font-headline-sm text-headline-sm shrink-0 font-bold">
+            MD
+          </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="font-label-lg text-label-lg text-on-surface font-bold leading-tight">मीना देवी</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">(Meena Devi)</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">24 वर्ष (Female) · रामपुर वार्ड नं. 2</span>
+</div>
+</div>
+<!-- Overdue Pill -->
+<div class="shrink-0 flex flex-col items-end">
+<span class="px-2.5 py-1 bg-error-container text-on-error-container rounded-full font-label-sm text-[11px] font-bold tracking-tight inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+            2 दिन बाकी
+          </span>
+<span class="font-label-sm text-[10px] text-error font-medium mt-0.5">2 Days Overdue</span>
+</div>
+</div>
+<!-- Clinical Reason Banner -->
+<div class="bg-surface-container-low p-2.5 rounded-lg flex items-start gap-2">
+<span class="material-symbols-outlined text-error text-[20px] shrink-0 mt-0.5">heart_broken</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface font-semibold leading-snug">
+            उच्च रक्तचाप पुनः जांच (High BP follow-up) &amp; PHC Referral check
+          </span>
+<span class="font-body-sm text-[11px] text-on-surface-variant mt-0.5">
+            अंतिम BP 148/94 mmHg · तत्काल ANC परामर्श आवश्यक
+          </span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="grid grid-cols-2 gap-space-xs pt-1">
+<a class="min-h-[48px] px-3 bg-surface-container text-primary rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 active:bg-surface-container-high transition-colors" href="tel:+919876543210">
+<span class="material-symbols-outlined text-[20px]">call</span>
+<div class="flex flex-col items-start leading-none">
+<span>कॉल करें</span>
+<span class="text-[10px] opacity-75">Call Asha</span>
+</div>
+</a>
+<button class="btn-visit-record min-h-[48px] px-3 bg-error text-on-error rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 active:opacity-90 shadow-sm transition-transform active:scale-[0.98]">
+<span class="material-symbols-outlined text-[20px]">medical_services</span>
+<div class="flex flex-col items-start leading-none">
+<span>दौरा करें</span>
+<span class="text-[10px] opacity-90">Visit Now</span>
+</div>
+</button>
+</div>
+</div>
+<!-- Card 2: Overdue 1 Day - Medium Risk (Orange Accent Left Bar) -->
+<div class="relative bg-surface-container-lowest rounded-xl p-space-sm shadow-sm overflow-hidden flex flex-col gap-space-sm pl-4">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-tertiary"></div>
+<div class="flex items-start justify-between gap-space-xs">
+<div class="flex items-center gap-space-xs min-w-0">
+<div class="w-12 h-12 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center font-headline-sm text-headline-sm shrink-0 font-bold">
+            SK
+          </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="font-label-lg text-label-lg text-on-surface font-bold leading-tight">सुनीता कुमारी</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">(Sunita)</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">8 माह शिशु (Infant) · रामपुर स्कूल टोला</span>
+</div>
+</div>
+<!-- Overdue Pill -->
+<div class="shrink-0 flex flex-col items-end">
+<span class="px-2.5 py-1 bg-tertiary-container text-on-tertiary-container rounded-full font-label-sm text-[11px] font-bold tracking-tight inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+            1 दिन बाकी
+          </span>
+<span class="font-label-sm text-[10px] text-tertiary font-medium mt-0.5">1 Day Overdue</span>
+</div>
+</div>
+<!-- Vaccination Reason Banner -->
+<div class="bg-surface-container-low p-2.5 rounded-lg flex items-start gap-2">
+<span class="material-symbols-outlined text-tertiary text-[20px] shrink-0 mt-0.5">vaccines</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface font-semibold leading-snug">
+            पेन्टावेलेंट-3 टीका छूटा हुआ (Missed Pentavalent-3 Vaccine)
+          </span>
+<span class="font-body-sm text-[11px] text-on-surface-variant mt-0.5">
+            साथ में: OPV-3 &amp; Rota-3 खुराक लंबित
+          </span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="grid grid-cols-2 gap-space-xs pt-1">
+<a class="min-h-[48px] px-3 bg-surface-container text-primary rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 active:bg-surface-container-high transition-colors" href="tel:+919876543211">
+<span class="material-symbols-outlined text-[20px]">call</span>
+<div class="flex flex-col items-start leading-none">
+<span>कॉल करें</span>
+<span class="text-[10px] opacity-75">Call Parent</span>
+</div>
+</a>
+<button class="btn-log-vaccine min-h-[48px] px-3 bg-primary-container text-on-primary rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 active:bg-primary shadow-sm transition-transform active:scale-[0.98]">
+<span class="material-symbols-outlined text-[20px]">edit_note</span>
+<div class="flex flex-col items-start leading-none">
+<span>टीका दर्ज करें</span>
+<span class="text-[10px] opacity-90">Log Vaccine</span>
+</div>
+</button>
+</div>
+</div>
+<!-- Card 3: Due Today - Medium Risk (Warm Amber Accent Left Bar) -->
+<div class="relative bg-surface-container-lowest rounded-xl p-space-sm shadow-sm overflow-hidden flex flex-col gap-space-sm pl-4">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-secondary"></div>
+<div class="flex items-start justify-between gap-space-xs">
+<div class="flex items-center gap-space-xs min-w-0">
+<div class="w-12 h-12 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-headline-sm text-headline-sm shrink-0 font-bold">
+            RK
+          </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="font-label-lg text-label-lg text-on-surface font-bold leading-tight">राधा कृष्ण</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">(Radha Krishna)</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">62 वर्ष (Male) · रामपुर मुख्य बस्ती</span>
+</div>
+</div>
+<!-- Due Today Pill -->
+<div class="shrink-0 flex flex-col items-end">
+<span class="px-2.5 py-1 bg-surface-container-high text-primary font-bold rounded-full font-label-sm text-[11px] tracking-tight inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">calendar_today</span>
+            आज देय
+          </span>
+<span class="font-label-sm text-[10px] text-primary font-medium mt-0.5">Due Today</span>
+</div>
+</div>
+<!-- NCD Reason Banner -->
+<div class="bg-surface-container-low p-2.5 rounded-lg flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px] shrink-0 mt-0.5">bloodtype</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface font-semibold leading-snug">
+            NCD मधुमेह फॉलो-अप (Diabetes Blood Sugar check)
+          </span>
+<span class="font-body-sm text-[11px] text-on-surface-variant mt-0.5">
+            मासिक ग्लूकोज मीटर माप व दवा अनुपालन सत्यापन
+          </span>
+</div>
+</div>
+<!-- Action Button (Full Width Single Priority Action) -->
+<div class="w-full pt-1">
+<button class="w-full min-h-[48px] px-4 bg-primary text-on-primary rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 active:bg-primary-container shadow-sm transition-transform active:scale-[0.98]">
+<span class="material-symbols-outlined text-[20px]">monitor_heart</span>
+<div class="flex flex-row items-center gap-2 leading-none">
+<span class="font-bold">चेकअप शुरू करें</span>
+<span class="text-xs opacity-80">· Start Checkup</span>
+</div>
+</button>
+</div>
+</div>
+</div>
+<!-- Playful & Human Field Tip / Offline Sync Notice -->
+<div class="flex flex-col gap-space-xs p-space-sm bg-surface-container-low rounded-xl">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-secondary/15 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-[18px]">verified_user</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold">ऑफलाइन मोड सक्रिय · सुरक्षित काम</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">All 18 records safe on phone without internet</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-outline pl-9">
+      इंटरनेट न होने पर भी विज़िट फॉर्म भरें। नेटवर्क मिलने पर डेटा स्वतः सिंक हो जाएगा।
+    </p>
+</div>
+<!-- Interactive Modal / Quick Record Drawer (Initially Hidden) -->
+<div class="fixed inset-x-0 bottom-20 z-40 hidden px-margin" id="quick-action-sheet">
+<div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-2xl flex flex-col gap-space-sm border-t border-surface-container">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[24px]">verified</span>
+<span class="font-label-lg text-label-lg font-bold text-on-surface" id="sheet-title">विज़िट दर्ज करें / Record Visit</span>
+</div>
+<button class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant" id="close-sheet">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant" id="sheet-desc">
+        मरीज के घर पहुँच कर तुरंत आवाज से जानकारी रिकॉर्ड करें।
+      </p>
+<div class="flex items-center gap-2 pt-2">
+<button class="flex-1 min-h-[48px] bg-primary text-on-primary rounded-xl font-label-md text-label-md font-bold flex items-center justify-center gap-2 shadow-md" id="confirm-sheet-action">
+<span class="material-symbols-outlined text-[20px]">mic</span>
+          बोलकर दर्ज करें
+        </button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Tab Switching Micro-interaction
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(t => {
+        t.setAttribute('aria-selected', 'false');
+        t.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+        t.classList.add('text-on-surface-variant');
+      });
+      btn.setAttribute('aria-selected', 'true');
+      btn.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+      btn.classList.remove('text-on-surface-variant');
+    });
+  });
+
+  // Filter Chips Interactive State
+  const filterChips = document.querySelectorAll('.filter-chip');
+  filterChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      filterChips.forEach(c => {
+        c.classList.remove('bg-secondary-container', 'text-on-secondary-container', 'font-bold');
+        c.classList.add('bg-surface-container-lowest', 'text-on-surface-variant');
+        const icon = c.querySelector('.material-symbols-outlined');
+        if (icon && icon.textContent === 'check') {
+          icon.remove();
+        }
+      });
+      chip.classList.add('bg-secondary-container', 'text-on-secondary-container', 'font-bold');
+      chip.classList.remove('bg-surface-container-lowest', 'text-on-surface-variant');
+      if (!chip.querySelector('.material-symbols-outlined')) {
+        const checkIcon = document.createElement('span');
+        checkIcon.className = 'material-symbols-outlined text-[18px]';
+        checkIcon.textContent = 'check';
+        chip.prepend(checkIcon);
+      }
+    });
+  });
+
+  // Action Drawer Triggers
+  const drawer = document.getElementById('quick-action-sheet');
+  const closeDrawer = document.getElementById('close-sheet');
+  const title = document.getElementById('sheet-title');
+
+  document.querySelectorAll('.btn-visit-record').forEach(b => {
+    b.addEventListener('click', () => {
+      title.textContent = 'दौरा शुरू करें / Visit: मीना देवी';
+      drawer.classList.remove('hidden');
+    });
+  });
+
+  document.querySelectorAll('.btn-log-vaccine').forEach(b => {
+    b.addEventListener('click', () => {
+      title.textContent = 'टीकाकरण दर्ज / Vaccine: सुनीता';
+      drawer.classList.remove('hidden');
+    });
+  });
+
+  if (closeDrawer) {
+    closeDrawer.addEventListener('click', () => {
+      drawer.classList.add('hidden');
+    });
+  }
+
+  // Audio Guide Micro-interaction
+  const audioGuideBtn = document.getElementById('btn-audio-guide');
+  if (audioGuideBtn) {
+    let isPlaying = false;
+    audioGuideBtn.addEventListener('click', () => {
+      isPlaying = !isPlaying;
+      const icon = audioGuideBtn.querySelector('.material-symbols-outlined');
+      if (isPlaying) {
+        icon.textContent = 'pause';
+        audioGuideBtn.classList.add('animate-pulse');
+      } else {
+        icon.textContent = 'volume_up';
+        audioGuideBtn.classList.remove('animate-pulse');
+      }
+    });
+  }
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/95 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.06)]" data-active-classes="text-primary font-bold"><div class="flex justify-around items-center h-20 px-space-xs"><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 text-on-surface-variant transition-colors hover:text-primary" data-path="home-dashboard" href="#"><span class="material-symbols-outlined text-[24px]">home</span><span class="font-label-sm text-label-sm leading-none mt-1">होम</span><span class="font-label-sm text-[10px] text-outline leading-none">Home</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 text-on-surface-variant transition-colors hover:text-primary" data-path="patient-directory" href="#"><span class="material-symbols-outlined text-[24px]">groups</span><span class="font-label-sm text-label-sm leading-none mt-1">मरीज़</span><span class="font-label-sm text-[10px] text-outline leading-none">Patients</span></a><a class="relative -top-3 flex flex-col items-center justify-center min-w-[56px] min-h-[48px] text-on-surface-variant transition-colors group" data-path="voice-recording" href="#"><div class="w-14 h-14 rounded-full bg-primary-container text-on-primary shadow-[0_4px_12px_rgba(15,118,110,0.28)] flex items-center justify-center group-hover:bg-primary transition-transform active:scale-95"><span class="material-symbols-outlined text-[30px]">mic</span></div><span class="font-label-sm text-label-sm text-primary font-semibold leading-none mt-1">रिकॉर्डिंग</span><span class="font-label-sm text-[10px] text-outline leading-none">Record</span></a><a aria-current="page" class="relative flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 transition-colors text-primary font-bold" data-path="follow-ups" href="#"><span class="material-symbols-outlined text-[24px]">event_upcoming</span><span class="absolute top-1 right-2 w-2 h-2 rounded-full bg-tertiary-container"></span><span class="font-label-sm text-label-sm leading-none mt-1">फॉलो-अप</span><span class="font-label-sm text-[10px] text-outline leading-none">Follow-up</span></a><a class="relative flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 text-on-surface-variant transition-colors hover:text-primary" data-path="sync-center" href="#"><span class="material-symbols-outlined text-[24px]">cloud_sync</span><span class="absolute top-1 right-2 px-1 bg-secondary text-on-secondary rounded-full font-label-sm text-[9px] leading-tight">3</span><span class="font-label-sm text-label-sm leading-none mt-1">सिंक</span><span class="font-label-sm text-[10px] text-outline leading-none">Sync</span></a></div></nav></body></html>

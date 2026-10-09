@@ -1,0 +1,6 @@
+fastapi>=0.110.0
+uvicorn>=0.28.0
+pydantic>=2.6.0
+# python-multipart reserved for standard OAuth2 form parsing and future audio/telemetry uploads
+python-multipart>=0.0.9
+pyjwt>=2.8.0

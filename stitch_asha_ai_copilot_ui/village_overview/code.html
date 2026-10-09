@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed-dim":"#80d5cb","surface-tint":"#006a63","on-secondary-fixed-variant":"#005048","surface-dim":"#d3daef","on-secondary":"#ffffff","on-primary-fixed":"#00201d","on-tertiary-container":"#ffe6da","on-primary":"#ffffff","outline-variant":"#bdc9c6","on-primary-fixed-variant":"#00504a","on-secondary-fixed":"#00201c","surface-variant":"#dce2f7","surface":"#f9f9ff","primary":"#005c55","inverse-surface":"#293040","on-error-container":"#93000a","tertiary":"#893a00","tertiary-fixed":"#ffdbca","surface-container-highest":"#dce2f7","tertiary-fixed-dim":"#ffb690","on-error":"#ffffff","secondary-fixed":"#71f8e4","inverse-primary":"#80d5cb","tertiary-container":"#af4c00","secondary-fixed-dim":"#4fdbc8","surface-container-high":"#e1e8fd","on-secondary-container":"#006f64","surface-bright":"#f9f9ff","on-tertiary-fixed":"#341100","on-tertiary-fixed-variant":"#783200","surface-container-low":"#f1f3ff","surface-container-lowest":"#ffffff","on-surface-variant":"#3e4947","on-tertiary":"#ffffff","primary-container":"#0f766e","error":"#ba1a1a","secondary":"#006b5f","on-surface":"#141b2b","on-primary-container":"#a3faef","on-background":"#141b2b","inverse-on-surface":"#edf0ff","surface-container":"#e9edff","background":"#f9f9ff","outline":"#6e7977","secondary-container":"#6df5e1","error-container":"#ffdad6","primary-fixed":"#9cf2e8"},borderRadius:{DEFAULT:"0.25rem",lg:"0.5rem",xl:"0.75rem",full:"9999px"},spacing:{"space-md":"1rem","space-xl":"2rem",gutter:"1rem","space-xs":"0.25rem",margin:"1rem","space-lg":"1.5rem","space-sm":"0.5rem"},fontFamily:{"label-md":["Inter"],"body-lg":["Inter"],"headline-sm":["Inter"],"label-sm":["Inter"],"body-md":["Inter"],"headline-md":["Inter"],"body-sm":["Inter"],"headline-lg":["Inter"],"headline-lg-mobile":["Inter"],"label-lg":["Inter"]},fontSize:{"label-md":["14px",{lineHeight:"18px",fontWeight:"500"}],"body-lg":["17px",{lineHeight:"26px",fontWeight:"400"}],"headline-sm":["18px",{lineHeight:"24px",fontWeight:"600"}],"label-sm":["12px",{lineHeight:"16px",fontWeight:"500"}],"body-md":["15px",{lineHeight:"22px",fontWeight:"400"}],"headline-md":["20px",{lineHeight:"28px",fontWeight:"600"}],"body-sm":["13px",{lineHeight:"18px",fontWeight:"400"}],"headline-lg":["30px",{lineHeight:"38px",fontWeight:"700"}],"headline-lg-mobile":["24px",{lineHeight:"32px",fontWeight:"700"}],"label-lg":["16px",{lineHeight:"22px",fontWeight:"600"}]}}}};</script></head><body class="bg-background font-body-md text-body-md text-on-surface"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest z-50 flex flex-col shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-space-md flex items-center gap-space-sm bg-surface-container-low"><img alt="Brand logo. - Primary color: #0f766e
+- Font: inter
+- Mode: light
+- Roundness: rounded-md
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Wvoe2KfVJxMKu1N947h4AckHmmOojM_ZLXACAj4_GFgbTX0I3ZS__1T_l6mfYhG8jqiBRwCHXX8_R9NkJzOvIZItY6NYd_DsKmxcVMgggHco7TOxz8qZrSZWdf9-Z7eNEDuve05g4CfWudxpGVTA81adCfxihfPgg5bINa2YJGf36_s9D1rAFXOsdej4hWLY1LY8vTJQlLBbKpnv2xTEQuNN0vShvIS8obz5yG3MJr8QZEPvS6Vq9OoeY"/><div class="flex flex-col"><span class="font-label-lg text-label-lg text-primary leading-tight">ग्रामीण स्वास्थ्य</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-none">Gramin Swasthya PHC</span></div></div><div class="p-space-md bg-surface-container-low"><div class="bg-surface-container-lowest p-space-sm rounded-lg flex items-center justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-headline-sm">local_hospital</span><div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface">रामपुर प्राथमिक केंद्र</span><span class="font-body-sm text-body-sm text-on-surface-variant">Rampur Sector 4</span></div></div><span class="material-symbols-outlined text-outline text-headline-sm">unfold_more</span></div></div><nav class="flex-1 px-space-md py-space-sm flex flex-col gap-space-xs overflow-y-auto" data-active-classes="bg-primary-container text-on-primary-container font-headline-sm"><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg transition-colors bg-primary-container text-on-primary-container font-headline-sm" data-path="village-overview" href="#"><span class="material-symbols-outlined text-headline-sm">analytics</span><div class="flex flex-col"><span class="font-label-md text-label-md">गाँव समीक्षा</span><span class="font-body-sm text-body-sm text-on-surface-variant">Overview / Village</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="high-risk-patients" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-headline-sm">warning</span><div class="flex flex-col"><span class="font-label-md text-label-md">उच्च जोखिम मरीज़</span><span class="font-body-sm text-body-sm text-on-surface-variant">High-Risk Patients</span></div></div><span class="px-space-xs py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm">18</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="pending-follow-ups" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-headline-sm">pending_actions</span><div class="flex flex-col"><span class="font-label-md text-label-md">लंबित फॉलो-अप</span><span class="font-body-sm text-body-sm text-on-surface-variant">Pending Follow-ups</span></div></div><span class="px-space-xs py-0.5 rounded-full bg-surface-container-highest text-on-surface font-label-sm text-label-sm">42</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="worker-performance" href="#"><span class="material-symbols-outlined text-headline-sm">group</span><div class="flex flex-col"><span class="font-label-md text-label-md">आशा कार्यकर्ता प्रदर्शन</span><span class="font-body-sm text-body-sm text-on-surface-variant">Worker Performance</span></div></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="system-settings" href="#"><span class="material-symbols-outlined text-headline-sm">settings</span><div class="flex flex-col"><span class="font-label-md text-label-md">सिस्टम सेटिंग्स</span><span class="font-body-sm text-body-sm text-on-surface-variant">System Settings</span></div></a></nav><div class="p-space-md bg-surface-container-low"><div class="p-space-sm rounded-lg bg-surface-container-lowest flex items-center gap-space-sm"><span class="material-symbols-outlined text-primary text-headline-sm">cloud_done</span><div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface">ऑफ़लाइन मोड सुरक्षित</span><span class="font-body-sm text-body-sm text-on-surface-variant">Local Cache Synced</span></div></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-md"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs px-space-sm py-1.5 rounded-lg bg-surface-container-low"><span class="material-symbols-outlined text-primary text-headline-sm">domain</span><span class="font-label-md text-label-md text-on-surface">Rampur Primary Health Centre</span><span class="material-symbols-outlined text-outline text-headline-sm">expand_more</span></div><div class="flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-secondary-container text-on-secondary-container"><span class="w-2 h-2 rounded-full bg-secondary"></span><span class="font-label-sm text-label-sm">14/14 Sub-centers Connected</span></div></div><div class="flex items-center gap-space-md"><div class="flex items-center bg-surface-container-low rounded-lg px-space-sm py-1.5 w-72"><span class="material-symbols-outlined text-outline text-headline-sm mr-space-xs">search</span><input class="bg-transparent border-none outline-none font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant w-full" placeholder="Search Beneficiary, RCH ID, ASHA..." type="text"/></div><button class="flex items-center gap-space-xs px-space-sm py-1.5 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container-high transition-colors"><span class="font-label-sm text-label-sm text-primary font-bold">हिंदी</span><span class="text-outline font-label-sm text-label-sm">/</span><span class="font-label-sm text-label-sm text-on-surface-variant">EN</span></button><button class="relative p-space-xs rounded-lg hover:bg-surface-container-high transition-colors"><span class="material-symbols-outlined text-on-surface-variant text-headline-sm">notifications</span><span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-error rounded-full"></span></button><div class="flex items-center gap-space-sm pl-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1WoPZz67yGYDcBOXUgKkKaoLR88B0b4Ec2JL5qSKl-uwzle0JvwzO7UQTi7uky9bbOjY188AWyKVGTZV7_yM0D_6W6gxSAtF4N_sNtp34KVyXGhUOBt-VN2CXBzOicKvLR0KgSZYZyo5ZuR5hCt_LkVadXTUDRZc01Jw282PSJFy56xN5Gi1-074zMhhuQcFhNjMS2dEU-J_Gdd7MmhJLlhGCnIbvcptbUdZFaBXbjF-tizrrAM0Ukhn_wJ"/><div class="flex flex-col text-left"><span class="font-label-md text-label-md text-on-surface leading-tight">Dr. Ananya Sharma</span><span class="font-body-sm text-body-sm text-on-surface-variant leading-none">Medical Officer (PHC)</span></div><span class="material-symbols-outlined text-outline text-headline-sm">keyboard_arrow_down</span></div></div></header><main class="w-full pt-16 bg-surface"><div class="flex flex-col w-full">
+<!-- Top Context / Breadcrumb & Controls Banner -->
+<div class="px-space-md py-space-sm bg-surface-container-low flex flex-col md:flex-row md:items-center justify-between gap-space-sm shadow-sm">
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md">
+<span class="flex items-center gap-1 hover:text-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-label-lg text-primary">local_hospital</span>
+<span>PHC Rampur</span>
+</span>
+<span class="material-symbols-outlined text-outline text-label-sm">chevron_right</span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface leading-tight">गाँव समीक्षा एवं समग्र स्थिति</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Village Supervision & Cluster Intelligence</span>
+</div>
+</div>
+<!-- Live Telemetry Badge & Quick Sync Trigger -->
+<div class="flex items-center gap-space-sm">
+<div class="flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-secondary-container text-on-secondary-container">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-sm text-label-sm">Safe On-Device Sync • 18 Secs Ago</span>
+</div>
+<button class="flex items-center gap-1 px-space-sm py-1.5 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container-high shadow-sm transition-all" onclick="alert('Manual Refresh Triggered: Pulling field records from 14 Sub-Centers')">
+<span class="material-symbols-outlined text-primary text-label-md">refresh</span>
+<span class="font-label-sm text-label-sm">Sync Now</span>
+</button>
+</div>
+</div>
+<!-- Command Strip Filters (Cluster, Date, Triaged High-Risk Only) -->
+<div class="px-space-md py-space-sm bg-surface-container-lowest flex flex-wrap items-center justify-between gap-space-md shadow-sm">
+<div class="flex flex-wrap items-center gap-space-sm">
+<!-- Village Dropdown Selector -->
+<div class="relative">
+<select class="appearance-none bg-surface-container-low text-on-surface font-label-md text-label-md pl-3 pr-8 py-2 rounded-lg outline-none cursor-pointer hover:bg-surface-container-high transition-colors">
+<option value="all">सभी 6 गाँव (All 6 Villages)</option>
+<option value="rampur">Rampur (रामपुर - 12 High Risk)</option>
+<option value="belwa">Belwa (बेलवा)</option>
+<option value="pipra">Pipra (पिपरा)</option>
+<option value="kalyanpur">Kalyanpur (कल्याणपुर)</option>
+<option value="chandpur">Chandpur (चांदपुर)</option>
+<option value="sonpur">Sonpur (सोनपुर)</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2 top-2.5 text-outline text-label-md">expand_more</span>
+</div>
+<!-- Month Period Pill -->
+<div class="flex items-center gap-1 px-space-sm py-2 rounded-lg bg-surface-container-low text-on-surface font-label-md text-label-md">
+<span class="material-symbols-outlined text-outline text-label-md">date_range</span>
+<span>This Month: Oct 2024</span>
+</div>
+<!-- High Risk Toggle Chip -->
+<button class="flex items-center gap-1.5 px-space-sm py-2 rounded-lg bg-error-container text-on-error-container font-label-md text-label-md shadow-sm hover:opacity-90 transition-opacity" id="toggleHighRisk">
+<span class="material-symbols-outlined text-error text-label-md" style="font-variation-settings: 'FILL' 1;">emergency</span>
+<span>केवल उच्च-जोखिम (High-Risk Only: 42)</span>
+</button>
+</div>
+<!-- Quick Audio Dispatcher Assistant Dock Button -->
+<div class="flex items-center gap-space-sm">
+<div class="hidden lg:flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm bg-surface-container-low px-space-sm py-1.5 rounded-full">
+<span class="material-symbols-outlined text-secondary text-label-md">mic</span>
+<span>ASHA Voice Feed: Active</span>
+</div>
+<button class="flex items-center gap-space-xs px-space-sm py-2 rounded-lg bg-primary-container text-on-primary-container font-label-md text-label-md shadow-sm hover:opacity-95 transition-all">
+<span class="material-symbols-outlined text-label-md">record_voice_over</span>
+<span>नया वॉइस अलर्ट जारी करें</span>
+</button>
+</div>
+</div>
+<!-- Master Content Wrapper -->
+<div class="p-space-md flex flex-col gap-space-md">
+<!-- KPI Summary Row (4 Bespoke Visual Cards) -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-space-md">
+<!-- KPI 1 -->
+<div class="p-space-md bg-surface-container-lowest rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">क्षेत्राधिकार एवं बल</span>
+<span class="font-headline-sm text-headline-sm text-on-surface mt-0.5">कुल गाँव व बस्तियाँ</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Village Clusters & Health Workforce</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-headline-sm">maps_home_work</span>
+</div>
+</div>
+<div class="mt-4 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-primary leading-none">6</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Villages</span>
+<span class="text-outline mx-1">•</span>
+<span class="font-label-lg text-label-lg text-on-surface">14</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Sub-Centers</span>
+</div>
+<div class="mt-3 pt-2 bg-surface-container-low -mx-space-md -mb-space-md px-space-md py-2 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-label-sm">groups</span>
+            148 ASHA Workers Active
+          </span>
+<span class="text-primary font-label-sm">100% Assigned</span>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="p-space-md bg-surface-container-lowest rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">नागरिक व्याप्ति</span>
+<span class="font-headline-sm text-headline-sm text-on-surface mt-0.5">कुल लक्षित आबादी</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Target Population Demographics</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-headline-sm">reduce_capacity</span>
+</div>
+</div>
+<div class="mt-4 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-on-surface leading-none">24,850</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Citizens</span>
+</div>
+<div class="mt-3 pt-2 bg-surface-container-low -mx-space-md -mb-space-md px-space-md py-2 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>3,420 Verified Families</span>
+<span class="font-label-sm text-secondary font-medium">96.8% Aadhaar/ABHA</span>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="p-space-md bg-surface-container-lowest rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-error uppercase tracking-wider font-semibold">अत्यावश्यक प्राथमिकता</span>
+<span class="font-headline-sm text-headline-sm text-error mt-0.5">सक्रिय उच्च-जोखिम मामले</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">High-Risk Pregnancy / Child Vitals</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-error-container text-on-error-container flex items-center justify-center">
+<span class="material-symbols-outlined text-headline-sm" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+</div>
+<div class="mt-4 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-error leading-none">42</span>
+<span class="font-label-md text-label-md text-error">Cases Triaged</span>
+<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold">+4 This Week</span>
+</div>
+<div class="mt-3 pt-2 bg-error-container/30 -mx-space-md -mb-space-md px-space-md py-2 flex items-center justify-between font-label-sm text-label-sm text-error">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-label-sm">priority_high</span>
+            18 Severe Maternal Anemia / BP
+          </span>
+<span class="font-semibold underline cursor-pointer">Dispatch ANM</span>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="p-space-md bg-surface-container-lowest rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">दौरा पूर्णता दर</span>
+<span class="font-headline-sm text-headline-sm text-on-surface mt-0.5">मासिक दौरा अनुपालन</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Home Visit Routine Adherence</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-headline-sm">fact_check</span>
+</div>
+</div>
+<div class="mt-4 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-primary leading-none">88.4%</span>
+<span class="font-label-sm text-label-sm text-primary font-medium flex items-center">
+<span class="material-symbols-outlined text-label-sm">trending_up</span>
+            +3.2% vs Sep
+          </span>
+</div>
+<div class="mt-3 pt-2 bg-surface-container-low -mx-space-md -mb-space-md px-space-md py-2 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>1,240 / 1,402 Completed</span>
+<span class="font-label-sm text-primary">162 Remaining</span>
+</div>
+</div>
+</div>
+<!-- Visual Split Grid: 6 Village Cards (Left 7 Cols) + Field Map & Escalation Queue (Right 5 Cols) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md">
+<!-- Left Column: Village Cluster Multi-Cards (7 Cols) -->
+<div class="lg:col-span-7 flex flex-col gap-space-md">
+<!-- Header with sorting indicator -->
+<div class="flex items-center justify-between bg-surface-container-lowest p-space-sm rounded-lg shadow-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-headline-sm">grid_view</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">गाँव क्लस्टर स्थिति</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">(6 Village Clusters Ranked by Risk Level)</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
+<span>क्रम:</span>
+<span class="text-primary font-semibold">उच्चतम जोखिम पहले (Highest Risk First)</span>
+</div>
+</div>
+<!-- The 6 Interactive Village Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- 1. Rampur (रामपुर) - High Alert -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col overflow-hidden relative">
+<div class="h-1.5 w-full bg-error"></div>
+<div class="p-space-md flex flex-col flex-1 justify-between">
+<div>
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">रामपुर</h3>
+<span class="font-body-md text-body-md text-on-surface-variant font-medium">(Rampur)</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Cluster Lead: ASHA Shanti Devi</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-error text-on-error font-label-sm text-label-sm font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-on-error animate-ping"></span>
+                    High Alert
+                  </span>
+</div>
+<!-- Demographics and Vitals Meter -->
+<div class="grid grid-cols-3 gap-2 mt-4 p-2 rounded-lg bg-surface-container-low text-center">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface-variant">आबादी (Pop)</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">1,840</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-error">उच्च जोखिम</span>
+<span class="font-label-md text-label-md text-error font-bold">12 Cases</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface-variant">लंबित दौरे</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">18 Visits</span>
+</div>
+</div>
+<div class="mt-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-label-sm font-label-sm">
+<span class="text-error font-medium">8 Severe BP (Pre-eclampsia Risk)</span>
+<span class="text-error font-medium">4 Severe Anemia</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-error rounded-full" style="width: 82%"></div>
+</div>
+</div>
+</div>
+<!-- Footer with sync status & quick action -->
+<div class="mt-4 pt-3 border-t-0 flex items-center justify-between bg-surface-container-low/60 -mx-space-md -mb-space-md p-space-sm px-space-md">
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-label-sm text-primary">cloud_sync</span>
+                  Sync: 12 min ago
+                </span>
+<button class="px-space-sm py-1.5 rounded-lg bg-primary text-on-primary font-label-sm text-label-sm hover:opacity-90 transition-opacity">
+                  विस्तृत विवरण (Details)
+                </button>
+</div>
+</div>
+</div>
+<!-- 2. Kalyanpur (कल्याणपुर) - High Alert -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col overflow-hidden relative">
+<div class="h-1.5 w-full bg-error"></div>
+<div class="p-space-md flex flex-col flex-1 justify-between">
+<div>
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">कल्याणपुर</h3>
+<span class="font-body-md text-body-md text-on-surface-variant font-medium">(Kalyanpur)</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Cluster Lead: ASHA Rita Devi</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-error text-on-error font-label-sm text-label-sm font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-on-error animate-ping"></span>
+                    High Alert
+                  </span>
+</div>
+<div class="grid grid-cols-3 gap-2 mt-4 p-2 rounded-lg bg-surface-container-low text-center">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface-variant">आबादी</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">1,650</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-error">उच्च जोखिम</span>
+<span class="font-label-md text-label-md text-error font-bold">9 Cases</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-tertiary">छूटे टीके</span>
+<span class="font-label-md text-label-md text-tertiary font-bold">14 Missed</span>
+</div>
+</div>
+<div class="mt-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-label-sm font-label-sm">
+<span class="text-tertiary font-medium">14 Missed Infant Vaccinations</span>
+<span class="text-on-surface-variant font-medium">RI Session Overdue</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary rounded-full" style="width: 68%"></div>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between bg-surface-container-low/60 -mx-space-md -mb-space-md p-space-sm px-space-md">
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-label-sm text-primary">cloud_sync</span>
+                  Sync: 25 min ago
+                </span>
+<button class="px-space-sm py-1.5 rounded-lg bg-primary text-on-primary font-label-sm text-label-sm hover:opacity-90 transition-opacity">
+                  विस्तृत विवरण (Details)
+                </button>
+</div>
+</div>
+</div>
+<!-- 3. Belwa (बेलवा) - Moderate Alert -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col overflow-hidden relative">
+<div class="h-1.5 w-full bg-tertiary"></div>
+<div class="p-space-md flex flex-col flex-1 justify-between">
+<div>
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">बेलवा</h3>
+<span class="font-body-md text-body-md text-on-surface-variant font-medium">(Belwa)</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Cluster Lead: ASHA Geeta Singh</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold">
+                    मध्यम (Moderate)
+                  </span>
+</div>
+<div class="grid grid-cols-3 gap-2 mt-4 p-2 rounded-lg bg-surface-container-low text-center">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface-variant">आबादी</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">1,420</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-tertiary">उच्च जोखिम</span>
+<span class="font-label-md text-label-md text-tertiary font-bold">6 Cases</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface-variant">लंबित दौरे</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">7 Visits</span>
+</div>
+</div>
+<div class="mt-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-label-sm font-label-sm">
+<span class="text-on-surface-variant">ANC-3 Checkups Scheduled</span>
+<span class="text-tertiary font-semibold">82% on track</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary-container rounded-full" style="width: 82%"></div>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between bg-surface-container-low/60 -mx-space-md -mb-space-md p-space-sm px-space-md">
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-label-sm text-primary">cloud_sync</span>
+                  Sync: 45 min ago
+                </span>
+<button class="px-space-sm py-1.5 rounded-lg bg-surface-container-high text-on-surface font-label-sm text-label-sm hover:bg-surface-container-highest transition-colors">
+                  विस्तृत विवरण (Details)
+                </button>
+</div>
+</div>
+</div>
+<!-- 4. Sonpur (सोनपुर) - Attention / Network Outages -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col overflow-hidden relative">
+<div class="h-1.5 w-full bg-tertiary-container"></div>
+<div class="p-space-md flex flex-col flex-1 justify-between">
+<div>
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">सोनपुर</h3>
+<span class="font-body-md text-body-md text-on-surface-variant font-medium">(Sonpur)</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Cluster Lead: ASHA Sunita Parvin</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-label-sm">wifi_off</span>
+                    2 Outages
+                  </span>
+</div>
+<div class="grid grid-cols-3 gap-2 mt-4 p-2 rounded-lg bg-surface-container-low text-center">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface-variant">आबादी</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">890</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-tertiary">उच्च जोखिम</span>
+<span class="font-label-md text-label-md text-tertiary font-bold">5 Cases</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface-variant">ऑफ़लाइन रिकॉर्ड</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">28 Buffered</span>
+</div>
+</div>
+<div class="mt-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-label-sm font-label-sm">
+<span class="text-on-surface-variant">Local Phone Storage</span>
+<span class="text-primary font-semibold">100% Encrypted</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 50%"></div>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between bg-surface-container-low/60 -mx-space-md -mb-space-md p-space-sm px-space-md">
+<span class="font-label-sm text-label-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-label-sm text-outline">signal_cellular_alt_1_bar</span>
+                  Last Sync: 1.5h ago
+                </span>
+<button class="px-space-sm py-1.5 rounded-lg bg-surface-container-high text-on-surface font-label-sm text-label-sm hover:bg-surface-container-highest transition-colors">
+                  विस्तृत विवरण (Details)
+                </button>
+</div>
+</div>
+</div>
+<!-- 5. Pipra (पिपरा) - Normal (Teal) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col overflow-hidden relative">
+<div class="h-1.5 w-full bg-primary"></div>
+<div class="p-space-md flex flex-col flex-1 justify-between">
+<div>
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">पिपरा</h3>
+<span class="font-body-md text-body-md text-on-surface-variant font-medium">(Pipra)</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Cluster Lead: ASHA Rekha Devi</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+                    सामान्य (Normal)
+                  </span>
+</div>
+<div class="grid grid-cols-3 gap-2 mt-4 p-2 rounded-lg bg-surface-container-low text-center">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface-variant">आबादी</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">980</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-primary">उच्च जोखिम</span>
+<span class="font-label-md text-label-md text-primary font-bold">2 Cases</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface-variant">लंबित</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">3 Visits</span>
+</div>
+</div>
+<div class="mt-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-label-sm font-label-sm">
+<span class="text-on-surface-variant">Coverage Adherence</span>
+<span class="text-primary font-semibold">94% Target Met</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 94%"></div>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between bg-surface-container-low/60 -mx-space-md -mb-space-md p-space-sm px-space-md">
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-label-sm text-primary">cloud_sync</span>
+                  Sync: 1 hour ago
+                </span>
+<button class="px-space-sm py-1.5 rounded-lg bg-surface-container-high text-on-surface font-label-sm text-label-sm hover:bg-surface-container-highest transition-colors">
+                  विस्तृत विवरण (Details)
+                </button>
+</div>
+</div>
+</div>
+<!-- 6. Chandpur (चांदपुर) - Normal -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col overflow-hidden relative">
+<div class="h-1.5 w-full bg-primary"></div>
+<div class="p-space-md flex flex-col flex-1 justify-between">
+<div>
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">चांदपुर</h3>
+<span class="font-body-md text-body-md text-on-surface-variant font-medium">(Chandpur)</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Cluster Lead: ASHA Kusum Kumari</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+                    सामान्य (Normal)
+                  </span>
+</div>
+<div class="grid grid-cols-3 gap-2 mt-4 p-2 rounded-lg bg-surface-container-low text-center">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface-variant">आबादी</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">1,120</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-primary">उच्च जोखिम</span>
+<span class="font-label-md text-label-md text-primary font-bold">3 Cases</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface-variant">लंबित</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">5 Visits</span>
+</div>
+</div>
+<div class="mt-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-label-sm font-label-sm">
+<span class="text-on-surface-variant">Maternal Nutrition Given</span>
+<span class="text-primary font-semibold">91% Supplied</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 91%"></div>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between bg-surface-container-low/60 -mx-space-md -mb-space-md p-space-sm px-space-md">
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-label-sm text-primary">cloud_sync</span>
+                  Sync: 2 hours ago
+                </span>
+<button class="px-space-sm py-1.5 rounded-lg bg-surface-container-high text-on-surface font-label-sm text-label-sm hover:bg-surface-container-highest transition-colors">
+                  विस्तृत विवरण (Details)
+                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Weekly Field Visit Progress Sparkline Visual -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">साप्ताहिक दौरा एवं फॉलो-अप प्रगति</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">7-Day Aggregated Routine Checks Across Clusters</span>
+</div>
+<div class="flex items-center gap-space-sm font-label-sm text-label-sm">
+<span class="flex items-center gap-1 text-primary"><span class="w-3 h-3 rounded bg-primary"></span> पूर्ण (Done)</span>
+<span class="flex items-center gap-1 text-tertiary"><span class="w-3 h-3 rounded bg-tertiary-fixed-dim"></span> लंबित (Pending)</span>
+</div>
+</div>
+<!-- Inline Bar Visualization (1.5KB SVG) -->
+<div class="w-full h-32 flex items-end justify-between pt-4 px-2 bg-surface-container-low rounded-lg">
+<div class="flex flex-col items-center gap-1 flex-1">
+<div class="w-7 bg-primary rounded-t-sm" style="height: 65px"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Mon</span>
+</div>
+<div class="flex flex-col items-center gap-1 flex-1">
+<div class="w-7 bg-primary rounded-t-sm" style="height: 80px"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Tue</span>
+</div>
+<div class="flex flex-col items-center gap-1 flex-1">
+<div class="w-7 bg-primary rounded-t-sm" style="height: 94px"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Wed</span>
+</div>
+<div class="flex flex-col items-center gap-1 flex-1">
+<div class="w-7 bg-primary rounded-t-sm" style="height: 52px"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Thu</span>
+</div>
+<div class="flex flex-col items-center gap-1 flex-1">
+<div class="w-7 bg-primary rounded-t-sm" style="height: 88px"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Fri</span>
+</div>
+<div class="flex flex-col items-center gap-1 flex-1">
+<div class="w-7 bg-primary rounded-t-sm" style="height: 70px"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Sat</span>
+</div>
+<div class="flex flex-col items-center gap-1 flex-1">
+<div class="w-7 bg-tertiary rounded-t-sm" style="height: 38px"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Sun</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Visual Sector Geolocation & Critical Escalation Feed (5 Cols) -->
+<div class="lg:col-span-5 flex flex-col gap-space-md">
+<!-- Geolocation & Field Worker Mapping Card -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">भौगोलिक क्लस्टर एवं उप-केंद्र</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Rampur PHC Field Boundaries & Catchment</span>
+</div>
+<span class="material-symbols-outlined text-primary text-headline-sm">near_me</span>
+</div>
+<!-- Interactive Location Container with data-location -->
+<div class="w-full h-48 bg-surface-container-high rounded-xl relative overflow-hidden flex flex-col justify-end p-space-sm shadow-inner" data-alt="Satellite terrain map of rural agricultural village clusters with highlighted primary health center boundary pins and winding river roads in Uttar Pradesh India during morning light." data-location="Rampur, Uttar Pradesh, India" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB3MxodrQqsaTQkcXKG-6FUuYlWVOnIjgoTQt4T-mxXGtCtcVbmnUnbWW9Yyzf6cT97OXAV6-pyrTZ54iVkT6dtBej3jF3aTx2lNlHgIBfUc62ATIfSOZd50uszHy_90RJOoa0i704_5lD7psM4zdwcsGaoiCG2yz9GcaCyzTiC_KdC2iZH4m5Y08G5xs_AbebLOwCfMSyXh17BMjdJY8I7zKpN8cvRyMygznCeB8We6C_k840y83sGhQ')">
+<!-- Map overlay tag -->
+<div class="bg-surface-container-lowest/95 backdrop-blur-md p-2 rounded-lg shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-error animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">12 Severe Cases in Sector 4</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary underline cursor-pointer">पूर्ण मानचित्र (Full Map)</span>
+</div>
+</div>
+<!-- Active ASHA Field Deployment Micro-List -->
+<div class="flex items-center justify-between pt-2">
+<div class="flex -space-x-2">
+<img class="w-8 h-8 rounded-full border-2 border-white object-cover" data-alt="Close up warm professional portrait of an Indian rural female ASHA community health activist wearing traditional uniform smiling outdoors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMlV9IDFXQdvnCZy5uYLS_XiE6YQJS4nW5K0NildS9DHl7v_YWbq3cYZB5hADbI1gDSyd8McH6Me9lqDh8oXOEKrZPsAXtqBveS0Qij1q_hnkvYoNEHsdwdS53Fptzu1JNu-9XaBPdYMIH9ONNXIzA2njQwme0eD5xR6jebFkOWaqKxKoYPANuLdRrSGHyKeSUDOUXT80yoLWC4ec2D6exnlHPnAd7ywyNgr36qzafnQlpDdow1bnC4w"/>
+<img class="w-8 h-8 rounded-full border-2 border-white object-cover" data-alt="Portrait of an Indian woman healthcare worker with stethoscope around neck in front of village health sub center." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAi2kp08Y3OL2egawHj8lOWTNx3IYdX6nb2YFmQUsvOdlADblPYW1mOKe0-RY0zEfvOEI2fsgFiR_2g0BFu_2bTztmTwfPJoFAO-6D6yXeWtpKPRSNYBrH6P7eMucm_jwxRd6QjzER2YJipR5xs1PsSLEKoE1HTJKCKhYurHb3jDLMqOABfdLG5t0qLesgkKF_mBOhVpjIT6ZN9nuU8SWi4wzeZ36wA3_FLdGFelc11cstK24duilPYA"/>
+<img class="w-8 h-8 rounded-full border-2 border-white object-cover" data-alt="Indian female healthcare supervisor with identification lanyard smiling softly in rural clinical courtyard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwU1Pr2DO-2xAgAJfOCgzpmnrd_WjFBkqd79r8DeGQejP4Yq-gcfaenyQxHc3mJdRZsOSU0vrGeWAQ7Ma1TvErQ44lu5u0ZmhnCvVn69D2B2iGKdmP6yaCEZljyqCrGK2xqQPlflje5xa7QqigfWbzspOTuvP_bdRq9HU8ZNiyXKQHNG7Ee-lssslqXvDBTNn0OyLlR8gs_EPVFdY2KqGuYBqhiMFTtoBadOLm8t0y3gzRnjvePl9X3A"/>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold flex items-center justify-center">
+                +14
+              </div>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-label-sm text-on-surface font-medium">14 ANM / ASHA On Field Duty</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Live GPS telemetry verified</p>
+</div>
+</div>
+</div>
+<!-- Voice-First Critical Escalation Queue (Directly flagged via ASHA Voice AI) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm flex flex-col overflow-hidden">
+<div class="p-space-md bg-error-container/30 flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-error text-headline-sm" style="font-variation-settings: 'FILL' 1;">assignment_late</span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-error leading-tight">त्वरित निवारण कतार</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Critical Voice-Escalated Cases</span>
+</div>
+</div>
+<span class="px-2 py-1 rounded-full bg-error text-on-error font-label-sm text-label-sm font-bold">
+              3 Urgent
+            </span>
+</div>
+<!-- List of Voice Flagged Patients -->
+<div class="p-space-sm flex flex-col divide-y divide-surface-container-high">
+<!-- Item 1: Severe BP -->
+<div class="p-space-sm flex flex-col gap-2 hover:bg-surface-container-low rounded-lg transition-colors">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2">
+<div class="w-2.5 h-2.5 rounded-full bg-error"></div>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface leading-tight">मीना देवी (Meena Devi)</h4>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Age: 26 • Trimester 3 • Rampur Tola 2</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+                  BP 142/96
+                </span>
+</div>
+<!-- AI Voice Transcribed Summary Pill -->
+<div class="p-2 rounded bg-surface-container flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-label-md mt-0.5">graphic_eq</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant italic">
+                  "आशा शांति देवी: 'मीना के पैरों में अत्यधिक सूजन है और सिरदर्द की शिकायत है, तुरंत डॉक्टर परामर्श चाहिए।'"
+                </p>
+</div>
+<!-- Triage Action Buttons -->
+<div class="flex items-center justify-between pt-1">
+<span class="font-label-sm text-label-sm text-outline">Flagged: 18m ago</span>
+<div class="flex items-center gap-1.5">
+<button class="px-space-sm py-1.5 rounded-lg bg-surface-container-high text-on-surface font-label-sm text-label-sm hover:bg-surface-container-highest transition-colors">
+                    कॉल करें (Call)
+                  </button>
+<button class="px-space-sm py-1.5 rounded-lg bg-error text-on-error font-label-sm text-label-sm font-semibold hover:opacity-95 transition-opacity" onclick="alert('ANM Team Dispatched to Meena Devi (Rampur Tola 2)')">
+                    समीक्षा व ANM भेजें
+                  </button>
+</div>
+</div>
+</div>
+<!-- Item 2: Missed Immunization -->
+<div class="p-space-sm flex flex-col gap-2 hover:bg-surface-container-low rounded-lg transition-colors">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2">
+<div class="w-2.5 h-2.5 rounded-full bg-tertiary"></div>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface leading-tight">सुनीता कुमारी (Sunita Kumari / शिशु आरव)</h4>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Infant 14 Weeks • Kalyanpur Ward 1</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold">
+                  Missed Penta-3
+                </span>
+</div>
+<div class="p-2 rounded bg-surface-container flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-label-md mt-0.5">graphic_eq</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant italic">
+                  "आशा रीता: 'माता बच्चे को लेकर ननिहाल गई थी, पेंटावैलेंट-3 खुराक 2 सप्ताह लेट है।'"
+                </p>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-label-sm text-label-sm text-outline">Flagged: 42m ago</span>
+<div class="flex items-center gap-1.5">
+<button class="px-space-sm py-1.5 rounded-lg bg-primary-container text-on-primary-container font-label-sm text-label-sm font-semibold hover:opacity-95 transition-opacity" onclick="alert('Rescheduled RI Session for Infant Aarav')">
+                    टीकाकरण पुनः निर्धारित करें
+                  </button>
+</div>
+</div>
+</div>
+<!-- Item 3: Severe Anemia Detection -->
+<div class="p-space-sm flex flex-col gap-2 hover:bg-surface-container-low rounded-lg transition-colors">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2">
+<div class="w-2.5 h-2.5 rounded-full bg-error"></div>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface leading-tight">पार्वती देवी (Parvati Devi)</h4>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Age: 31 • Hb: 6.8 g/dL • Rampur</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+                  Severe Anemia
+                </span>
+</div>
+<div class="p-2 rounded bg-surface-container flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-label-md mt-0.5">graphic_eq</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant italic">
+                  "हीमोग्लोबिन 7 से नीचे गिरा है, आयरन सुक्रोज इन्फ्यूजन रेफरल आवश्यक।"
+                </p>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-label-sm text-label-sm text-outline">Flagged: 1h ago</span>
+<button class="px-space-sm py-1.5 rounded-lg bg-error text-on-error font-label-sm text-label-sm font-semibold hover:opacity-95 transition-opacity" onclick="alert('Emergency Ambulance & Iron Infusion Referral Sent to Rampur PHC Bed 4')">
+                  PHC रेफरल जारी करें
+                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Full Width Clinical Activity Ledger -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-sm">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-headline-sm">history_edu</span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">दैनिक स्वास्थ्य गतिविधि रजिस्टर</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Live Consolidated Field Encounter Stream</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="flex items-center bg-surface-container-low rounded-lg px-2 py-1">
+<span class="material-symbols-outlined text-outline text-label-md mr-1">filter_list</span>
+<input class="bg-transparent border-none outline-none font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant" placeholder="Filter by Beneficiary Name..." type="text"/>
+</div>
+<button class="px-space-sm py-1.5 rounded-lg bg-surface-container-high text-on-surface font-label-sm text-label-sm hover:bg-surface-container-highest transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-label-sm">download</span>
+            Export Excel
+          </button>
+</div>
+</div>
+<!-- Ledger Table -->
+<div class="overflow-x-auto mt-2">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<tr>
+<th class="py-2.5 px-3">समय (Time)</th>
+<th class="py-2.5 px-3">लाभार्थी (Beneficiary & RCH ID)</th>
+<th class="py-2.5 px-3">गाँव / उप-केंद्र</th>
+<th class="py-2.5 px-3">आशा कार्यकर्ता</th>
+<th class="py-2.5 px-3">जांच का प्रकार (Type)</th>
+<th class="py-2.5 px-3">महत्वपूर्ण माप (Vitals Recorded)</th>
+<th class="py-2.5 px-3">स्थिति (Status)</th>
+<th class="py-2.5 px-3 text-right">कार्रवाई</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container font-body-sm text-body-sm text-on-surface">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-3 text-outline font-label-sm">11:42 AM</td>
+<td class="py-3 px-3">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-on-surface">रूपा देवी (Rupa Devi)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">RCH: 10984421002</span>
+</div>
+</td>
+<td class="py-3 px-3">रामपुर (सेक्टर 2)</td>
+<td class="py-3 px-3">श्रीमती शांति देवी</td>
+<td class="py-3 px-3 font-medium">ANC 2nd Trimester</td>
+<td class="py-3 px-3">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container-high text-on-surface">
+                  BP: 118/76 • Weight: 54kg
+                </span>
+</td>
+<td class="py-3 px-3">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+                  स्वस्थ (Normal)
+                </span>
+</td>
+<td class="py-3 px-3 text-right">
+<button class="p-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-headline-sm">chevron_right</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors bg-error-container/10">
+<td class="py-3 px-3 text-error font-label-sm font-semibold">11:15 AM</td>
+<td class="py-3 px-3">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-error">मीना देवी (Meena Devi)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">RCH: 10984421990</span>
+</div>
+</td>
+<td class="py-3 px-3">रामपुर (टोला 2)</td>
+<td class="py-3 px-3">श्रीमती शांति देवी</td>
+<td class="py-3 px-3 font-medium text-error">Emergency Home Visit</td>
+<td class="py-3 px-3">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-error-container text-on-error-container font-bold">
+                  BP: 142/96 (Severe)
+                </span>
+</td>
+<td class="py-3 px-3">
+<span class="px-2 py-0.5 rounded-full bg-error text-on-error font-label-sm text-label-sm font-bold">
+                  उच्च जोखिम (HRP)
+                </span>
+</td>
+<td class="py-3 px-3 text-right">
+<button class="px-2 py-1 bg-error text-on-error rounded font-label-sm text-label-sm hover:opacity-90">
+                  Review
+                </button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-3 text-outline font-label-sm">10:50 AM</td>
+<td class="py-3 px-3">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-on-surface">मास्टर विवान (Master Vivaan)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">DOB: 12-Jun-2024</span>
+</div>
+</td>
+<td class="py-3 px-3">पिपरा</td>
+<td class="py-3 px-3">श्रीमती रेखा देवी</td>
+<td class="py-3 px-3 font-medium">Routine Immunization</td>
+<td class="py-3 px-3">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container-high text-on-surface">
+                  OPV-2, Rota-2 Administered
+                </span>
+</td>
+<td class="py-3 px-3">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+                  टीकाकृत (Vaccinated)
+                </span>
+</td>
+<td class="py-3 px-3 text-right">
+<button class="p-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-headline-sm">chevron_right</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-3 text-outline font-label-sm">10:25 AM</td>
+<td class="py-3 px-3">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-on-surface">कविता बाई (Kavita Bai)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">RCH: 10984428811</span>
+</div>
+</td>
+<td class="py-3 px-3">चांदपुर</td>
+<td class="py-3 px-3">श्रीमती कुसुम कुमारी</td>
+<td class="py-3 px-3 font-medium">Post-Natal Check (PNC-1)</td>
+<td class="py-3 px-3">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container-high text-on-surface">
+                  Temp: 98.4°F • Cord: Clean
+                </span>
+</td>
+<td class="py-3 px-3">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+                  सत्यापित (Verified)
+                </span>
+</td>
+<td class="py-3 px-3 text-right">
+<button class="p-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-headline-sm">chevron_right</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Interactive Client Behavior Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const toggleBtn = document.getElementById('toggleHighRisk');
+      let filterActive = false;
+
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', function () {
+          filterActive = !filterActive;
+          if (filterActive) {
+            toggleBtn.classList.remove('bg-error-container', 'text-on-error-container');
+            toggleBtn.classList.add('bg-error', 'text-on-error');
+            toggleBtn.innerHTML = `
+              <span class="material-symbols-outlined text-on-error text-label-md" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+              <span>फ़िल्टर सक्रिय (42 उच्च जोखिम)</span>
+            `;
+          } else {
+            toggleBtn.classList.remove('bg-error', 'text-on-error');
+            toggleBtn.classList.add('bg-error-container', 'text-on-error-container');
+            toggleBtn.innerHTML = `
+              <span class="material-symbols-outlined text-error text-label-md" style="font-variation-settings: 'FILL' 1;">emergency</span>
+              <span>केवल उच्च-जोखिम (High-Risk Only: 42)</span>
+            `;
+          }
+        });
+      }
+    });
+  </script>
+</div></main></div></body></html>

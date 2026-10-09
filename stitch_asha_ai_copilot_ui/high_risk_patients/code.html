@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed-dim":"#80d5cb","surface-tint":"#006a63","on-secondary-fixed-variant":"#005048","surface-dim":"#d3daef","on-secondary":"#ffffff","on-primary-fixed":"#00201d","on-tertiary-container":"#ffe6da","on-primary":"#ffffff","outline-variant":"#bdc9c6","on-primary-fixed-variant":"#00504a","on-secondary-fixed":"#00201c","surface-variant":"#dce2f7","surface":"#f9f9ff","primary":"#005c55","inverse-surface":"#293040","on-error-container":"#93000a","tertiary":"#893a00","tertiary-fixed":"#ffdbca","surface-container-highest":"#dce2f7","tertiary-fixed-dim":"#ffb690","on-error":"#ffffff","secondary-fixed":"#71f8e4","inverse-primary":"#80d5cb","tertiary-container":"#af4c00","secondary-fixed-dim":"#4fdbc8","surface-container-high":"#e1e8fd","on-secondary-container":"#006f64","surface-bright":"#f9f9ff","on-tertiary-fixed":"#341100","on-tertiary-fixed-variant":"#783200","surface-container-low":"#f1f3ff","surface-container-lowest":"#ffffff","on-surface-variant":"#3e4947","on-tertiary":"#ffffff","primary-container":"#0f766e","error":"#ba1a1a","secondary":"#006b5f","on-surface":"#141b2b","on-primary-container":"#a3faef","on-background":"#141b2b","inverse-on-surface":"#edf0ff","surface-container":"#e9edff","background":"#f9f9ff","outline":"#6e7977","secondary-container":"#6df5e1","error-container":"#ffdad6","primary-fixed":"#9cf2e8"},borderRadius:{DEFAULT:"0.25rem",lg:"0.5rem",xl:"0.75rem",full:"9999px"},spacing:{"space-md":"1rem","space-xl":"2rem",gutter:"1rem","space-xs":"0.25rem",margin:"1rem","space-lg":"1.5rem","space-sm":"0.5rem"},fontFamily:{"label-md":["Inter"],"body-lg":["Inter"],"headline-sm":["Inter"],"label-sm":["Inter"],"body-md":["Inter"],"headline-md":["Inter"],"body-sm":["Inter"],"headline-lg":["Inter"],"headline-lg-mobile":["Inter"],"label-lg":["Inter"]},fontSize:{"label-md":["14px",{lineHeight:"18px",fontWeight:"500"}],"body-lg":["17px",{lineHeight:"26px",fontWeight:"400"}],"headline-sm":["18px",{lineHeight:"24px",fontWeight:"600"}],"label-sm":["12px",{lineHeight:"16px",fontWeight:"500"}],"body-md":["15px",{lineHeight:"22px",fontWeight:"400"}],"headline-md":["20px",{lineHeight:"28px",fontWeight:"600"}],"body-sm":["13px",{lineHeight:"18px",fontWeight:"400"}],"headline-lg":["30px",{lineHeight:"38px",fontWeight:"700"}],"headline-lg-mobile":["24px",{lineHeight:"32px",fontWeight:"700"}],"label-lg":["16px",{lineHeight:"22px",fontWeight:"600"}]}}}};</script></head><body class="bg-background font-body-md text-body-md text-on-surface"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest z-50 flex flex-col shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-space-md flex items-center gap-space-sm bg-surface-container-low"><img alt="Brand logo. - Primary color: #0f766e
+- Font: inter
+- Mode: light
+- Roundness: rounded-md
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Wvoe2KfVJxMKu1N947h4AckHmmOojM_ZLXACAj4_GFgbTX0I3ZS__1T_l6mfYhG8jqiBRwCHXX8_R9NkJzOvIZItY6NYd_DsKmxcVMgggHco7TOxz8qZrSZWdf9-Z7eNEDuve05g4CfWudxpGVTA81adCfxihfPgg5bINa2YJGf36_s9D1rAFXOsdej4hWLY1LY8vTJQlLBbKpnv2xTEQuNN0vShvIS8obz5yG3MJr8QZEPvS6Vq9OoeY"/><div class="flex flex-col"><span class="font-label-lg text-label-lg text-primary leading-tight">ग्रामीण स्वास्थ्य</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-none">Gramin Swasthya PHC</span></div></div><div class="p-space-md bg-surface-container-low"><div class="bg-surface-container-lowest p-space-sm rounded-lg flex items-center justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-headline-sm">local_hospital</span><div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface">रामपुर प्राथमिक केंद्र</span><span class="font-body-sm text-body-sm text-on-surface-variant">Rampur Sector 4</span></div></div><span class="material-symbols-outlined text-outline text-headline-sm">unfold_more</span></div></div><nav class="flex-1 px-space-md py-space-sm flex flex-col gap-space-xs overflow-y-auto" data-active-classes="bg-primary-container text-on-primary-container font-headline-sm"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="village-overview" href="#"><span class="material-symbols-outlined text-headline-sm">analytics</span><div class="flex flex-col"><span class="font-label-md text-label-md">गाँव समीक्षा</span><span class="font-body-sm text-body-sm text-on-surface-variant">Overview / Village</span></div></a><a aria-current="page" class="flex items-center justify-between px-space-md py-space-sm rounded-lg transition-colors bg-primary-container text-on-primary-container font-headline-sm" data-path="high-risk-patients" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-headline-sm">warning</span><div class="flex flex-col"><span class="font-label-md text-label-md">उच्च जोखिम मरीज़</span><span class="font-body-sm text-body-sm text-on-surface-variant">High-Risk Patients</span></div></div><span class="px-space-xs py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm">18</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="pending-follow-ups" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-headline-sm">pending_actions</span><div class="flex flex-col"><span class="font-label-md text-label-md">लंबित फॉलो-अप</span><span class="font-body-sm text-body-sm text-on-surface-variant">Pending Follow-ups</span></div></div><span class="px-space-xs py-0.5 rounded-full bg-surface-container-highest text-on-surface font-label-sm text-label-sm">42</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="worker-performance" href="#"><span class="material-symbols-outlined text-headline-sm">group</span><div class="flex flex-col"><span class="font-label-md text-label-md">आशा कार्यकर्ता प्रदर्शन</span><span class="font-body-sm text-body-sm text-on-surface-variant">Worker Performance</span></div></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="system-settings" href="#"><span class="material-symbols-outlined text-headline-sm">settings</span><div class="flex flex-col"><span class="font-label-md text-label-md">सिस्टम सेटिंग्स</span><span class="font-body-sm text-body-sm text-on-surface-variant">System Settings</span></div></a></nav><div class="p-space-md bg-surface-container-low"><div class="p-space-sm rounded-lg bg-surface-container-lowest flex items-center gap-space-sm"><span class="material-symbols-outlined text-primary text-headline-sm">cloud_done</span><div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface">ऑफ़लाइन मोड सुरक्षित</span><span class="font-body-sm text-body-sm text-on-surface-variant">Local Cache Synced</span></div></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-md"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs px-space-sm py-1.5 rounded-lg bg-surface-container-low"><span class="material-symbols-outlined text-primary text-headline-sm">domain</span><span class="font-label-md text-label-md text-on-surface">Rampur Primary Health Centre</span><span class="material-symbols-outlined text-outline text-headline-sm">expand_more</span></div><div class="flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-secondary-container text-on-secondary-container"><span class="w-2 h-2 rounded-full bg-secondary"></span><span class="font-label-sm text-label-sm">14/14 Sub-centers Connected</span></div></div><div class="flex items-center gap-space-md"><div class="flex items-center bg-surface-container-low rounded-lg px-space-sm py-1.5 w-72"><span class="material-symbols-outlined text-outline text-headline-sm mr-space-xs">search</span><input class="bg-transparent border-none outline-none font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant w-full" placeholder="Search Beneficiary, RCH ID, ASHA..." type="text"/></div><button class="flex items-center gap-space-xs px-space-sm py-1.5 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container-high transition-colors"><span class="font-label-sm text-label-sm text-primary font-bold">हिंदी</span><span class="text-outline font-label-sm text-label-sm">/</span><span class="font-label-sm text-label-sm text-on-surface-variant">EN</span></button><button class="relative p-space-xs rounded-lg hover:bg-surface-container-high transition-colors"><span class="material-symbols-outlined text-on-surface-variant text-headline-sm">notifications</span><span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-error rounded-full"></span></button><div class="flex items-center gap-space-sm pl-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1WoPZz67yGYDcBOXUgKkKaoLR88B0b4Ec2JL5qSKl-uwzle0JvwzO7UQTi7uky9bbOjY188AWyKVGTZV7_yM0D_6W6gxSAtF4N_sNtp34KVyXGhUOBt-VN2CXBzOicKvLR0KgSZYZyo5ZuR5hCt_LkVadXTUDRZc01Jw282PSJFy56xN5Gi1-074zMhhuQcFhNjMS2dEU-J_Gdd7MmhJLlhGCnIbvcptbUdZFaBXbjF-tizrrAM0Ukhn_wJ"/><div class="flex flex-col text-left"><span class="font-label-md text-label-md text-on-surface leading-tight">Dr. Ananya Sharma</span><span class="font-body-sm text-body-sm text-on-surface-variant leading-none">Medical Officer (PHC)</span></div><span class="material-symbols-outlined text-outline text-headline-sm">keyboard_arrow_down</span></div></div></header><main class="w-full pt-16 bg-surface"><div class="flex flex-col w-full p-space-md gap-space-lg">
+<!-- Offline Sync Sub-banner & Top Summary Stats -->
+<div class="flex flex-wrap items-center justify-between gap-space-md p-space-sm px-space-md rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="flex items-center gap-space-sm">
+<span class="w-3 h-3 rounded-full bg-error animate-pulse"></span>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-md text-label-md text-on-surface">18 गंभीर मामले सक्रिय</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/ 18 Critical Triage Flags Needing MO Action</span>
+</div>
+<span class="ml-space-sm px-space-xs py-0.5 rounded-md bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">
+        3 Syncs in last 15 min
+      </span>
+</div>
+<div class="flex items-center gap-space-lg">
+<div class="flex items-center gap-space-xs font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-headline-sm">verified</span>
+<span>NHM Protocol v4.2</span>
+</div>
+<div class="flex items-center gap-space-xs font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-outline text-headline-sm">timer</span>
+<span>Avg PHC Response: 24m</span>
+</div>
+</div>
+</div>
+<!-- Header Section with Distinct Visual Anchor -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container-low p-space-lg shadow-sm">
+<div class="absolute -right-8 -top-8 w-64 h-64 rounded-full bg-primary-fixed-dim/20 blur-3xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs max-w-3xl">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm uppercase tracking-wider">Triage Level 1 & 2</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">• Rampur PHC Sub-district Registry</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+          उच्च-जोखिम मरीज़ रजिस्ट्री <span class="text-primary font-headline-md font-normal">/ High-Risk Patient Triage</span>
+</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          AI-detected and ASHA-escalated critical maternal & child health cases across Rampur PHC. Voice notes parsed, maternal child protection (MCP) cards scanned, and algorithmic vitals triaged.
+        </p>
+</div>
+<!-- Action Cluster -->
+<div class="flex items-center gap-space-sm flex-wrap">
+<button class="flex items-center gap-space-xs h-12 px-space-md rounded-xl bg-surface-container-lowest text-primary shadow-sm hover:bg-surface-container-high transition-colors" onclick="toggleVoiceDock()">
+<span class="material-symbols-outlined text-primary text-headline-sm">mic</span>
+<div class="flex flex-col text-left">
+<span class="font-label-sm text-label-sm leading-tight text-primary">बोलकर खोजें</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant leading-none">Voice Search</span>
+</div>
+</button>
+<button class="flex items-center gap-space-xs h-12 px-space-md rounded-xl bg-primary-container text-on-primary-container shadow-sm hover:opacity-95 transition-opacity">
+<span class="material-symbols-outlined text-headline-sm">cloud_upload</span>
+<div class="flex flex-col text-left">
+<span class="font-label-sm text-label-sm leading-tight">NHM पोर्टल एक्सपोर्ट</span>
+<span class="font-body-sm text-body-sm leading-none opacity-90">Export to NHM</span>
+</div>
+</button>
+</div>
+</div>
+<!-- Quick Stat KPI Strip -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-md mt-space-lg pt-space-md bg-surface-container-lowest/60 rounded-lg p-space-sm">
+<div class="flex items-center gap-space-sm px-space-sm">
+<div class="w-10 h-10 rounded-lg bg-error-container flex items-center justify-center text-on-error-container">
+<span class="material-symbols-outlined text-headline-sm">e911_emergency</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-surface">6 Cases</div>
+<div class="font-label-sm text-label-sm text-error">Severe Critical (लाल)</div>
+</div>
+</div>
+<div class="flex items-center gap-space-sm px-space-sm">
+<div class="w-10 h-10 rounded-lg bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed">
+<span class="material-symbols-outlined text-headline-sm">warning</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-surface">12 Cases</div>
+<div class="font-label-sm text-label-sm text-tertiary">High Risk ANC / SAM</div>
+</div>
+</div>
+<div class="flex items-center gap-space-sm px-space-sm">
+<div class="w-10 h-10 rounded-lg bg-primary-fixed flex items-center justify-center text-on-primary-fixed">
+<span class="material-symbols-outlined text-headline-sm">ambulance</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-surface">3 Ambulances</div>
+<div class="font-label-sm text-label-sm text-primary">In Transit (108/102)</div>
+</div>
+</div>
+<div class="flex items-center gap-space-sm px-space-sm">
+<div class="w-10 h-10 rounded-lg bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined text-headline-sm">bloodtype</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-surface">4 Units</div>
+<div class="font-label-sm text-label-sm text-secondary">O-ve / B+ve Reserved CHC</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Filters & Triage Selector Bar -->
+<div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-md p-space-sm rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="flex flex-wrap items-center gap-space-xs flex-1">
+<div class="relative flex-1 min-w-[260px]">
+<span class="material-symbols-outlined absolute left-space-sm top-3 text-outline text-headline-sm">search</span>
+<input class="w-full h-11 pl-10 pr-space-md bg-surface-container-low rounded-lg font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant outline-none" placeholder="Search Meena Devi, RCH #4082, Rampur Ward 2..." type="text"/>
+</div>
+<!-- Condition Pills -->
+<button class="h-10 px-space-sm rounded-lg bg-surface-container text-primary font-label-sm text-label-sm flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-headline-sm text-error">flag</span>
+<span>सभी जोखिम (All: 18)</span>
+</button>
+<button class="h-10 px-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm flex items-center gap-space-xs transition-colors">
+<span>गंभीर प्री-एक्लेम्पसिया (BP)</span>
+</button>
+<button class="h-10 px-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm flex items-center gap-space-xs transition-colors">
+<span>गंभीर एनीमिया (Severe Anemia)</span>
+</button>
+<button class="h-10 px-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm flex items-center gap-space-xs transition-colors">
+<span>शिशु कुपोषण (SAM Infant)</span>
+</button>
+<button class="h-10 px-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm flex items-center gap-space-xs transition-colors">
+<span>NCD मधुमेह (High Sugar)</span>
+</button>
+</div>
+<!-- Right Controls -->
+<div class="flex items-center gap-space-xs self-end lg:self-auto">
+<button class="h-10 px-space-sm rounded-lg bg-surface-container-low text-on-surface font-label-sm text-label-sm flex items-center gap-space-xs hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-outline text-headline-sm">filter_list</span>
+<span>फिल्टर (Filters)</span>
+</button>
+<button class="h-10 px-space-sm rounded-lg bg-surface-container-low text-on-surface font-label-sm text-label-sm flex items-center gap-space-xs hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-outline text-headline-sm">swap_vert</span>
+<span>क्रमबद्ध (Sort)</span>
+</button>
+</div>
+</div>
+<!-- Main High Density Triage Table -->
+<div class="overflow-x-auto rounded-xl bg-surface-container-lowest shadow-sm">
+<table class="w-full text-left border-collapse min-w-[1040px]">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-space-sm px-space-md w-1"></th>
+<th class="py-space-sm px-space-md">मरीज़ विवरण / Patient Details</th>
+<th class="py-space-sm px-space-md">गाँव / Village</th>
+<th class="py-space-sm px-space-md">जोखिम व AI ट्राइएज / Risk & Clinical Reason</th>
+<th class="py-space-sm px-space-md">वाइटल्स / Vitals</th>
+<th class="py-space-sm px-space-md">आशा कार्यकर्ता / ASHA & Visit</th>
+<th class="py-space-sm px-space-md text-right">कार्रवाई / MO Action</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 font-body-sm text-body-sm text-on-surface">
+<!-- Row 1: Meena Devi (CRITICAL RED) -->
+<tr class="hover:bg-surface-container-low/60 transition-colors cursor-pointer group" onclick="openDrawer('meena')">
+<td class="p-0">
+<div class="w-1.5 h-full min-h-[96px] bg-error rounded-r"></div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="relative">
+<img class="w-11 h-11 rounded-full object-cover shadow-sm" data-alt="A portrait photograph of Meena Devi, a 24-year-old pregnant rural Indian woman wearing a red and saffron saree, calm expression, natural daylight soft lighting in an Indian village primary health context, photo realistic documentary style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBj1sRrFMyOcHWpNpUlHbKlVWlAfv7jS27k8HPzbHUKs766oL2Pxnq0cg0elQJaBOgwZSwK9_j6_eb4Kfeuge1qTccJ1DKucmjfZYorAk1PCunEOLgqLxdW_1svEXsUYfhXLuXYImJHoY7Tn8oRdaCpeyiTWvFIoWFwOrqyJuyzXoYSwpsG8SXEo6vVVCxQKRojV5kLIJcgb6MSmDy4wn0wyt1j_5uXocIB3VN6ddq3ELMja1lzNFUVxA"/>
+<span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-error flex items-center justify-center text-[10px] text-on-error font-bold">!</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface">मीना देवी</span>
+<span class="font-label-md text-label-md text-on-surface-variant font-medium">(Meena Devi)</span>
+</div>
+<div class="flex items-center gap-space-xs font-body-sm text-body-sm text-on-surface-variant">
+<span>24y F</span>
+<span>•</span>
+<span class="font-mono text-primary font-semibold">RCH #4082</span>
+<span>•</span>
+<span class="px-space-xs py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold">ANC 32 Wks</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Rampur Ward 2</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Sub-center Rampur West</span>
+<span class="font-body-sm text-body-sm text-outline">Distance: 4.2 km to PHC</span>
+</div>
+</td>
+<td class="py-space-md px-space-md max-w-sm">
+<div class="flex flex-col gap-space-xs">
+<div class="inline-flex items-center gap-space-xs px-space-xs py-0.5 rounded-full bg-error text-on-error w-max font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">priority_high</span>
+<span>Critical High BP (Preeclampsia Risk)</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface line-clamp-2">
+                Severe frontal headache & bilateral pedal edema (+2) with 142/96 mmHg. AI voice note analysis flagged urgent preeclampsia danger.
+              </p>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col gap-1 font-body-sm text-body-sm">
+<div class="flex items-center justify-between gap-space-sm">
+<span class="text-on-surface-variant font-label-sm text-label-sm">BP:</span>
+<span class="font-mono font-bold text-error px-1 rounded bg-error-container">142/96</span>
+</div>
+<div class="flex items-center justify-between gap-space-sm">
+<span class="text-on-surface-variant font-label-sm text-label-sm">Hb:</span>
+<span class="font-mono text-on-surface font-semibold">9.8 g/dL</span>
+</div>
+<div class="flex items-center justify-between gap-space-sm">
+<span class="text-on-surface-variant font-label-sm text-label-sm">Wt Gain:</span>
+<span class="font-mono text-on-surface">56.4 kg (+1.8 kg)</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-label-lg">support_agent</span>
+<span class="font-label-md text-label-md text-on-surface">Sunita Devi</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">ASHA-UP-402</span>
+<div class="flex items-center gap-space-xs text-secondary font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>Today, 10:14 AM (Synced)</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="flex flex-col items-end gap-space-xs">
+<button class="flex items-center gap-space-xs h-10 px-space-sm rounded-lg bg-error text-on-error shadow-sm hover:opacity-90 font-label-sm text-label-sm" onclick="event.stopPropagation(); alert('108 Emergency Ambulance Dispatched to Rampur Ward 2 for Meena Devi.');">
+<span class="material-symbols-outlined text-headline-sm">emergency_share</span>
+<span class="font-bold">तत्काल 108 एम्बुलेंस / Dispatch</span>
+</button>
+<button class="font-label-sm text-label-sm text-primary hover:underline flex items-center gap-0.5" onclick="event.stopPropagation(); openDrawer('meena')">
+<span>View MCP Card & Audio</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Geeta Devi (CRITICAL RED) -->
+<tr class="hover:bg-surface-container-low/60 transition-colors cursor-pointer group" onclick="openDrawer('geeta')">
+<td class="p-0">
+<div class="w-1.5 h-full min-h-[96px] bg-error rounded-r"></div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="relative">
+<img class="w-11 h-11 rounded-full object-cover shadow-sm" data-alt="A portrait of Geeta Devi, an Indian village mother 28 years old with mild fatigue in her eyes, wearing an emerald green and mustard dupatta, warm rural indoor light, documentary photograph style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsHi6MT6PDB74ZTr-LuFKmaZE_-5_J1mWZ1WUavm8upMiU9kYvliinmrrnsFJ4abZl6JaDP2hDmSEWwO2seKTwO0J4pBTDQYorayXm2PKET5lYCWFNe1oXwPGN23XmGjBju2AX1ciHXNSAbfX8WLnTN-DYis4RCYxTzhF1o7gPtDfGczEC1NoJ8BIl7nIWzx7Sp9cus8DaCO8eXp2GhCfEgWmBamg2HrWqZEP1HdKizQy2GIq_g0Arxw"/>
+<span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-error flex items-center justify-center text-[10px] text-on-error font-bold">!</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface">गीता देवी</span>
+<span class="font-label-md text-label-md text-on-surface-variant font-medium">(Geeta Devi)</span>
+</div>
+<div class="flex items-center gap-space-xs font-body-sm text-body-sm text-on-surface-variant">
+<span>28y F</span>
+<span>•</span>
+<span class="font-mono text-primary font-semibold">RCH #3912</span>
+<span>•</span>
+<span class="px-space-xs py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold">ANC 36 Wks</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Kalyanpur Ward 1</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Sub-center Kalyanpur East</span>
+<span class="font-body-sm text-body-sm text-outline">Distance: 8.5 km to PHC</span>
+</div>
+</td>
+<td class="py-space-md px-space-md max-w-sm">
+<div class="flex flex-col gap-space-xs">
+<div class="inline-flex items-center gap-space-xs px-space-xs py-0.5 rounded-full bg-error text-on-error w-max font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">bloodtype</span>
+<span>Severe Anemia (Hb < 7.0 g/dL)</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface line-clamp-2">
+                Hemoglobin 6.8 g/dL in 9th month. Palor in conjunctiva, shortness of breath upon light exertion. Urgent blood transfusion required before labor.
+              </p>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col gap-1 font-body-sm text-body-sm">
+<div class="flex items-center justify-between gap-space-sm">
+<span class="text-on-surface-variant font-label-sm text-label-sm">Hb:</span>
+<span class="font-mono font-bold text-error px-1 rounded bg-error-container">6.8 g/dL</span>
+</div>
+<div class="flex items-center justify-between gap-space-sm">
+<span class="text-on-surface-variant font-label-sm text-label-sm">BP:</span>
+<span class="font-mono text-on-surface font-semibold">110/70</span>
+</div>
+<div class="flex items-center justify-between gap-space-sm">
+<span class="text-on-surface-variant font-label-sm text-label-sm">Foetal HR:</span>
+<span class="font-mono text-on-surface">144 bpm</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-label-lg">support_agent</span>
+<span class="font-label-md text-label-md text-on-surface">Vimla Devi</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">ASHA-UP-418</span>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span>Yesterday, 04:30 PM</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="flex flex-col items-end gap-space-xs">
+<button class="flex items-center gap-space-xs h-10 px-space-sm rounded-lg bg-primary-container text-on-primary-container shadow-sm hover:opacity-90 font-label-sm text-label-sm" onclick="event.stopPropagation(); alert('CHC Blood Bank reserved 2 units PRBC for Geeta Devi. Transit coordinated.');">
+<span class="material-symbols-outlined text-headline-sm">local_hospital</span>
+<span class="font-bold">रक्त आधान रेफरल / CHC Transfusion</span>
+</button>
+<button class="font-label-sm text-label-sm text-primary hover:underline flex items-center gap-0.5" onclick="event.stopPropagation(); openDrawer('geeta')">
+<span>Clinical Notes & History</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Baby Aarav (HIGH ORANGE) -->
+<tr class="hover:bg-surface-container-low/60 transition-colors cursor-pointer group" onclick="openDrawer('aarav')">
+<td class="p-0">
+<div class="w-1.5 h-full min-h-[96px] bg-tertiary-container rounded-r"></div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="relative">
+<img class="w-11 h-11 rounded-full object-cover shadow-sm" data-alt="A portrait of a 9-month-old Indian baby boy named Aarav held gently by his rural mother, soft outdoor natural shade lighting, tender, high detail photograph depicting rural Indian child healthcare context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDysqkOvs3EuhI4Sz4-dRvBYqe2mBrZi255FYssfChOneVa-9LSclxpnz2ztN_wiSSh965RbExwlOQVAUXpTHWG5D-VR9Ex3LvyWqBKHHrQ8y5zktYhQ8yo-5GkOLbgciTBVfYjIpScAf5Q3xZC1LLiakka8bg5bIZyWZ9u6-ozU3mvQupU6LyQtSLnSk1gEc-8ogn56XcL5B4pmorSSKzNusp6WvB0bdAC4Th79ZMD7uHAQizOqLiORg"/>
+<span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-tertiary-container flex items-center justify-center text-[10px] text-on-tertiary font-bold">▲</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface">शिशु आरव</span>
+<span class="font-label-md text-label-md text-on-surface-variant font-medium">(Baby Aarav)</span>
+</div>
+<div class="flex items-center gap-space-xs font-body-sm text-body-sm text-on-surface-variant">
+<span>9m M</span>
+<span>•</span>
+<span class="font-mono text-primary font-semibold">RCH #5519</span>
+<span>•</span>
+<span class="px-space-xs py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold">M/O Sunita</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Belwa Sector 2</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Sub-center Belwa North</span>
+<span class="font-body-sm text-body-sm text-outline">Distance: 6.1 km to PHC</span>
+</div>
+</td>
+<td class="py-space-md px-space-md max-w-sm">
+<div class="flex flex-col gap-space-xs">
+<div class="inline-flex items-center gap-space-xs px-space-xs py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed w-max font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">child_care</span>
+<span>SAM (Severe Acute Malnutrition)</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface line-clamp-2">
+                MUAC tape indicates red zone (11.2 cm < 11.5 cm). Weight stagnation over 60 days. Lethargic feeding reported in ASHA audio transcript.
+              </p>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col gap-1 font-body-sm text-body-sm">
+<div class="flex items-center justify-between gap-space-sm">
+<span class="text-on-surface-variant font-label-sm text-label-sm">MUAC:</span>
+<span class="font-mono font-bold text-tertiary px-1 rounded bg-tertiary-fixed">11.2 cm</span>
+</div>
+<div class="flex items-center justify-between gap-space-sm">
+<span class="text-on-surface-variant font-label-sm text-label-sm">Weight:</span>
+<span class="font-mono text-tertiary font-semibold">6.1 kg (-3 SD)</span>
+</div>
+<div class="flex items-center justify-between gap-space-sm">
+<span class="text-on-surface-variant font-label-sm text-label-sm">Edema:</span>
+<span class="font-mono text-on-surface">None</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-label-lg">support_agent</span>
+<span class="font-label-md text-label-md text-on-surface">Maya Sharma</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">ASHA-UP-409</span>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span>22 Oct 2024</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="flex flex-col items-end gap-space-xs">
+<button class="flex items-center gap-space-xs h-10 px-space-sm rounded-lg bg-tertiary-container text-on-tertiary shadow-sm hover:opacity-90 font-label-sm text-label-sm" onclick="event.stopPropagation(); alert('Admit to Nutritional Rehabilitation Centre (NRC) generated for Baby Aarav.');">
+<span class="material-symbols-outlined text-headline-sm">nutrition</span>
+<span class="font-bold">NRC रेफरल / NRC Admission</span>
+</button>
+<button class="font-label-sm text-label-sm text-primary hover:underline flex items-center gap-0.5" onclick="event.stopPropagation(); openDrawer('aarav')">
+<span>Growth Chart & Vitals</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: Rameshwar Singh (MEDIUM YELLOW) -->
+<tr class="hover:bg-surface-container-low/60 transition-colors cursor-pointer group" onclick="openDrawer('rameshwar')">
+<td class="p-0">
+<div class="w-1.5 h-full min-h-[96px] bg-outline-variant rounded-r"></div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="relative">
+<img class="w-11 h-11 rounded-full object-cover shadow-sm" data-alt="A portrait of Rameshwar Singh, an elder 58-year-old rural Indian farmer with grey mustache and turban, kind weathered face, warm natural earthen lighting in a village courtyard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9UQqzhcHDmUqpW5Qf3in7qbwtGQrudNR-tWuD1oQaI8GvxZi7fAiT2rkULD123x29vcZCk2R_oeAf3k7B-dTETtMByq_N-nCgZhJ_cUiuF2mwxaR__mPm_DvwDxEDutOxUG4UAhprA5x1KaLFmPu1LF1mTp6Bc1Hjt-otpsFc-vPE_2G-vBNK8cp_pwzXzykRKtz2Dev6RKBN3zKOqqBDYEDlKyUA8QLg1BfPNmPkoGkvgnBL40UFzw"/>
+<span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-surface-container-highest flex items-center justify-center text-[10px] text-on-surface font-bold">•</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface">रामेश्वर सिंह</span>
+<span class="font-label-md text-label-md text-on-surface-variant font-medium">(Rameshwar Singh)</span>
+</div>
+<div class="flex items-center gap-space-xs font-body-sm text-body-sm text-on-surface-variant">
+<span>58y M</span>
+<span>•</span>
+<span class="font-mono text-primary font-semibold">NCD #1084</span>
+<span>•</span>
+<span class="px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm">Diabetic NCD</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Rampur Ward 1</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Sub-center Rampur Central</span>
+<span class="font-body-sm text-body-sm text-outline">Distance: 1.8 km to PHC</span>
+</div>
+</td>
+<td class="py-space-md px-space-md max-w-sm">
+<div class="flex flex-col gap-space-xs">
+<div class="inline-flex items-center gap-space-xs px-space-xs py-0.5 rounded-full bg-surface-container text-on-surface w-max font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">glucose</span>
+<span>Uncontrolled Fasting Blood Sugar</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface line-clamp-2">
+                Fasting sugar 240 mg/dL with blurred vision complaints. Patient skipped Metformin dosage for 12 days due to stock out at sub-center.
+              </p>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col gap-1 font-body-sm text-body-sm">
+<div class="flex items-center justify-between gap-space-sm">
+<span class="text-on-surface-variant font-label-sm text-label-sm">FBS:</span>
+<span class="font-mono font-bold text-on-surface px-1 rounded bg-surface-container-high">240 mg/dL</span>
+</div>
+<div class="flex items-center justify-between gap-space-sm">
+<span class="text-on-surface-variant font-label-sm text-label-sm">BP:</span>
+<span class="font-mono text-on-surface">138/88</span>
+</div>
+<div class="flex items-center justify-between gap-space-sm">
+<span class="text-on-surface-variant font-label-sm text-label-sm">BMI:</span>
+<span class="font-mono text-on-surface">26.2</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-label-lg">support_agent</span>
+<span class="font-label-md text-label-md text-on-surface">Sunita Devi</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">ASHA-UP-402</span>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span>21 Oct 2024</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="flex flex-col items-end gap-space-xs">
+<button class="flex items-center gap-space-xs h-10 px-space-sm rounded-lg bg-surface-container-high text-on-surface shadow-sm hover:bg-surface-container-highest font-label-sm text-label-sm" onclick="event.stopPropagation(); alert('Prescription refilled with Metformin + Lifestyle counselling alert sent.');">
+<span class="material-symbols-outlined text-headline-sm">medication</span>
+<span class="font-bold">दवा समायोजन / Refill Rx</span>
+</button>
+<button class="font-label-sm text-label-sm text-primary hover:underline flex items-center gap-0.5" onclick="event.stopPropagation(); openDrawer('rameshwar')">
+<span>NCD Screening Card</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination & Quick Mass Actions -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-space-md p-space-sm rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="flex items-center gap-space-sm font-body-sm text-body-sm text-on-surface-variant">
+<span>Showing 1 to 4 of 18 High-Risk Patients</span>
+<span class="px-space-xs py-0.5 rounded bg-surface-container text-on-surface font-mono font-medium">Page 1 of 5</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="h-9 px-space-sm rounded-lg bg-surface-container-low text-outline font-label-sm text-label-sm" disabled="">पिछला (Previous)</button>
+<button class="h-9 w-9 rounded-lg bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold">1</button>
+<button class="h-9 w-9 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm transition-colors">2</button>
+<button class="h-9 w-9 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm transition-colors">3</button>
+<button class="h-9 px-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm transition-colors">अगला (Next)</button>
+</div>
+</div>
+<!-- CLINICAL TRIAGE SLIDE-OVER DRAWER (Controlled via Vanilla JS) -->
+<div class="fixed inset-0 z-50 pointer-events-none transition-opacity duration-300 opacity-0" id="clinicalDrawer">
+<!-- Backdrop -->
+<div class="absolute inset-0 bg-inverse-surface/40 backdrop-blur-sm transition-opacity" id="drawerBackdrop" onclick="closeDrawer()"></div>
+<!-- Drawer Panel -->
+<div class="absolute right-0 top-0 bottom-0 w-full max-w-2xl bg-surface-container-lowest shadow-2xl p-space-lg flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out pointer-events-auto overflow-y-auto" id="drawerPanel">
+<!-- Drawer Header -->
+<div class="flex items-center justify-between pb-space-md border-b-0 bg-surface-container-low -mx-space-lg -mt-space-lg p-space-lg">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-xl bg-error-container text-on-error-container flex items-center justify-center font-bold text-headline-md">
+            !
+          </div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<h2 class="font-headline-md text-headline-md text-on-surface" id="drawerPatientName">मीना देवी (Meena Devi)</h2>
+<span class="px-space-xs py-0.5 rounded-full bg-error text-on-error font-label-sm text-label-sm" id="drawerBadge">High-Risk Triage</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant" id="drawerPatientSub">RCH #4082 • 24y F • Rampur Ward 2</span>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface hover:bg-surface-container-high transition-colors" onclick="closeDrawer()">
+<span class="material-symbols-outlined text-headline-sm">close</span>
+</button>
+</div>
+<!-- Drawer Content -->
+<div class="flex flex-col gap-space-lg py-space-lg">
+<!-- Emergency Action Bar Inside Drawer -->
+<div class="p-space-md rounded-xl bg-error-container/40 flex items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-error text-headline-md">ambulance</span>
+<div>
+<div class="font-headline-sm text-headline-sm text-error">इमरजेंसी एम्बुलेंस डिस्पैच आवश्यक</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Estimated arrival time from Rampur PHC: 18 mins</div>
+</div>
+</div>
+<button class="h-11 px-space-md rounded-xl bg-error text-on-error font-label-md text-label-md font-bold shadow-md hover:opacity-90" onclick="alert('108 Dispatch sequence triggered. Driver notified with GPS link.');">
+            Call 108 Now
+          </button>
+</div>
+<!-- AI Voice Scribe & Field Transcript Section -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg text-on-surface flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-headline-sm">graphic_eq</span>
+<span>आशा कार्यकर्ता वॉयस ट्रांसक्रिप्ट (ASHA Audio Scribe)</span>
+</span>
+<span class="font-label-sm text-label-sm text-secondary font-medium">Bilingual Speech-to-Text</span>
+</div>
+<!-- Audio Waveform Player Simulation -->
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-sm">
+<div class="flex items-center gap-space-md">
+<button class="w-11 h-11 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-sm" onclick="toggleAudioDemo(this)">
+<span class="material-symbols-outlined text-headline-sm">play_arrow</span>
+</button>
+<div class="flex-1 flex flex-col gap-1">
+<div class="flex justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Record #VOICE-8812 (Sunita Devi, ASHA)</span>
+<span>01:14 / 01:45</span>
+</div>
+<!-- Inline SVG Waveform Representation -->
+<div class="h-6 w-full flex items-center gap-1">
+<span class="w-1 h-3 bg-primary rounded-full"></span>
+<span class="w-1 h-5 bg-primary rounded-full"></span>
+<span class="w-1 h-2 bg-primary rounded-full"></span>
+<span class="w-1 h-6 bg-primary rounded-full"></span>
+<span class="w-1 h-4 bg-primary rounded-full"></span>
+<span class="w-1 h-5 bg-primary rounded-full"></span>
+<span class="w-1 h-3 bg-primary rounded-full"></span>
+<span class="w-1 h-6 bg-primary rounded-full"></span>
+<span class="w-1 h-2 bg-outline-variant rounded-full"></span>
+<span class="w-1 h-4 bg-outline-variant rounded-full"></span>
+<span class="w-1 h-5 bg-outline-variant rounded-full"></span>
+<span class="w-1 h-3 bg-outline-variant rounded-full"></span>
+<span class="w-1 h-4 bg-outline-variant rounded-full"></span>
+<span class="w-1 h-2 bg-outline-variant rounded-full"></span>
+<span class="w-1 h-5 bg-outline-variant rounded-full"></span>
+<span class="w-1 h-3 bg-outline-variant rounded-full"></span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="w-1 h-4 bg-outline-variant rounded-full"></span>
+</div>
+</div>
+</div>
+<!-- Parsed Transcript -->
+<div class="p-space-sm rounded-lg bg-surface-container-lowest font-body-sm text-body-sm text-on-surface leading-relaxed">
+<span class="font-bold text-primary">Transcript (Hindi):</span> "मीना को सुबह से सिर में बहुत तेज दर्द हो रहा है और दोनों पैरों में सूजन आ गई है। बीपी नापा तो 142/96 आया है। पेशाब में हल्का झाग दिखा। तुरंत डॉक्टर साहब को दिखाने की सलाह दी है।"
+              <div class="mt-space-xs pt-space-xs text-on-surface-variant border-t-0 bg-surface-container-low/50 p-1 rounded">
+<span class="font-semibold">AI Translated Summary:</span> Severe acute headache, marked bilateral pedal edema, elevated blood pressure 142/96. Suggests proteinuria signs. Suspected preeclampsia crisis.
+              </div>
+</div>
+</div>
+</div>
+<!-- MCP Card Photographic Evidence & OCR -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg text-on-surface flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-headline-sm">document_scanner</span>
+<span>मातृ एवं बाल सुरक्षा (MCP) कार्ड स्कैन</span>
+</span>
+<span class="font-label-sm text-label-sm text-primary">OCR Extracted 100%</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm">
+<div class="relative rounded-xl overflow-hidden shadow-sm bg-surface-container-low">
+<img class="w-full h-44 object-cover" data-alt="A high contrast photograph of an official Government of India Mother and Child Protection (MCP) card with handwritten maternal records in Devanagari script, health stamps, immunization ticks, and clinical checkmarks, brightly lit under a daylight lamp." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-D4CpOoopyue-zATpu65urNxDGDFHsg1tNqfU4W4RUqiLgnqsz-o0YfKT6BdjuKXpqDNYutWig2OUAfFDHP56FvNqQMjQhN76gxN-kzm8JmWq8nA2d3pFNygxgkmagpAeZsjIhdlrAGPiKPvlAL0tN3peWZ74PM4M1Bz2n3hv_vEv36kIusWQJMlwXVbHp4m5JeshaGGw3RkwuAJMNMkl4yY6D7aTNHw-BF5910Ts52IHX9xlHOyzuQ"/>
+<span class="absolute bottom-2 left-2 px-space-xs py-0.5 rounded bg-inverse-surface/80 text-inverse-on-surface font-label-sm text-label-sm">
+                Scanned Card Page 4
+              </span>
+</div>
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col justify-between">
+<div>
+<span class="font-label-md text-label-md text-on-surface font-semibold">OCR Vitals Comparison</span>
+<div class="mt-space-xs space-y-1 font-body-sm text-body-sm">
+<div class="flex justify-between">
+<span class="text-on-surface-variant">LMP Date:</span>
+<span class="font-mono text-on-surface">12 Feb 2024</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">EDD Date:</span>
+<span class="font-mono text-on-surface font-bold text-primary">19 Nov 2024</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Blood Group:</span>
+<span class="font-mono text-on-surface">B +ve</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">TT/Td Dosage:</span>
+<span class="text-secondary font-semibold">Completed (2 Doses)</span>
+</div>
+</div>
+</div>
+<button class="w-full py-1.5 px-space-sm rounded-lg bg-surface-container-highest text-on-surface font-label-sm text-label-sm hover:bg-surface-container transition-colors">
+                View Full High-Res MCP PDF
+              </button>
+</div>
+</div>
+</div>
+<!-- Clinical Medical Officer Clinical Action Notes -->
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-lg text-label-lg text-on-surface flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-headline-sm">medical_services</span>
+<span>चिकित्सा अधिकारी का आदेश / MO Order & Rx</span>
+</span>
+<div class="p-space-md rounded-xl bg-surface-container-low space-y-space-sm">
+<div>
+<label class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Recommended Emergency Protocol</label>
+<div class="p-space-sm rounded-lg bg-surface-container-lowest font-body-sm text-body-sm text-on-surface flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span>Administer Tab Labetalol 100mg stat; arrange immediate referral to District Hospital Rampur for magnesium sulfate infusion.</span>
+</div>
+</div>
+<div>
+<label class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Supervisor Clinical Guidance Note (हिंदी में आशा को निर्देश):</label>
+<textarea class="w-full p-space-sm rounded-lg bg-surface-container-lowest font-body-sm text-body-sm text-on-surface border-none outline-none focus:ring-2 focus:ring-primary" placeholder="सुनीता जी, मरीज़ को तुरंत बाईं करवट लिटाएं और 108 वाहन आने तक रक्तचाप मॉनिटर करते रहें..." rows="2"></textarea>
+</div>
+</div>
+</div>
+</div>
+<!-- Drawer Bottom Sticky Actions -->
+<div class="mt-auto pt-space-md border-t-0 flex items-center justify-end gap-space-sm bg-surface-container-lowest sticky bottom-0">
+<button class="h-11 px-space-md rounded-xl bg-surface-container-low text-on-surface font-label-md text-label-md hover:bg-surface-container transition-colors" onclick="closeDrawer()">
+          रद्द करें / Close
+        </button>
+<button class="h-11 px-space-lg rounded-xl bg-primary text-on-primary font-label-md text-label-md font-bold shadow-md hover:bg-primary-container transition-colors" onclick="saveClinicalTriage()">
+          आदेश जारी करें / Confirm & Notify ASHA
+        </button>
+</div>
+</div>
+</div>
+<!-- PERSISTENT PRIMARY VOICE ACTION DOCK (Per Design System) -->
+<div class="fixed bottom-6 right-8 z-40 flex items-center gap-space-sm p-space-xs pl-space-md pr-space-xs rounded-full bg-surface-container-lowest shadow-xl transition-all duration-300" id="voiceDock">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+<span class="font-label-sm text-label-sm text-primary font-bold">वॉयस ट्राइएज मोड</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Speak patient name or vitals</span>
+</div>
+<button class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg hover:scale-105 transition-transform" onclick="toggleVoiceDictation(this)">
+<span class="material-symbols-outlined text-headline-md">mic</span>
+</button>
+</div>
+</div>
+<!-- Vanilla JS Interactions -->
+<script>
+  function openDrawer(patientKey) {
+    const drawer = document.getElementById('clinicalDrawer');
+    const panel = document.getElementById('drawerPanel');
+    const nameEl = document.getElementById('drawerPatientName');
+    const subEl = document.getElementById('drawerPatientSub');
+    const badgeEl = document.getElementById('drawerBadge');
+
+    if (patientKey === 'geeta') {
+      nameEl.textContent = 'गीता देवी (Geeta Devi)';
+      subEl.textContent = 'RCH #3912 • 28y F • Kalyanpur Ward 1';
+      badgeEl.textContent = 'Severe Anemia (Hb 6.8)';
+      badgeEl.className = 'px-space-xs py-0.5 rounded-full bg-error text-on-error font-label-sm text-label-sm';
+    } else if (patientKey === 'aarav') {
+      nameEl.textContent = 'शिशु आरव (Baby Aarav)';
+      subEl.textContent = 'RCH #5519 • 9m M • Belwa Sector 2';
+      badgeEl.textContent = 'SAM Indicator (MUAC 11.2cm)';
+      badgeEl.className = 'px-space-xs py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm';
+    } else if (patientKey === 'rameshwar') {
+      nameEl.textContent = 'रामेश्वर सिंह (Rameshwar Singh)';
+      subEl.textContent = 'NCD #1084 • 58y M • Rampur Ward 1';
+      badgeEl.textContent = 'Uncontrolled Fasting Sugar';
+      badgeEl.className = 'px-space-xs py-0.5 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm';
+    } else {
+      nameEl.textContent = 'मीना देवी (Meena Devi)';
+      subEl.textContent = 'RCH #4082 • 24y F • Rampur Ward 2';
+      badgeEl.textContent = 'High-Risk Triage: Preeclampsia';
+      badgeEl.className = 'px-space-xs py-0.5 rounded-full bg-error text-on-error font-label-sm text-label-sm';
+    }
+
+    drawer.classList.remove('opacity-0', 'pointer-events-none');
+    drawer.classList.add('opacity-100');
+    panel.classList.remove('translate-x-full');
+    panel.classList.add('translate-x-0');
+  }
+
+  function closeDrawer() {
+    const drawer = document.getElementById('clinicalDrawer');
+    const panel = document.getElementById('drawerPanel');
+    panel.classList.remove('translate-x-0');
+    panel.classList.add('translate-x-full');
+    drawer.classList.remove('opacity-100');
+    drawer.classList.add('opacity-0', 'pointer-events-none');
+  }
+
+  function saveClinicalTriage() {
+    alert('MO clinical protocol instructions dispatched to ASHA worker & Ambulance unit via SMS & in-app voice message.');
+    closeDrawer();
+  }
+
+  function toggleVoiceDock() {
+    const dock = document.getElementById('voiceDock');
+    dock.classList.toggle('ring-4');
+    dock.classList.toggle('ring-primary-container');
+  }
+
+  function toggleVoiceDictation(btn) {
+    const isListening = btn.classList.contains('bg-error');
+    if (isListening) {
+      btn.classList.remove('bg-error', 'text-on-error');
+      btn.classList.add('bg-primary-container', 'text-on-primary-container');
+      btn.querySelector('span').textContent = 'mic';
+    } else {
+      btn.classList.remove('bg-primary-container', 'text-on-primary-container');
+      btn.classList.add('bg-error', 'text-on-error');
+      btn.querySelector('span').textContent = 'graphic_eq';
+      alert('Listening for command in Hindi/English (उदा. "मीना देवी का रक्तचाप दिखाओ" or "Filter Critical Cases")...');
+    }
+  }
+
+  function toggleAudioDemo(btn) {
+    const icon = btn.querySelector('span');
+    if (icon.textContent === 'play_arrow') {
+      icon.textContent = 'pause';
+    } else {
+      icon.textContent = 'play_arrow';
+    }
+  }
+</script></main></div></body></html>

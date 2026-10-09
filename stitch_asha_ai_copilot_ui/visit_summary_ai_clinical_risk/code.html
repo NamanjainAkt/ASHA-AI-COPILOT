@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><title>ASHA AI Copilot</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-primary-fixed-variant": "#00504a", "on-secondary-container": "#006f64", "inverse-surface": "#293040", "primary": "#005c55", "surface-container-high": "#e1e8fd", "error": "#ba1a1a", "tertiary-fixed-dim": "#ffb690", "on-secondary-fixed": "#00201c", "secondary": "#006b5f", "on-primary-container": "#a3faef", "surface-tint": "#006a63", "on-secondary-fixed-variant": "#005048", "primary-container": "#0f766e", "error-container": "#ffdad6", "on-secondary": "#ffffff", "on-tertiary-container": "#ffe6da", "surface": "#f9f9ff", "on-tertiary": "#ffffff", "inverse-primary": "#80d5cb", "on-tertiary-fixed": "#341100", "on-error": "#ffffff", "secondary-fixed-dim": "#4fdbc8", "tertiary-fixed": "#ffdbca", "surface-container-low": "#f1f3ff", "surface-container-highest": "#dce2f7", "inverse-on-surface": "#edf0ff", "on-background": "#141b2b", "on-primary-fixed": "#00201d", "primary-fixed-dim": "#80d5cb", "background": "#f9f9ff", "on-primary": "#ffffff", "outline": "#6e7977", "on-error-container": "#93000a", "on-tertiary-fixed-variant": "#783200", "primary-fixed": "#9cf2e8", "outline-variant": "#bdc9c6", "on-surface-variant": "#3e4947", "surface-dim": "#d3daef", "surface-container": "#e9edff", "surface-bright": "#f9f9ff", "tertiary-container": "#af4c00", "tertiary": "#893a00", "surface-container-lowest": "#ffffff", "secondary-fixed": "#71f8e4", "secondary-container": "#6df5e1", "on-surface": "#141b2b", "surface-variant": "#dce2f7" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-lg": "1.5rem", "space-sm": "0.5rem", "margin": "1rem", "space-md": "1rem", "space-xl": "2rem", "space-xs": "0.25rem", "gutter": "1rem" }, fontFamily: { "headline-md": ["Inter"], "label-lg": ["Inter"], "label-md": ["Inter"], "label-sm": ["Inter"], "body-lg": ["Inter"], "body-sm": ["Inter"], "body-md": ["Inter"], "headline-lg-mobile": ["Inter"], "headline-lg": ["Inter"], "headline-sm": ["Inter"] }, fontSize: { "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "label-lg": ["16px", { "lineHeight": "22px", "fontWeight": "600" }], "label-md": ["14px", { "lineHeight": "18px", "fontWeight": "500" }], "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "body-lg": ["17px", { "lineHeight": "26px", "fontWeight": "400" }], "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "body-md": ["15px", { "lineHeight": "22px", "fontWeight": "400" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }], "headline-lg": ["30px", { "lineHeight": "38px", "fontWeight": "700" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }] } } } };</script><style>@layer base{html,body{width:100%;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-background font-body-md text-body-md text-on-surface antialiased flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-space-sm flex items-center justify-between gap-space-xs"><div class="flex items-center gap-space-xs min-w-0"><button aria-label="Go Back" class="min-w-[48px] min-h-[48px] rounded-full flex items-center justify-center text-primary hover:bg-surface-container transition-colors" onclick="history.back()"><span class="material-symbols-outlined text-[24px]">arrow_back</span></button><img alt="ASHA AI Copilot Logo" class="h-8 w-auto object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1Vq4SSf0E5MYN0M12rUTOrGWBFt1BSjzjn9UwsMMAaO-Fe4K-DA2hoMZEWlmyxQ99KID1XbmbbKczn9d0zrDTbSD4hFYeIR4g0iUXpfxWZ0aK4eAwa1aeNKzWXyzL5x7GePGPeIIzw3OAj3ikm8RY5-Hj4HPVMobv_Ntu5mH6seDYK0fDlTX5d_2ONMg2B3QDfnY8f53fKGb26Bk2OgQkBSxPNO9s3Q8vokmwmCGzraJ1PxZq6UPlOdVW_R"/><div class="flex flex-col truncate"><h1 class="font-headline-sm text-headline-sm text-on-surface truncate">Patient Detail</h1><span class="font-label-sm text-label-sm text-on-surface-variant">आशा Copilot</span></div></div><div class="flex items-center gap-space-xs flex-shrink-0"><button aria-label="Language Toggle Hindi English" class="min-h-[44px] px-space-sm py-1 bg-surface-container rounded-full flex items-center justify-center gap-1 text-primary hover:bg-surface-container-high transition-colors"><span class="font-label-sm text-label-sm font-bold">हिंदी</span><span class="font-label-sm text-label-sm text-outline">/</span><span class="font-label-sm text-label-sm text-on-surface-variant">EN</span></button><button aria-label="Worker Profile" class="min-w-[44px] min-h-[44px] flex items-center justify-center p-0.5 rounded-full hover:bg-surface-container transition-colors"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvUGzPR6Obe507243yp8_5kMJVvtncXLYjgtLl_At-6SWMzL_TnJ29UQVi3Stdl1PSvtmaUWZYI6Qm9IMxmIl2bhCVQdS9X4FPYTAaUkzwnDkPja074jeX_6JH9IAKtYmJu1_cDNgocaURXslEf4CwAV-TsnhHW8Of8nGy24Nhtgz_ZTPk0lTHLetioIfiKWeXSwKgE4QLEqvN_Lb56xJ4PJ1YkooLTaLIDQEpXR1SXg4atGwWYJ-7vw"/></button></div></div></header><main class="flex flex-col relative w-full pt-16 pb-safe px-margin bg-background min-h-screen"><div class="flex flex-col w-full pb-8 space-y-4">
+<!-- Invisible Sync & Connectivity Banner -->
+<div class="w-full bg-surface-container py-1.5 px-space-md rounded-lg flex items-center justify-between shadow-sm">
+<div class="flex items-center space-x-2">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">18 रिकॉर्ड सुरक्षित ऑफ़लाइन • Ready to sync</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-primary" title="Local device safe storage">cloud_done</span>
+</div>
+<!-- Header & Patient Context Badge -->
+<div class="flex flex-col space-y-2">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">दौरा सारांश / Visit Summary</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">वॉयस ट्रांसक्रिप्शन से तैयार किया गया • Auto-extracted</p>
+</div>
+<button aria-label="Listen aloud" class="min-w-[48px] min-h-[48px] rounded-full bg-surface-container-high text-primary flex items-center justify-center hover:bg-surface-variant transition-colors shadow-sm" id="audioTtsBtn" onclick="toggleAudioSpeech()">
+<span class="material-symbols-outlined text-[24px]">volume_up</span>
+</button>
+</div>
+<!-- Beneficiary Pill -->
+<div class="flex items-center justify-between bg-surface-container-low p-space-sm rounded-xl">
+<div class="flex items-center space-x-3">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="Close up warm documentary portrait of Meena Devi, a 24-year-old rural Indian pregnant woman wearing a traditional mustard yellow and teal saree, soft morning natural courtyard lighting, gentle dignified smile, shallow depth of field, authentic rural health clinic context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQvTbuYJpBBS4YSOQXNNU1hGmsbcybAqW_t974WFLnpXpkDontCIg1Iq20TBTUx8qyb9pVEUqxtcvEm3_7LLk2bUiSWHU7gyRkssR5X69z5nOwJtUwbVsFEV6KFrKB-sx5gHQj2AicIyIK6NcPKsRQEwQ9VgPlTfgPgtRitfARBFCO8DH5sJRJIQvn3q31ocMAiSink6qYxSCEeSbj3TflZ821ouYaeA3AGpX2ZvPg0gYfv8YhClpgWg"/>
+<span class="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-error ring-2 ring-surface"></span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">मीना देवी (24y, F)</span>
+<span class="font-label-sm text-label-sm text-tertiary font-medium">ANC 32 Weeks • HRP Watchlist</span>
+</div>
+</div>
+<a aria-label="Call Patient" class="min-w-[48px] min-h-[48px] rounded-full bg-surface-container-highest text-primary flex items-center justify-center" href="tel:9876543210">
+<span class="material-symbols-outlined text-[22px]">phone</span>
+</a>
+</div>
+</div>
+<!-- Section 1: AI Clinical Summary Card -->
+<div class="relative overflow-hidden bg-surface-container-lowest rounded-xl p-space-md shadow-md">
+<!-- Subtle Gradient Accent Top -->
+<div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-secondary to-primary-container"></div>
+<div class="flex items-center space-x-2 mb-2.5">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-bold">AI सारांश / AI Clinical Summary</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Voice analyzed in real-time (Maithili-Hindi dialect)</span>
+</div>
+</div>
+<!-- Clinical Paragraph Dual Lockup -->
+<div class="space-y-2 bg-surface-container-low/70 p-3 rounded-lg">
+<p class="font-body-md text-body-md text-on-surface leading-snug">
+        ३२ सप्ताह की गर्भवती महिला में उच्च रक्तचाप (<strong class="text-error font-semibold">142/96 mmHg</strong>) और हल्का प्री-एक्लेम्पसिया लक्षण (सिरदर्द, एडिमा) दर्ज किया गया। तत्काल PHC रेफरल अनुशंसित है।
+      </p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+        High BP reading (142/96 mmHg) and mild pre-eclampsia warning signs (persistent headache, pedal edema) observed at 32 weeks gestation. Immediate MO review advised.
+      </p>
+</div>
+<!-- Micro-playback preview pill -->
+<div class="mt-3 pt-2.5 flex items-center justify-between border-t-0">
+<div class="flex items-center space-x-2">
+<button class="min-h-[40px] px-3 py-1 bg-surface-container rounded-full flex items-center space-x-1.5 text-primary hover:bg-surface-container-high transition-colors" onclick="playVoiceSnippet()">
+<span class="material-symbols-outlined text-[18px]">play_arrow</span>
+<span class="font-label-sm text-label-sm">वॉयस नोट (0:42s)</span>
+</button>
+<span class="font-label-sm text-label-sm text-outline">Hindi/Bhojpuri</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Confidence 98%</span>
+</div>
+<!-- AI Disclaimer Footer -->
+<div class="mt-3 pt-2 flex items-start space-x-1.5">
+<span class="material-symbols-outlined text-[16px] text-outline flex-shrink-0 mt-0.5">info</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+        AI-generated summary. Not a diagnosis. ASHA / Medical Officer validation required.
+      </p>
+</div>
+</div>
+<!-- Section 2: Clinical Risk Triage Chips -->
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface font-semibold">क्लिनिकल अलर्ट / Risk Triage</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">3 Flags Identified</span>
+</div>
+<div class="flex flex-col space-y-2">
+<!-- Critical / High Chip -->
+<div class="bg-error-container text-on-error-container rounded-xl p-space-sm flex items-start space-x-2.5 shadow-sm">
+<span class="material-symbols-outlined text-[20px] text-error flex-shrink-0 mt-0.5" style="font-variation-settings: 'FILL' 1;">error</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold tracking-tight">● High Priority Alert</span>
+<span class="font-body-sm text-body-sm">BP 142/96 mmHg exceeds gestational threshold (Severe HRP risk)</span>
+</div>
+</div>
+<!-- Warning / Medium Chip -->
+<div class="bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-xl p-space-sm flex items-start space-x-2.5 shadow-sm">
+<span class="material-symbols-outlined text-[20px] text-tertiary flex-shrink-0 mt-0.5" style="font-variation-settings: 'FILL' 1;">warning</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold tracking-tight">▲ Medium Priority Alert</span>
+<span class="font-body-sm text-body-sm">Mild bilateral pedal edema &amp; headache reported across 48 hrs</span>
+</div>
+</div>
+<!-- Success / Low Chip -->
+<div class="bg-surface-container-high text-on-secondary-container rounded-xl p-space-sm flex items-start space-x-2.5 shadow-sm">
+<span class="material-symbols-outlined text-[20px] text-secondary flex-shrink-0 mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold tracking-tight">✓ Normal Baseline</span>
+<span class="font-body-sm text-body-sm">Fetal heart rate audible and stable at 144 bpm (Doppler verified)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 3: Auto-Filled Form Fields (Voice Extracted) -->
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface font-semibold">निकाले गए विवरण / Extracted Clinical Vitals</span>
+<span class="font-label-sm text-label-sm text-primary flex items-center gap-1 font-medium">
+<span class="material-symbols-outlined text-[16px]">mic</span> 5 auto-filled
+      </span>
+</div>
+<!-- Field 1: Blood Pressure -->
+<div class="bg-surface-container-lowest p-space-sm rounded-xl shadow-sm flex items-center justify-between">
+<div class="flex flex-col space-y-1">
+<div class="flex items-center space-x-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">रक्तचाप / Blood Pressure</span>
+<span class="bg-surface-container px-2 py-0.5 rounded-full text-primary font-label-sm text-label-sm flex items-center gap-1">
+            🎙 auto-filled
+          </span>
+</div>
+<div class="flex items-baseline space-x-2">
+<span class="font-headline-sm text-headline-sm text-error font-bold" id="val-bp">142 / 96</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">mmHg</span>
+</div>
+</div>
+<button aria-label="Edit Blood Pressure" class="min-w-[48px] min-h-[48px] rounded-full hover:bg-surface-container flex items-center justify-center text-on-surface-variant" onclick="openFieldEditor('Blood Pressure', '142 / 96')">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+</div>
+<!-- Field 2: Weight -->
+<div class="bg-surface-container-lowest p-space-sm rounded-xl shadow-sm flex items-center justify-between">
+<div class="flex flex-col space-y-1">
+<div class="flex items-center space-x-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">वज़न / Weight</span>
+<span class="bg-surface-container px-2 py-0.5 rounded-full text-primary font-label-sm text-label-sm flex items-center gap-1">
+            🎙 auto-filled
+          </span>
+</div>
+<div class="flex items-baseline space-x-2">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold" id="val-weight">56.4</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">kg (+1.8 kg this month)</span>
+</div>
+</div>
+<button aria-label="Edit Weight" class="min-w-[48px] min-h-[48px] rounded-full hover:bg-surface-container flex items-center justify-center text-on-surface-variant" onclick="openFieldEditor('Weight', '56.4')">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+</div>
+<!-- Field 3: Gestational Age -->
+<div class="bg-surface-container-lowest p-space-sm rounded-xl shadow-sm flex items-center justify-between">
+<div class="flex flex-col space-y-1">
+<div class="flex items-center space-x-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">गर्भावस्था सप्ताह / Gestational Age</span>
+<span class="bg-surface-container px-2 py-0.5 rounded-full text-primary font-label-sm text-label-sm flex items-center gap-1">
+            🎙 auto-filled
+          </span>
+</div>
+<div class="flex items-baseline space-x-2">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold" id="val-ga">32</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Weeks (EDD: 18 Nov 2024)</span>
+</div>
+</div>
+<button aria-label="Edit Gestational Age" class="min-w-[48px] min-h-[48px] rounded-full hover:bg-surface-container flex items-center justify-center text-on-surface-variant" onclick="openFieldEditor('Gestational Age', '32')">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+</div>
+<!-- Field 4: Reported Symptoms -->
+<div class="bg-surface-container-lowest p-space-sm rounded-xl shadow-sm flex items-start justify-between">
+<div class="flex flex-col space-y-1 pr-2">
+<div class="flex items-center space-x-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">लक्षण / Reported Symptoms</span>
+<span class="bg-surface-container px-2 py-0.5 rounded-full text-primary font-label-sm text-label-sm flex items-center gap-1">
+            🎙 auto-filled
+          </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface font-medium" id="val-symptoms">
+          Headache (सिरदर्द), bilateral pedal edema (पैरों में सूजन)
+        </p>
+</div>
+<button aria-label="Edit Symptoms" class="min-w-[48px] min-h-[48px] rounded-full hover:bg-surface-container flex items-center justify-center text-on-surface-variant flex-shrink-0" onclick="openFieldEditor('Symptoms', 'Headache, bilateral pedal edema')">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+</div>
+<!-- Field 5: Guidance Given -->
+<div class="bg-surface-container-lowest p-space-sm rounded-xl shadow-sm flex items-start justify-between">
+<div class="flex flex-col space-y-1 pr-2">
+<div class="flex items-center space-x-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">सलाह / Guidance Given</span>
+<span class="bg-surface-container-high px-2 py-0.5 rounded-full text-on-secondary-container font-label-sm text-label-sm">
+            Clinical Advice
+          </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface font-medium" id="val-advice">
+          Prescribed IFA continued, advised low salt intake &amp; urgent PHC doctor evaluation tomorrow morning.
+        </p>
+</div>
+<button aria-label="Edit Advice" class="min-w-[48px] min-h-[48px] rounded-full hover:bg-surface-container flex items-center justify-center text-on-surface-variant flex-shrink-0" onclick="openFieldEditor('Advice Given', 'Prescribed IFA continued, advised low salt &amp; immediate PHC doctor visit')">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+</div>
+</div>
+<!-- ASHA Field Notes Photographic Evidence Card -->
+<div class="bg-surface-container-low p-space-sm rounded-xl flex items-center space-x-3">
+<img class="w-16 h-16 rounded-lg object-cover flex-shrink-0" data-alt="A clean, flat-lay macro photo of a government maternal and child protection MCP green health card with stamped dates and iron folic acid blister pack tablets, on a clean wooden table in a village center." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDL5tRkUvbW5Lzf6Pl0u2V7-67_ChMBzsEjHCRip8XMdARVWGXBRl1CMIv9MOSvc6g9hW9ePUD093Hsd8R69uyOaa9EhXkuTF--3ZIbKQ_KhLdVTCRLeXyywAZyJDh9zf_naAYbJdEgJMEThS-NiUX6BEz3Wv7CObkNLKpk_JYe2vpyeU0vFy2lgjc3fXpeVracUTRm9L-XMHaZzPw_HB6wRnWtAt-Ed0q1DmZwKPoE82vtiZ2CYYkegg"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">MCP कार्ड स्नैपशॉट संलग्न</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">MCP Green Card verified • 2 Iron Folic Acid strips distributed today</span>
+</div>
+</div>
+<!-- Section 4: Bottom Action CTAs -->
+<div class="pt-2 space-y-3">
+<!-- Urgent Referral Button (Filled Danger Error Palette) -->
+<button class="w-full min-h-[52px] bg-error hover:bg-on-error-container text-on-error rounded-xl font-label-lg text-label-lg flex items-center justify-center space-x-2 px-space-md shadow-md active:scale-[0.98] transition-transform" id="urgentReferralBtn" onclick="triggerUrgentReferralModal()">
+<span class="material-symbols-outlined text-[24px]">emergency_home</span>
+<div class="flex flex-col items-center">
+<span>तत्काल PHC रेफरल मार्क करें</span>
+<span class="font-label-sm text-label-sm text-white/90">Mark Urgent PHC Referral</span>
+</div>
+</button>
+<!-- Primary Button: Save & Queue for Sync (52dp height, thumb ergonomic) -->
+<button class="w-full min-h-[52px] bg-primary hover:bg-primary-container text-on-primary rounded-xl font-label-lg text-label-lg flex items-center justify-center space-x-2 px-space-md shadow-md active:scale-[0.98] transition-transform" id="saveSyncBtn" onclick="saveVisitRecord()">
+<span class="material-symbols-outlined text-[22px]">check_circle</span>
+<div class="flex flex-col items-center">
+<span>रिकॉर्ड सुरक्षित करें</span>
+<span class="font-label-sm text-label-sm text-on-primary-container">Save &amp; Queue for Sync</span>
+</div>
+</button>
+</div>
+<!-- Micro-Modal for Field Quick-Editing (Native-like bottom drawer) -->
+<div class="hidden fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-sm flex items-end justify-center p-0 transition-opacity" id="quickEditModal">
+<div class="w-full bg-surface-container-lowest rounded-t-2xl p-space-md shadow-xl flex flex-col space-y-4 max-w-lg">
+<div class="flex items-center justify-between pb-2">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-primary">edit_note</span>
+<span class="font-headline-sm text-headline-sm text-on-surface" id="modalFieldTitle">संपादित करें / Edit Field</span>
+</div>
+<button class="min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center text-outline hover:bg-surface-container" onclick="closeFieldEditor()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="flex flex-col space-y-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant font-medium" for="modalInput">मूल्य दर्ज करें (वॉयस या कीपैड) / Update Value</label>
+<div class="relative flex items-center">
+<input class="w-full min-h-[52px] bg-surface-container-low px-4 rounded-xl text-on-surface font-body-lg text-body-lg focus:outline-none focus:bg-surface-container-lowest" id="modalInput" type="text"/>
+<button class="absolute right-2 min-w-[40px] min-h-[40px] rounded-full bg-surface-container-high text-primary flex items-center justify-center" onclick="simulateFieldVoiceInput()" title="Speak new value">
+<span class="material-symbols-outlined text-[20px]">mic</span>
+</button>
+</div>
+</div>
+<div class="flex items-center space-x-3 pt-2">
+<button class="flex-1 min-h-[48px] bg-surface-container rounded-xl text-on-surface font-label-md text-label-md" onclick="closeFieldEditor()">
+          रद्द करें / Cancel
+        </button>
+<button class="flex-1 min-h-[48px] bg-primary text-on-primary rounded-xl font-label-md text-label-md font-semibold" onclick="applyFieldEdit()">
+          स्वीकार करें / Save
+        </button>
+</div>
+</div>
+</div>
+<!-- Referral Confirmation Toast / Dialogue -->
+<div class="hidden fixed inset-0 z-50 bg-inverse-surface/50 backdrop-blur-sm flex items-center justify-center p-space-md transition-opacity" id="referralDialog">
+<div class="w-full max-w-sm bg-surface-container-lowest rounded-2xl p-space-lg shadow-2xl flex flex-col space-y-4 text-center">
+<div class="w-14 h-14 bg-error-container text-error rounded-full flex items-center justify-center mx-auto">
+<span class="material-symbols-outlined text-[32px]">notification_important</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">PHC 108 एम्बुलेंस &amp; डॉक्टर अलर्ट</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+          मीना देवी के लिए आपातकालीन उच्च रक्तचाप (142/96) रेफरल सीधे रामपुर प्राथमिक स्वास्थ्य केंद्र (PHC) प्रभारी को भेजा जा रहा है।
+        </p>
+</div>
+<div class="bg-surface-container-low p-space-sm rounded-xl text-left space-y-1">
+<div class="flex items-center justify-between text-on-surface font-label-sm text-label-sm font-semibold">
+<span>चिकित्सा अधिकारी: डॉ. आर. के. वर्मा</span>
+<span class="text-secondary font-bold">On Duty</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">PHC Rampur • 4.2 km दूरी</span>
+</div>
+<div class="flex flex-col space-y-2 pt-2">
+<button class="w-full min-h-[50px] bg-error text-on-error rounded-xl font-label-md text-label-md font-semibold flex items-center justify-center space-x-2" onclick="confirmUrgentReferral()">
+<span class="material-symbols-outlined text-[20px]">send</span>
+<span>पुष्टि करें और 108 को सूचित करें</span>
+</button>
+<button class="w-full min-h-[44px] text-outline font-label-md text-label-md" onclick="closeReferralModal()">
+          वापस जाएं / Go Back
+        </button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  let activeEditTarget = null;
+
+  function openFieldEditor(fieldName, currentValue) {
+    activeEditTarget = fieldName;
+    document.getElementById('modalFieldTitle').innerText = 'संपादित करें / Edit: ' + fieldName;
+    const input = document.getElementById('modalInput');
+    input.value = currentValue;
+    document.getElementById('quickEditModal').classList.remove('hidden');
+    input.focus();
+  }
+
+  function closeFieldEditor() {
+    document.getElementById('quickEditModal').classList.add('hidden');
+    activeEditTarget = null;
+  }
+
+  function applyFieldEdit() {
+    const val = document.getElementById('modalInput').value;
+    if (activeEditTarget === 'Blood Pressure') {
+      const el = document.getElementById('val-bp');
+      if (el) el.innerText = val;
+    } else if (activeEditTarget === 'Weight') {
+      const el = document.getElementById('val-weight');
+      if (el) el.innerText = val;
+    } else if (activeEditTarget === 'Gestational Age') {
+      const el = document.getElementById('val-ga');
+      if (el) el.innerText = val;
+    } else if (activeEditTarget === 'Symptoms') {
+      const el = document.getElementById('val-symptoms');
+      if (el) el.innerText = val;
+    } else if (activeEditTarget === 'Advice Given') {
+      const el = document.getElementById('val-advice');
+      if (el) el.innerText = val;
+    }
+    closeFieldEditor();
+  }
+
+  function simulateFieldVoiceInput() {
+    const input = document.getElementById('modalInput');
+    const original = input.value;
+    input.value = "सुन रहा है... (Listening)";
+    setTimeout(() => {
+      input.value = original + " (संशोधित)";
+    }, 1200);
+  }
+
+  function toggleAudioSpeech() {
+    const btn = document.getElementById('audioTtsBtn');
+    const icon = btn.querySelector('.material-symbols-outlined');
+    if (icon.innerText === 'volume_up') {
+      icon.innerText = 'graphic_eq';
+      btn.classList.add('bg-primary', 'text-on-primary');
+      btn.classList.remove('bg-surface-container-high', 'text-primary');
+      setTimeout(() => {
+        icon.innerText = 'volume_up';
+        btn.classList.remove('bg-primary', 'text-on-primary');
+        btn.classList.add('bg-surface-container-high', 'text-primary');
+      }, 3500);
+    }
+  }
+
+  function playVoiceSnippet() {
+    const btn = event.currentTarget;
+    const icon = btn.querySelector('.material-symbols-outlined');
+    icon.innerText = 'pause';
+    setTimeout(() => {
+      icon.innerText = 'play_arrow';
+    }, 2500);
+  }
+
+  function triggerUrgentReferralModal() {
+    document.getElementById('referralDialog').classList.remove('hidden');
+  }
+
+  function closeReferralModal() {
+    document.getElementById('referralDialog').classList.add('hidden');
+  }
+
+  function confirmUrgentReferral() {
+    const btn = document.getElementById('urgentReferralBtn');
+    btn.innerHTML = `<span class="material-symbols-outlined text-[22px]">check_circle</span><span>PHC रेफरल पंजीकृत! / Dispatched</span>`;
+    btn.classList.remove('bg-error');
+    btn.classList.add('bg-on-error-container');
+    closeReferralModal();
+  }
+
+  function saveVisitRecord() {
+    const btn = document.getElementById('saveSyncBtn');
+    btn.innerHTML = `
+      <span class="material-symbols-outlined animate-spin text-[20px]">sync</span>
+      <div class="flex flex-col items-center">
+        <span>ऑफ़लाइन सुरक्षित किया गया...</span>
+        <span class="font-label-sm text-label-sm text-on-primary-container">Saved &amp; Queued Locally</span>
+      </div>
+    `;
+    setTimeout(() => {
+      btn.innerHTML = `
+        <span class="material-symbols-outlined text-[22px]">cloud_done</span>
+        <div class="flex flex-col items-center">
+          <span>सफलतापूर्वक सुरक्षित! / Record Safe</span>
+          <span class="font-label-sm text-label-sm text-on-primary-container">Synced to Register #ANC-32</span>
+        </div>
+      `;
+      btn.classList.remove('bg-primary');
+      btn.classList.add('bg-secondary');
+    }, 1100);
+  }
+</script></main></body></html>

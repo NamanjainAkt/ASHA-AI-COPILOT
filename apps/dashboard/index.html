@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASHA AI Copilot — Supervisor Command Center</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#0F766E',
+            primaryBright: '#14B8A6',
+            primaryDark: '#005C55',
+            surfaceContainer: '#E9EDFF',
+            clinicalDanger: '#DC2626',
+            clinicalWarning: '#F59E0B',
+            clinicalSuccess: '#16A34A',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased min-h-screen flex flex-col">
+  <!-- Top Navigation Header -->
+  <header class="bg-primary text-white sticky top-0 z-50 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-teal-800 flex items-center justify-center font-bold text-lg border border-teal-600">
+          आशा
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight">ASHA AI Copilot · Supervisor Command Center</h1>
+          <p class="text-xs text-teal-200">PHC Rampur · Community Health Surveillance</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-900 text-emerald-200 border border-emerald-600">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-ping"></span>
+          Live Sync Engine Active
+        </span>
+        <button onclick="fetchDashboardData()" class="px-3 py-1.5 bg-teal-700 hover:bg-teal-600 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 border border-teal-500">
+          <span class="material-symbols-outlined text-[16px]">refresh</span>
+          Refresh
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <!-- Metric KPI Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <!-- Card 1 -->
+      <div class="bg-white rounded-xl p-5 border border-gray-200 shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-teal-50 text-primary flex items-center justify-center">
+          <span class="material-symbols-outlined text-28">group</span>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Patients</p>
+          <p id="stat-patients" class="text-2xl font-bold text-gray-900 mt-0.5">--</p>
+          <p class="text-xs text-teal-600 font-medium">In Rampur Sector</p>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="bg-white rounded-xl p-5 border border-gray-200 shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+          <span class="material-symbols-outlined text-28">clinical_notes</span>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Screenings Recorded</p>
+          <p id="stat-screenings" class="text-2xl font-bold text-gray-900 mt-0.5">--</p>
+          <p class="text-xs text-blue-600 font-medium">100% Offline Verified</p>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="bg-white rounded-xl p-5 border border-red-200 shadow-sm flex items-center gap-4 bg-red-50/30">
+        <div class="w-12 h-12 rounded-xl bg-red-100 text-clinicalDanger flex items-center justify-center">
+          <span class="material-symbols-outlined text-28">warning</span>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-red-700 uppercase tracking-wider">High-Risk Triage</p>
+          <p id="stat-high-priority" class="text-2xl font-bold text-red-600 mt-0.5">--</p>
+          <p class="text-xs text-red-600 font-medium">Immediate MO Attention</p>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="bg-white rounded-xl p-5 border border-amber-200 shadow-sm flex items-center gap-4 bg-amber-50/30">
+        <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
+          <span class="material-symbols-outlined text-28">schedule</span>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-amber-800 uppercase tracking-wider">Pending Follow-ups</p>
+          <p id="stat-followups" class="text-2xl font-bold text-amber-700 mt-0.5">--</p>
+          <p class="text-xs text-amber-700 font-medium">Scheduled Field Visits</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Priority Alerts & Surveillance Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- High Priority Cases Table (2 cols) -->
+      <div class="lg:col-span-2 bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-clinicalDanger">notification_important</span>
+            <h2 class="text-base font-bold text-gray-900">Urgent Field Triage & Danger Sign Referrals</h2>
+          </div>
+          <span class="text-xs font-medium text-gray-500">Auto-flagged by Protocol Rule Engine</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm text-gray-600">
+            <thead class="bg-gray-50 text-xs uppercase text-gray-500 border-b border-gray-200">
+              <tr>
+                <th class="px-5 py-3">Beneficiary</th>
+                <th class="px-5 py-3">Village / Phone</th>
+                <th class="px-5 py-3">Clinical Trigger</th>
+                <th class="px-5 py-3">Due Date</th>
+                <th class="px-5 py-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="high-priority-table" class="divide-y divide-gray-100">
+              <tr>
+                <td colspan="5" class="px-5 py-8 text-center text-gray-400">Loading priority cases...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Field Worker Status Column (1 col) -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 space-y-4">
+        <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+          <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">badge</span>
+            Field Worker Deployment
+          </h2>
+          <span id="active-workers-count" class="text-xs font-semibold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full">2 Active</span>
+        </div>
+        <div id="workers-list" class="space-y-3">
+          <!-- Worker cards inserted dynamically -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-500">
+    ASHA AI Copilot · Monorepo Architecture · 100% Offline-First with FastAPI Synchronization · Not an Autonomous Diagnosis System
+  </footer>
+
+  <script>
+    const API_BASE = window.location.origin;
+    let authToken = localStorage.getItem('asha_token') || '';
+
+    async function ensureAuth() {
+      if (authToken) return authToken;
+      try {
+        const res = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: 'supervisor', password: 'password123', role: 'supervisor' })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          authToken = data.access_token;
+          localStorage.setItem('asha_token', authToken);
+          return authToken;
+        }
+      } catch (e) {
+        console.warn('Auto-auth failed:', e);
+      }
+      return '';
+    }
+
+    async function authFetch(url, options = {}) {
+      const token = await ensureAuth();
+      const headers = {
+        ...(options.headers || {}),
+        'Authorization': `Bearer ${token}`
+      };
+      return fetch(url, { ...options, headers });
+    }
+
+    async function fetchDashboardData() {
+      if (document.hidden) return; // Pause polling when backgrounded (ISS-233)
+      try {
+        // 1. Fetch Summary Stats
+        const summaryRes = await authFetch(`${API_BASE}/dashboard/summary`);
+        if (summaryRes.ok) {
+          const summary = await summaryRes.json();
+          document.getElementById('stat-patients').textContent = summary.total_patients;
+          document.getElementById('stat-screenings').textContent = summary.total_screenings;
+          document.getElementById('stat-high-priority').textContent = summary.high_priority_cases;
+          document.getElementById('stat-followups').textContent = summary.pending_followups;
+        }
+
+        // 2. Fetch High Priority Cases (Safe DOM construction, no innerHTML XSS)
+        const hpRes = await authFetch(`${API_BASE}/dashboard/high-priority`);
+        if (hpRes.ok) {
+          const cases = await hpRes.json();
+          const tbody = document.getElementById('high-priority-table');
+          tbody.replaceChildren();
+
+          if (cases.length === 0) {
+            const emptyTr = document.createElement('tr');
+            const emptyTd = document.createElement('td');
+            emptyTd.colSpan = 5;
+            emptyTd.className = 'px-5 py-8 text-center text-emerald-600 font-medium';
+            emptyTd.textContent = 'All clear! No pending high-risk emergencies.';
+            emptyTr.appendChild(emptyTd);
+            tbody.appendChild(emptyTr);
+          } else {
+            cases.forEach(item => {
+              const tr = document.createElement('tr');
+              tr.className = 'hover:bg-red-50/20 transition';
+
+              // Col 1: Beneficiary
+              const td1 = document.createElement('td');
+              td1.className = 'px-5 py-4 font-semibold text-gray-900';
+              td1.textContent = item.patient_name || 'Beneficiary';
+              const typeSpan = document.createElement('span');
+              typeSpan.className = 'block text-xs font-normal text-gray-500';
+              typeSpan.textContent = item.screening_type ? item.screening_type.toUpperCase() : 'NCD';
+              td1.appendChild(typeSpan);
+
+              // Col 2: Location & Contact
+              const td2 = document.createElement('td');
+              td2.className = 'px-5 py-4';
+              const villageSpan = document.createElement('span');
+              villageSpan.className = 'block text-gray-900';
+              villageSpan.textContent = item.patient_village || 'Rampur';
+              const phoneSpan = document.createElement('span');
+              phoneSpan.className = 'block text-xs text-gray-500';
+              phoneSpan.textContent = item.patient_phone || 'No phone';
+              td2.appendChild(villageSpan);
+              td2.appendChild(phoneSpan);
+
+              // Col 3: Triggered Danger Sign
+              const td3 = document.createElement('td');
+              td3.className = 'px-5 py-4';
+              const reasonBadge = document.createElement('span');
+              reasonBadge.className = 'inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-red-100 text-red-800';
+              reasonBadge.textContent = item.reason;
+              td3.appendChild(reasonBadge);
+
+              // Col 4: Due Date
+              const td4 = document.createElement('td');
+              td4.className = 'px-5 py-4 text-xs font-medium text-gray-700';
+              td4.textContent = item.due_date || 'Today';
+
+              // Col 5: Referral Action Button
+              const td5 = document.createElement('td');
+              td5.className = 'px-5 py-4 text-right';
+              const btn = document.createElement('button');
+              btn.className = 'px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-semibold transition';
+              btn.textContent = 'Referral Triage';
+              btn.addEventListener('click', () => {
+                alert(`Dispatching Referral Protocol for ${item.patient_name || 'Patient'}`);
+              });
+              td5.appendChild(btn);
+
+              tr.append(td1, td2, td3, td4, td5);
+              tbody.appendChild(tr);
+            });
+          }
+        }
+
+        // 3. Fetch Field Workers (Safe DOM construction)
+        const workersRes = await authFetch(`${API_BASE}/dashboard/workers`);
+        if (workersRes.ok) {
+          const workers = await workersRes.json();
+          const container = document.getElementById('workers-list');
+          container.replaceChildren();
+
+          workers.forEach(w => {
+            const div = document.createElement('div');
+            div.className = 'p-3 rounded-lg border border-gray-100 bg-gray-50 flex items-center justify-between';
+
+            const leftDiv = document.createElement('div');
+            leftDiv.className = 'flex items-center gap-3';
+
+            const avatar = document.createElement('div');
+            avatar.className = 'w-9 h-9 rounded-full bg-teal-100 text-teal-800 font-bold flex items-center justify-center text-xs';
+            avatar.textContent = (w.name || 'W').charAt(0);
+
+            const metaDiv = document.createElement('div');
+            const nameP = document.createElement('p');
+            nameP.className = 'text-sm font-semibold text-gray-900';
+            nameP.textContent = w.name;
+            const subP = document.createElement('p');
+            subP.className = 'text-xs text-gray-500';
+            subP.textContent = `${w.village || ''} · ${(w.role || 'asha').toUpperCase()}`;
+            metaDiv.append(nameP, subP);
+
+            leftDiv.append(avatar, metaDiv);
+
+            const rightDiv = document.createElement('div');
+            rightDiv.className = 'text-right';
+            const badgeSpan = document.createElement('span');
+            badgeSpan.className = 'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-800';
+            badgeSpan.textContent = 'Synced';
+            const countP = document.createElement('p');
+            countP.className = 'text-[10px] text-gray-400 mt-0.5';
+            countP.textContent = `${w.screening_count || 0} records`;
+            rightDiv.append(badgeSpan, countP);
+
+            div.append(leftDiv, rightDiv);
+            container.appendChild(div);
+          });
+        }
+      } catch (e) {
+        console.warn('Dashboard fetch error', e);
+      }
+    }
+
+    // Auto-fetch on load and poll every 10s only when tab is active (ISS-233)
+    fetchDashboardData();
+    setInterval(() => {
+      if (!document.hidden) {
+        fetchDashboardData();
+      }
+    }, 10000);
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) fetchDashboardData();
+    });
+  </script>
+</body>
+</html>

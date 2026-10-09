@@ -1,0 +1,56 @@
+{
+    "protocol": "pregnancy_danger_signs_v1",
+    "version": "1.0",
+    "name": "Maternal & Pregnancy Danger Signs Protocol",
+    "source": "NHM ASHA Maternal Health Handbook & Danger Signs Checklist",
+    "rules": {
+        "vaginal_bleeding": {
+            "id": "RULE_MATERNAL_BLEEDING",
+            "enabled": true,
+            "priority": "high",
+            "reason_en": "Maternal danger sign: Vaginal bleeding reported during pregnancy.",
+            "reason_hi": "गर्भावस्था में रक्तस्राव (Vaginal Bleeding) खतरे का लक्षण है। तत्काल अस्पताल ले जाएं।",
+            "next_workflow": "Immediate emergency referral to First Referral Unit (FRU) / CHC via 108 ambulance."
+        },
+        "severe_headache_blurred_vision": {
+            "id": "RULE_MATERNAL_PREECLAMPSIA",
+            "enabled": true,
+            "priority": "high",
+            "reason_en": "Maternal danger sign: Severe headache and/or blurred vision indicating suspected pre-eclampsia risk.",
+            "reason_hi": "तेज सिरदर्द अथवा धुंधला दिखाई देना गंभीर प्री-एक्लेम्पसिया का संकेत हो सकता है।",
+            "next_workflow": "Measure blood pressure, check urine albumin, and escort to nearest CHC/District Hospital."
+        },
+        "severe_abdominal_pain": {
+            "id": "RULE_MATERNAL_ABDOMINAL_PAIN",
+            "enabled": true,
+            "priority": "high",
+            "reason_en": "Maternal danger sign: Persistent severe abdominal pain reported.",
+            "reason_hi": "पेट में असहनीय दर्द खतरे का लक्षण है।",
+            "next_workflow": "Facilitate institutional medical review immediately."
+        },
+        "reduced_fetal_movement": {
+            "id": "RULE_MATERNAL_FETAL_MOVEMENT",
+            "enabled": true,
+            "priority": "high",
+            "reason_en": "Maternal danger sign: Reduced or absent fetal movements reported after 24 weeks.",
+            "reason_hi": "गर्भ में शिशु की हलचल कम होना या बंद होना खतरे की घंटी है।",
+            "next_workflow": "Urgent ultrasound and fetal heartbeat assessment at health facility."
+        },
+        "swelling_with_hypertension": {
+            "id": "RULE_MATERNAL_EDEMA_BP",
+            "enabled": true,
+            "priority": "high",
+            "reason_en": "Puffy face/hands swelling combined with elevated blood pressure.",
+            "reason_hi": "चेहरे/हाथों पर सूजन और बढ़ा हुआ रक्तचाप। उच्च जोखिम गर्भावस्था (HRP)।",
+            "next_workflow": "Register in High-Risk Pregnancy (HRP) tracking track and refer to MO."
+        },
+        "high_fever": {
+            "id": "RULE_MATERNAL_FEVER",
+            "enabled": true,
+            "priority": "medium",
+            "reason_en": "Maternal danger sign: Persistent high grade fever.",
+            "reason_hi": "लगातार तेज बुखार संक्रमण का संकेत हो सकता है।",
+            "next_workflow": "Refer to PHC for malaria/infection evaluation and antipyretic guidance."
+        }
+    }
+}

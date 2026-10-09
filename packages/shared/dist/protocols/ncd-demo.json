@@ -1,0 +1,66 @@
+{
+    "protocol": "ncd_demo_v1",
+    "version": "1.0",
+    "name": "Non-Communicable Diseases Community Screening Protocol",
+    "source": "National NCD Screening Guidelines (Demo Alignment)",
+    "bp": {
+        "high_reading_rule": {
+            "id": "RULE_NCD_BP_HIGH",
+            "enabled": true,
+            "parameters": {
+                "systolic": 140,
+                "diastolic": 90
+            },
+            "priority": "medium",
+            "reason_en": "Recorded blood pressure ({systolic}/{diastolic} mmHg) meets or exceeds community screening threshold (140/90 mmHg).",
+            "reason_hi": "दर्ज किया गया रक्तचाप ({systolic}/{diastolic} mmHg) मानक स्क्रीनिंग सीमा (140/90 mmHg) से अधिक है।",
+            "next_workflow": "Schedule follow-up re-check within 7 days and refer to ANM/MO for clinical evaluation."
+        },
+        "severe_reading_rule": {
+            "id": "RULE_NCD_BP_CRITICAL",
+            "enabled": true,
+            "parameters": {
+                "systolic": 180,
+                "diastolic": 110
+            },
+            "priority": "high",
+            "reason_en": "Recorded blood pressure ({systolic}/{diastolic} mmHg) indicates severe elevation requiring prompt medical consultation.",
+            "reason_hi": "रक्तचाप ({systolic}/{diastolic} mmHg) बहुत अधिक है। तत्काल प्राथमिक स्वास्थ्य केंद्र (PHC) भेजने की आवश्यकता है।",
+            "next_workflow": "Urgent referral to PHC/CHC medical officer on the same day."
+        }
+    },
+    "glucose": {
+        "high_reading_rule": {
+            "id": "RULE_NCD_GLUCOSE_HIGH",
+            "enabled": true,
+            "parameters": {
+                "random_threshold": 200,
+                "fasting_threshold": 126
+            },
+            "priority": "high",
+            "reason_en": "Recorded blood glucose ({glucose} mg/dL) exceeds protocol threshold for elevated glucose.",
+            "reason_hi": "दर्ज किया गया ब्लड ग्लूकोज ({glucose} mg/dL) सुरक्षित स्तर से अधिक है।",
+            "next_workflow": "Refer to PHC for confirmatory fasting plasma glucose and dietary counseling."
+        }
+    },
+    "lifestyle": {
+        "tobacco_risk_rule": {
+            "id": "RULE_NCD_TOBACCO",
+            "enabled": true,
+            "priority": "low",
+            "reason_en": "Beneficiary reported active tobacco usage.",
+            "reason_hi": "तम्बाकू/बीड़ी सेवन की पुष्टि हुई। नशामुक्ति परामर्श आवश्यक है।",
+            "next_workflow": "Provide community lifestyle counseling and cessation support."
+        }
+    },
+    "adherence": {
+        "medication_missed_rule": {
+            "id": "RULE_NCD_MED_NON_ADHERENCE",
+            "enabled": true,
+            "priority": "medium",
+            "reason_en": "Known chronic illness patient reported missed or irregular medication intake.",
+            "reason_hi": "मरीज नियमित रूप से अपनी बीपी/शुगर की दवाइयां नहीं ले रहा है।",
+            "next_workflow": "Address medicine availability barriers and reinforce adherence."
+        }
+    }
+}

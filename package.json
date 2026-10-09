@@ -1,0 +1,37 @@
+{
+  "name": "asha-ai-copilot",
+  "version": "1.0.0",
+  "description": "Offline-first Hindi voice-enabled AI copilot for frontline ASHA community healthcare workers",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "start:mobile": "npm run start --workspace=@asha/mobile",
+    "start:dashboard": "npm run start --workspace=@asha/dashboard",
+    "test": "npm run build --workspace=@asha/shared && node tests/clinical_rules_test.js && python tests/sync_idempotency_test.py && node tests/route_smoke_test.js",
+    "api:start": "python -m services.api.main",
+    "postinstall": "node scripts/patch-expo-router.js",
+    "android": "npm run android --workspace=@asha/mobile",
+    "ios": "npm run ios --workspace=@asha/mobile"
+  },
+  "keywords": [
+    "asha",
+    "healthtech",
+    "react-native",
+    "expo",
+    "offline-first",
+    "voice-ai",
+    "cactus",
+    "whisper"
+  ],
+  "author": "ASHA AI Copilot Team",
+  "license": "MIT",
+  "dependencies": {
+    "query-string": "7.1.3",
+    "expo": "~52.0.49",
+    "react": "18.3.1",
+    "react-native": "0.76.9"
+  }
+}
