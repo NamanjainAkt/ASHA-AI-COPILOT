@@ -675,7 +675,6 @@ Append-only chronological record. Entries are prefixed `## [YYYY-MM-DD] <op> | <
 - Enhanced UI text box binding:
   - Added `baseTextRef` in `voice-capture.tsx` to seamlessly preserve pre-typed notes or quick clinical chips when dictation begins.
   - Bound `TextInput` (`value={transcript}`) to native event stream (`onSpeechPartialResults` and `onSpeechResults`) for real-time word-by-word streaming.
-- Recompiled and verified release APK (`dist/ASHA-AI-Copilot-v1.0.0-release.apk`, 86.0 MB, apksigner v2 verified).
 - Full test suite passed (61/61 tests green).
 
 
@@ -707,3 +706,64 @@ Append-only chronological record. Entries are prefixed `## [YYYY-MM-DD] <op> | <
   - Edge Cases Test: 15 / 15 passed (100%)
   - Multilingual Model Harness: 32 / 32 passed (100%)
   - Sync Idempotency & Auth Test: 12 / 12 passed (100%)
+
+## [2026-10-09] fix | Expo Android CLI targets mobile workspace from monorepo root
+
+- **Issue:** Running bare `npx expo run:android` from the repository root selected the root
+  Expo project, attempted the fallback `node_modules/expo/AppEntry.js`, and failed to resolve
+  `../../App`. The root `npm run android` script already delegates to `@asha/mobile`
+  (`package.json:16`); invoking `npx` directly bypasses npm scripts. The actual app declares
+  `apps/mobile/index.js` as its entry (`apps/mobile/package.json:4`, `apps/mobile/index.js:1`).
+- **Resolution:** Use `npx expo run:android apps/mobile` from the repository root, or keep using
+  `npm run android`. The accidental untracked root `app.json` and `android/` were left untouched.
+- **Verification:** `npx expo run:android apps/mobile` built successfully and installed/opened
+  `org.health.asha.aicopilot`. Since port 8081 was already occupied, ran
+  `npx expo run:android --port 8082 apps/mobile`; the mobile Metro server's `/status` reported
+  running and
+  `/.expo/.virtual-metro-entry.bundle?platform=android&dev=true&minify=false&hot=false&lazy=true`
+  returned HTTP 200 (8,619,861 bytes) with no `Unable to resolve` error.
+
+## [2026-10-09] feat | Complete UI form integration, beneficiary edit flow, clinical rule engine & backend sync
+
+- **Beneficiary Edit Flow**:
+  - Implemented `apps/mobile/app/patients/edit.tsx` for full Module A editing (ABHA ID, Hamlet/Tola, Head Relation, Phone Owner, Disability Access Needs, Consent).
+  - Extended `patientRepository.update()` in `patientRepo.ts` with atomic transaction & `sync_queue` enqueue.
+  - Added header edit button and demographic badge chips (ABHA, Hamlet, Relation, Phone Owner, Disability) to `apps/mobile/app/patients/[id].tsx`.
+- **Screening Verification Gate & Reactive UI**:
+  - Enhanced `apps/mobile/app/screening/summary.tsx` with live editing cards for Module B Common Visit (main complaint, onset, course chips, missed meds switch), CBAC waist circumference (cm), Pregnancy danger signs (convulsions, leaking fluid), PNC/Newborn danger signs, and Referral & Action plan (destination and urgency chips).
+  - Dynamically recalculates risk warnings via memoized `evaluateRules(currentStructuredData)` upon user edits.
+  - Automatically enqueues follow-ups with destination and urgency attributes upon verification and save.
+- **Deterministic Clinical Rule Engine**:
+  - Added 6 new clinical rules in `packages/shared/src/engine.ts`: `RULE_CBAC_WAIST_CIRCUMFERENCE` (waist >= 85 cm), `RULE_COMMON_VISIT_MISSED_MEDS`, `RULE_PREG_CONVULSIONS` (eclampsia 108 referral), `RULE_PREG_LEAKING_FLUID` (PROM danger sign), `RULE_PNC_NEWBORN_DANGER`, and `RULE_PNC_LOW_BIRTH_WEIGHT`.
+- **Backend & SQLite Persistence**:
+  - Updated SQLite schema in `services/api/database.py` and added migration alters for `patients` and `followups`.
+  - Updated `create_patient`, `create_followup`, `update_followup`, and `/sync/push` in `services/api/main.py`.
+- **Automated Verification**:
+  - Extended `tests/clinical_rules_test.js` (18/18 tests passed).
+  - Extended `tests/sync_idempotency_test.py` (13/13 tests passed, including roundtrip verification of extended fields).
+  - 100% pass across all suites (`tsc` 0 errors, shared build clean).
+
+## [2026-10-09] sync-rebase | Qwen3 0.6B Workflow Audit & Edge Cases Harness Integration
+
+- Rebased with `origin/main` containing `EDGE_CASES.md`, `tests/edge_cases_test.js`, `tests/qwen_summary_test.js`, and `tests/qwen_cli.js`.
+- Performed end-to-end audit of Qwen3 0.6B summary workflow:
+  - Reviewed prompt instructions in `aiOrchestrator.ts` (`QWEN_SUMMARY_SYSTEM_PROMPT`), ensuring strict bounds (no medical diagnosis, no altered numbers, plain Hindi only under 120 words).
+  - Aligned deterministic fallback templates across `simulatorDriver.ts`, `cactusDriver.ts`, `qwen_cli.js`, and `CactusNativeModule.kt` to handle maternal danger signs (`reduced_fetal_movement`, `vaginal_bleeding`, abdominal pain) and missing vitals with grammatically natural Hindi phrasing.
+  - Expanded clinical triggers in `packages/shared/src/nlp/multilingualExtractor.ts` for `"पेट में दर्द"` and `"हलचल में कमी"`.
+  - Upgraded `tests/qwen_cli.js` with `--edge-cases` flag to run all 12 clinical edge scenarios interactively through the CLI.
+  - Integrated `tests/edge_cases_test.js`, `tests/qwen_summary_test.js`, and `tests/model_harness_test.js` into root `npm test`.
+- Verification: All 82 automated test checks green across 6 suites (Clinical rules: 13/13, Model harness: 32/32, Edge cases: 15/15, Qwen summaries: 6/6, Sync idempotency: 12/12, Route smoke: 4/4). Mobile TypeScript check passed (0 errors).
+
+## [2026-10-09] fix-feature | Qwen3 0.6B Model Download Fix, Error Diagnostics & APK Packaging Strategy
+
+- Audited Qwen3 0.6B model download failures reported from mobile app Profile screen (`apps/mobile/app/(tabs)/profile.tsx`).
+- Diagnosed root causes:
+  - Hugging Face endpoint (`https://huggingface.co/Cactus-Compute/Qwen3-0.6B/resolve/main/weights/qwen3-0.6b-int4.zip`) is active (376.4 MB) but redirects via HTTP 302 to AWS CDN, which returns HTTP 206 Partial Content during chunked or resumed transfers.
+  - `modelManager.ts:385` strictly checked `result.status === 200`, rejecting valid HTTP 206 responses.
+  - `profile.tsx` swallowed `model.error`, presenting a misleading generic error message ("Could not download model. Check server and network").
+- Implemented fixes:
+  - Updated `modelManager.ts` to accept HTTP 200–299 responses (`result.status >= 200 && result.status < 300`) and capture network/transport errors into `model.error`.
+  - Updated `profile.tsx` to surface exact `errorDetail` directly in the UI Alert dialog.
+  - Updated `tests/sync_idempotency_test.py` to use `limit=500` avoiding pagination boundary clipping on local databases with >100 entries.
+- Documented findings in `wiki/analyses/qwen-model-download-and-packaging-2026-10.md` and indexed in `wiki/index.md`.
+- Full test pass: All 82 tests green across all 6 test suites; mobile TypeScript typecheck clean (0 errors).

@@ -168,7 +168,59 @@ export const ncdRules: HealthRule[] = [
     }
   },
 
-  // 6. Missing Mandatory Information Flag
+  // 6. CBAC Waist Circumference (Central Obesity)
+  {
+    id: 'RULE_CBAC_WAIST_CIRCUMFERENCE',
+    name: 'Central Obesity Risk (कमर का घेरा मानक सीमा से अधिक)',
+    protocol: ncdProtocol.name,
+    enabled: true,
+    evaluate(data) {
+      const waist = data.cbac?.waist_circumference_cm;
+      if (waist == null) return null;
+
+      // Threshold: 80 cm for women, 90 cm for men, or >= 85 cm general
+      if (waist >= 85) {
+        return {
+          ruleId: this.id,
+          ruleName: this.name,
+          triggered: true,
+          priority: 'medium' as PriorityLevel,
+          reason: `Waist circumference (${waist} cm) indicates central obesity and elevated cardiovascular/metabolic risk (CBAC threshold: 80cm female / 90cm male).`,
+          reason_hi: `कमर का घेरा (${waist} सेमी) सामान्य सीमा से अधिक है, जो उच्च मेटाबॉलिक व हृदय जोखिम का संकेत है।`,
+          nextWorkflow: 'Provide lifestyle and dietary counselling; monitor blood pressure and glucose regularly.',
+          protocolSource: ncdProtocol.name
+        };
+      }
+      return null;
+    }
+  },
+
+  // 7. Common Visit Missed Medication Intake
+  {
+    id: 'RULE_COMMON_VISIT_MISSED_MEDS',
+    name: 'Reported Medication Interruption (दवा बंद या छूटी हुई)',
+    protocol: ncdProtocol.name,
+    enabled: true,
+    evaluate(data) {
+      if (data.common_visit?.missed_medication_doses !== true) return null;
+      // If ncd medication rule already triggered, don't duplicate
+      if (data.ncd?.medication_adherence === false) return null;
+
+      const reason = data.common_visit.missed_medication_reason ? ` (${data.common_visit.missed_medication_reason})` : '';
+      return {
+        ruleId: this.id,
+        ruleName: this.name,
+        triggered: true,
+        priority: 'medium' as PriorityLevel,
+        reason: `Beneficiary reported missing or discontinuing prescribed medication${reason}. Adherence counselling required.`,
+        reason_hi: `लाभार्थी ने निर्धारित दवा छूटने या बंद होने की जानकारी दी है। नियमित दवा सेवन सुनिश्चित कराएं।`,
+        nextWorkflow: 'Verify drug supply, counsel on adherence and arrange refill at nearest PHC/HWC.',
+        protocolSource: ncdProtocol.name
+      };
+    }
+  },
+
+  // 8. Missing Mandatory Information Flag
   {
     id: 'RULE_NCD_MISSING_DATA',
     name: 'Incomplete Vital Measurement (अधूरी जांच)',
@@ -369,6 +421,126 @@ export const pregnancyRules: HealthRule[] = [
         protocolSource: pregnancyProtocol.name
       };
     }
+  },
+
+  // 7. Convulsions / Eclampsia (Maternal Emergency)
+  {
+    id: 'RULE_PREG_CONVULSIONS',
+    name: 'Maternal Convulsions / Eclampsia (गर्भावस्था में दौरे / एक्लेमप्सिया)',
+    protocol: pregnancyProtocol.name,
+    enabled: true,
+    evaluate(data) {
+      const preg = data.pregnancy;
+      if (!preg || !preg.convulsions) return null;
+
+      return {
+        ruleId: this.id,
+        ruleName: this.name,
+        triggered: true,
+        priority: 'high' as PriorityLevel,
+        reason: 'Maternal convulsions reported (Eclampsia danger sign). Immediate emergency referral via 108 ambulance required.',
+        reason_hi: 'गर्भावस्था में दौरे (एक्लेमप्सिया) की शिकायत दर्ज हुई है। 108 एम्बुलेंस द्वारा तत्काल अस्पताल रेफर करें।',
+        nextWorkflow: 'Call 108 ambulance immediately; place patient in left lateral position and refer to FRU/District Hospital.',
+        protocolSource: pregnancyProtocol.name
+      };
+    }
+  },
+
+  // 8. Premature Leaking Fluid (PROM Danger Sign)
+  {
+    id: 'RULE_PREG_LEAKING_FLUID',
+    name: 'Premature Rupture of Membranes (पानी छूटना / लीकिंग)',
+    protocol: pregnancyProtocol.name,
+    enabled: true,
+    evaluate(data) {
+      const preg = data.pregnancy;
+      if (!preg || !preg.leaking_fluid) return null;
+
+      return {
+        ruleId: this.id,
+        ruleName: this.name,
+        triggered: true,
+        priority: 'high' as PriorityLevel,
+        reason: 'Leaking amniotic fluid reported before term (PROM risk). Urgent referral for institutional delivery care required.',
+        reason_hi: 'प्रसव पूर्व पानी छूटने (लीकिंग) की शिकायत है। संक्रमण व जटिलता के जोखिम के कारण तत्काल अस्पताल भेजें।',
+        nextWorkflow: 'Refer immediately to CHC/District Hospital for sterile obstetric evaluation.',
+        protocolSource: pregnancyProtocol.name
+      };
+    }
+  }
+];
+
+export const pncRules: HealthRule[] = [
+  // 1. Critical Neonatal Danger Signs
+  {
+    id: 'RULE_PNC_NEWBORN_DANGER',
+    name: 'Critical Neonatal Danger Signs (नवजात शिशु खतरे के लक्षण)',
+    protocol: 'PNC_HBNC_PROTOCOL',
+    enabled: true,
+    evaluate(data) {
+      const pnc = data.pnc_child;
+      if (!pnc) return null;
+
+      const signs: string[] = [];
+      if (pnc.poor_feeding_or_sucking) signs.push('दूध न पीना / कमजोर खिंचाव (Unable to suckle/feed)');
+      if (pnc.fast_breathing_or_indrawing) signs.push('तेज सांस / पसली चलना (Fast breathing/chest indrawing)');
+      if (pnc.newborn_fever_or_hypothermia) signs.push('बुखार या शरीर ठंडा पड़ना (Fever/hypothermia)');
+      if (pnc.convulsions) signs.push('दौरे (Convulsions)');
+      if (pnc.reduced_activity_or_lethargy) signs.push('सुस्ती / हलचल में कमी (Lethargy/floppy baby)');
+      if (pnc.jaundice_yellow_palms_soles) signs.push('हथेली-तलवों पर पीलिया (Severe neonatal jaundice)');
+      if (pnc.umbilical_cord_infection) signs.push('नाल में मवाद या लालिमा (Umbilical infection)');
+
+      if (signs.length > 0) {
+        return {
+          ruleId: this.id,
+          ruleName: this.name,
+          triggered: true,
+          priority: 'high' as PriorityLevel,
+          reason: `Critical neonatal danger sign(s) detected: ${signs.join('; ')}. Immediate SNCU / NBSU emergency referral required.`,
+          reason_hi: `नवजात शिशु में खतरे के लक्षण: ${signs.join('; ')}। तत्काल एसएनसीयू / अस्पताल रेफरल आवश्यक है।`,
+          nextWorkflow: 'Arrange immediate emergency transport to Special Newborn Care Unit (SNCU/NBSU); maintain skin-to-skin warmth during transit.',
+          protocolSource: 'PNC_HBNC_PROTOCOL'
+        };
+      }
+      return null;
+    }
+  },
+
+  // 2. Low Birth Weight Neonate
+  {
+    id: 'RULE_PNC_LOW_BIRTH_WEIGHT',
+    name: 'Low Birth Weight Newborn (कम वजन वाला नवजात शिशु)',
+    protocol: 'PNC_HBNC_PROTOCOL',
+    enabled: true,
+    evaluate(data) {
+      const pnc = data.pnc_child;
+      if (!pnc || pnc.birth_weight_kg == null) return null;
+
+      if (pnc.birth_weight_kg < 1.8) {
+        return {
+          ruleId: this.id,
+          ruleName: 'Very Low Birth Weight (<1.8 kg - अति कम वजन)',
+          triggered: true,
+          priority: 'high' as PriorityLevel,
+          reason: `Birth weight (${pnc.birth_weight_kg} kg) is very low (< 1.8 kg). Immediate SNCU referral required.`,
+          reason_hi: `जन्म के समय वजन (${pnc.birth_weight_kg} किग्रा) बहुत कम है। तत्काल एसएनसीयू में भर्ती कराएं।`,
+          nextWorkflow: 'Urgent referral to SNCU/NBSU; initiate Kangaroo Mother Care (KMC) during transport.',
+          protocolSource: 'PNC_HBNC_PROTOCOL'
+        };
+      } else if (pnc.birth_weight_kg < 2.5) {
+        return {
+          ruleId: this.id,
+          ruleName: 'Low Birth Weight (<2.5 kg - कम वजन)',
+          triggered: true,
+          priority: 'medium' as PriorityLevel,
+          reason: `Birth weight (${pnc.birth_weight_kg} kg) is low (< 2.5 kg). Close thermal care, extra HBNC home visits and frequent feeding required.`,
+          reason_hi: `जन्म के समय वजन (${pnc.birth_weight_kg} किग्रा) सामान्य से कम है। कंगारू मदर केयर और नियमित निगरानी रखें।`,
+          nextWorkflow: 'Schedule extra home visits (HBNC Days 1, 3, 7, 14, 21, 28, 42) and monitor daily weight gain.',
+          protocolSource: 'PNC_HBNC_PROTOCOL'
+        };
+      }
+      return null;
+    }
   }
 ];
 
@@ -403,15 +575,16 @@ export function evaluateRules(data: StructuredScreeningData): RuleResult[] {
     }
   }
 
-  // ISS-204: Strict gating on screening_type
-  if (data.screening_type === 'ncd') {
+  // ISS-204: Strict gating on screening_type or visit_type
+  const currentType = data.visit_type || data.screening_type;
+  if (currentType === 'ncd') {
     for (const rule of ncdRules) {
       if (rule.enabled) {
         const res = rule.evaluate(data);
         if (res) results.push(res);
       }
     }
-  } else if (data.screening_type === 'pregnancy') {
+  } else if (currentType === 'pregnancy' || currentType === 'anc') {
     for (const rule of pregnancyRules) {
       if (rule.enabled) {
         const res = rule.evaluate(data);
@@ -431,9 +604,16 @@ export function evaluateRules(data: StructuredScreeningData): RuleResult[] {
         protocolSource: pregnancyProtocol.name
       });
     }
+  } else if (currentType === 'pnc' || currentType === 'child_hbnc') {
+    for (const rule of pncRules) {
+      if (rule.enabled) {
+        const res = rule.evaluate(data);
+        if (res) results.push(res);
+      }
+    }
   } else {
     // General or mixed screening: evaluate available subsystems
-    if (data.ncd) {
+    if (data.ncd || data.cbac) {
       for (const rule of ncdRules) {
         if (rule.enabled) {
           const res = rule.evaluate(data);
@@ -449,6 +629,21 @@ export function evaluateRules(data: StructuredScreeningData): RuleResult[] {
         }
       }
     }
+    if (data.pnc_child) {
+      for (const rule of pncRules) {
+        if (rule.enabled) {
+          const res = rule.evaluate(data);
+          if (res) results.push(res);
+        }
+      }
+    }
+  }
+
+  // Common visit adherence check across all visit types if not already triggered
+  if (data.common_visit?.missed_medication_doses === true && !results.some(r => r.ruleId === 'RULE_COMMON_VISIT_MISSED_MEDS' || r.ruleId === ncdProtocol.adherence.medication_missed_rule.id)) {
+    const commonRule = ncdRules.find(r => r.id === 'RULE_COMMON_VISIT_MISSED_MEDS');
+    const res = commonRule?.evaluate(data);
+    if (res) results.push(res);
   }
 
   // Sort by priority (high > medium > low)

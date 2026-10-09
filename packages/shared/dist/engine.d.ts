@@ -8,4 +8,5 @@ export interface HealthRule {
 }
 export declare const ncdRules: HealthRule[];
 export declare const pregnancyRules: HealthRule[];
+export declare const pncRules: HealthRule[];
 export declare function evaluateRules(data: StructuredScreeningData): RuleResult[];

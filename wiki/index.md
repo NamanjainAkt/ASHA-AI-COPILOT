@@ -58,6 +58,8 @@ Conventions: [[SCHEMA]]. Current synthesis: [[overview]]. History: [[log]].
 | [[analyses/release-readiness-2026-10]] | Pass/fail verdict for `dist/` v1.0.0 against the four invariants and the PRD checklist |
 | [[analyses/fix-verification-2026-10]] | Audit of the "all 88 resolved" claim: re-run chain, per-area verdicts, partials, carry-overs |
 | [[analyses/ai-models-not-integrated-2026-10]] | Whisper/Needle 2/Qwen runtime analysis: weights/runtime gap, resolution via Model Manager, Qwen 0.5B vs 1.7B, and multilingual NLP harness |
+| [[analyses/form-integration-and-edit-flow-2026-10]] | Full form expansion, dedicated beneficiary edit flow (`patients/edit.tsx`), reactive verification gate, extended clinical rule engine, and sync persistence |
+| [[analyses/qwen-model-download-and-packaging-2026-10]] | Qwen3 0.6B model download, HTTP 206 CDN partial content status validation, UI error diagnostics, and APK staging architecture |
 ## Gaps worth filling
 
 - iOS behaviour is entirely unexercised (no `Info.plist`/permissions review beyond `app.json:19-21`).

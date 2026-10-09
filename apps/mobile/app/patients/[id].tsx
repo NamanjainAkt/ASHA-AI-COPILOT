@@ -128,7 +128,13 @@ export default function PatientDetailScreen() {
           <Text style={styles.headerTitle} numberOfLines={1}>{patient.name}</Text>
           <Text style={styles.headerSub} numberOfLines={1}>ID: #{patient.id} · {patient.village}</Text>
         </View>
-        <View style={{ width: 36 }} />
+        <TouchableOpacity
+          style={styles.editBtn}
+          onPress={() => router.push({ pathname: '/patients/edit', params: { id: patient.id } })}
+          accessibilityLabel="Edit Beneficiary"
+        >
+          <Ionicons name="create-outline" size={20} color={Colors.primary} />
+        </TouchableOpacity>
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
@@ -166,35 +172,80 @@ export default function PatientDetailScreen() {
             )}
           </View>
 
+          {/* Demographic Chips / Extra Details */}
+          <View style={styles.metaRow}>
+            {patient.hamlet_tola ? (
+              <View style={styles.metaBadge}>
+                <Ionicons name="home-outline" size={11} color={Colors.textSecondary} />
+                <Text style={styles.metaBadgeText}>{patient.hamlet_tola}</Text>
+              </View>
+            ) : null}
+            {patient.relationship_to_head ? (
+              <View style={styles.metaBadge}>
+                <Ionicons name="people-outline" size={11} color={Colors.textSecondary} />
+                <Text style={styles.metaBadgeText}>{patient.relationship_to_head}</Text>
+              </View>
+            ) : null}
+            {patient.abha_id ? (
+              <View style={[styles.metaBadge, { backgroundColor: Colors.primaryLight }]}>
+                <Ionicons name="card-outline" size={11} color={Colors.primary} />
+                <Text style={[styles.metaBadgeText, { color: Colors.primary, fontWeight: '700' }]}>
+                  ABHA: {patient.abha_id}
+                </Text>
+              </View>
+            ) : null}
+            {patient.disability_access_needs ? (
+              <View style={[styles.metaBadge, { backgroundColor: Colors.warningLight }]}>
+                <Ionicons name="hand-right-outline" size={11} color={Colors.warning} />
+                <Text style={[styles.metaBadgeText, { color: Colors.warning }]}>
+                  {patient.disability_access_needs}
+                </Text>
+              </View>
+            ) : null}
+          </View>
+
           {patient.phone ? (
-            <TouchableOpacity
-              style={styles.phoneRow}
-              accessibilityRole="link"
-              accessibilityLabel={`${t.call} ${patient.phone}`}
-              onPress={async () => {
-                const cleanPhone = (patient.phone || '').trim();
-                if (!/^[0-9+ ]{6,15}$/.test(cleanPhone) || cleanPhone.includes(';') || cleanPhone.includes('#')) {
-                  Alert.alert(
-                    language === 'hi' ? 'अमान्य नंबर' : 'Invalid Phone',
-                    language === 'hi' ? 'फ़ोन नंबर अमान्य है' : 'The phone number format is invalid'
-                  );
-                  return;
-                }
-                const url = `tel:${cleanPhone.replace(/\s+/g, '')}`;
-                try {
-                  if (await Linking.canOpenURL(url)) {
-                    await Linking.openURL(url);
-                  } else {
-                    Alert.alert(t.error, language === 'hi' ? 'डिवाइस कॉलिंग का समर्थन नहीं करता है' : 'Device cannot make phone calls');
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8, gap: 8 }}>
+              <TouchableOpacity
+                style={[styles.phoneRow, { marginTop: 0, flex: 1 }]}
+                accessibilityRole="link"
+                accessibilityLabel={`${t.call} ${patient.phone}`}
+                onPress={async () => {
+                  const cleanPhone = (patient.phone || '').trim();
+                  if (!/^[0-9+ ]{6,15}$/.test(cleanPhone) || cleanPhone.includes(';') || cleanPhone.includes('#')) {
+                    Alert.alert(
+                      language === 'hi' ? 'अमान्य नंबर' : 'Invalid Phone',
+                      language === 'hi' ? 'फ़ोन नंबर अमान्य है' : 'The phone number format is invalid'
+                    );
+                    return;
                   }
-                } catch (err: any) {
-                  Alert.alert(t.error, err.message || 'Could not place call');
-                }
-              }}
-            >
-              <Ionicons name="call-outline" size={14} color={Colors.primary} />
-              <Text style={[styles.phoneText, { color: Colors.primary, textDecorationLine: 'underline' }]}>{patient.phone}</Text>
-            </TouchableOpacity>
+                  const url = `tel:${cleanPhone.replace(/\s+/g, '')}`;
+                  try {
+                    if (await Linking.canOpenURL(url)) {
+                      await Linking.openURL(url);
+                    } else {
+                      Alert.alert(t.error, language === 'hi' ? 'डिवाइस कॉलिंग का समर्थन नहीं करता है' : 'Device cannot make phone calls');
+                    }
+                  } catch (err: any) {
+                    Alert.alert(t.error, err.message || 'Could not place call');
+                  }
+                }}
+              >
+                <Ionicons name="call-outline" size={14} color={Colors.primary} />
+                <Text style={[styles.phoneText, { color: Colors.primary, textDecorationLine: 'underline' }]}>{patient.phone}</Text>
+              </TouchableOpacity>
+              {patient.phone_owner ? (
+                <View style={styles.phoneOwnerTag}>
+                  <Text style={styles.phoneOwnerTagText}>
+                    {patient.phone_owner === 'self' ? (language === 'hi' ? 'स्वयं' : 'Self') :
+                     patient.phone_owner === 'spouse' ? (language === 'hi' ? 'पति/पत्नी' : 'Spouse') :
+                     patient.phone_owner === 'parent' ? (language === 'hi' ? 'माता/पिता' : 'Parent') :
+                     patient.phone_owner === 'neighbor' ? (language === 'hi' ? 'पड़ोसी' : 'Neighbor') :
+                     (language === 'hi' ? 'अन्य' : 'Other')}
+                  </Text>
+                </View>
+              ) : null}
+            </View>
           ) : null}
         </View>
 
@@ -670,5 +721,46 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: Colors.textPrimary,
     marginTop: 8,
+  },
+  editBtn: {
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  metaRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginTop: 8,
+  },
+  metaBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: Colors.borderLight,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+  },
+  metaBadgeText: {
+    fontSize: 11,
+    color: Colors.textSecondary,
+    fontWeight: '500',
+  },
+  phoneOwnerTag: {
+    backgroundColor: Colors.primaryLight,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  phoneOwnerTagText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: Colors.primary,
   },
 });

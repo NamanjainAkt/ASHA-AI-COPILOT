@@ -169,9 +169,12 @@ export default function WorkerPerformanceScreen() {
           language === 'hi' ? 'मॉडल सफलतापूर्वक डाउनलोड हो गया है।' : 'Model downloaded successfully.'
         );
       } else {
+        const errorDetail = modelManager.getModel(id)?.error;
         Alert.alert(
           language === 'hi' ? 'डाउनलोड विफल' : 'Download Failed',
-          language === 'hi' ? 'मॉडल डाउनलोड नहीं हो सका। कृपया सर्वर और नेटवर्क जांचें।' : 'Could not download model. Check server and network.'
+          errorDetail
+            ? (language === 'hi' ? `मॉडल डाउनलोड नहीं हो सका: ${errorDetail}` : `Could not download model: ${errorDetail}`)
+            : (language === 'hi' ? 'मॉडल डाउनलोड नहीं हो सका। कृपया सर्वर और नेटवर्क जांचें।' : 'Could not download model. Check server and network.')
         );
       }
     } catch (err: any) {

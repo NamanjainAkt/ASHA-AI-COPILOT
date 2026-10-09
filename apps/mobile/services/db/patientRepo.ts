@@ -72,6 +72,57 @@ export const patientRepository = {
     };
   },
 
+  async update(
+    patient: Patient,
+    tx?: SQLite.SQLiteDatabase
+  ): Promise<Patient> {
+    const runner = tx || (await getDatabase());
+    const now = new Date().toISOString();
+    const syncStatus: SyncStatus = patient.sync_status || 'pending';
+
+    await runner.runAsync(
+      `UPDATE patients SET 
+        name = ?, 
+        age = ?, 
+        sex = ?, 
+        phone = ?, 
+        phone_owner = ?, 
+        village = ?, 
+        hamlet_tola = ?, 
+        household_id = ?, 
+        relationship_to_head = ?, 
+        abha_id = ?, 
+        disability_access_needs = ?, 
+        consent_obtained = ?, 
+        updated_at = ?, 
+        sync_status = ?
+       WHERE id = ?`,
+      [
+        patient.name,
+        patient.age,
+        patient.sex,
+        patient.phone || null,
+        patient.phone_owner || null,
+        patient.village,
+        patient.hamlet_tola || null,
+        patient.household_id || null,
+        patient.relationship_to_head || null,
+        patient.abha_id || null,
+        patient.disability_access_needs || null,
+        patient.consent_obtained === false ? 0 : 1,
+        now,
+        syncStatus,
+        patient.id
+      ]
+    );
+
+    return {
+      ...patient,
+      updated_at: now,
+      sync_status: syncStatus
+    };
+  },
+
   async updateSyncStatus(id: string, status: SyncStatus, tx?: SQLite.SQLiteDatabase): Promise<void> {
     const runner = tx || (await getDatabase());
     const now = new Date().toISOString();

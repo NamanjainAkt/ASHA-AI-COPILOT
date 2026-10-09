@@ -27,6 +27,8 @@ models/
 .expo/
 .expo-shared/
 .metro-health-check*
+/android/
+/app.json
 
 # Node & Dependencies
 node_modules/
