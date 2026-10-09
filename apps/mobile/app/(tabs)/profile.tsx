@@ -187,12 +187,12 @@ export default function WorkerPerformanceScreen() {
 
   const handleDeleteModel = (id: ModelId) => {
     Alert.alert(
-      language === 'hi' ? 'मॉडल हटाएं?' : 'Delete Model?',
-      language === 'hi' ? 'क्या आप इस मॉडल को डिवाइस से हटाना चाहते हैं?' : 'Are you sure you want to delete this model from local storage?',
+      language === 'hi' ? 'हटाएं?' : 'Remove?',
+      language === 'hi' ? 'क्या आप इसे फोन से हटाना चाहते हैं?' : 'Are you sure you want to remove this from your device?',
       [
         { text: t.cancelBtn, style: 'cancel' },
         {
-          text: language === 'hi' ? 'हटाएं' : 'Delete',
+          text: language === 'hi' ? 'हटाएं' : 'Remove',
           style: 'destructive',
           onPress: async () => {
             await modelManager.deleteModel(id);
@@ -277,50 +277,46 @@ export default function WorkerPerformanceScreen() {
         {/* System Integrity Badges */}
         <View style={styles.sectionCard}>
           <Text style={styles.sectionTitle}>
-            {language === 'hi' ? 'प्रणाली सत्यापन' : 'System Integrity'}
+            {language === 'hi' ? 'सुरक्षा एवं गोपनीयता' : 'Security & Privacy'}
           </Text>
 
           <View style={styles.badgeRow}>
-            <Ionicons name="mic-circle" size={22} color={Colors.primary} />
+            <Ionicons name="shield-checkmark" size={22} color={Colors.primary} />
             <View style={styles.badgeInfo}>
               <Text style={styles.badgeHeading}>
-                {language === 'hi' ? 'स्थानीय ऑडियो प्रसंस्करण' : 'On-Device Audio Pipeline'}
+                {language === 'hi' ? 'गोपनीय डेटा सुरक्षा' : 'Data Privacy'}
               </Text>
               <Text style={styles.badgeSub}>
-                {language === 'hi' ? 'पूर्णतः ऑफलाइन गोपनीयता सुरक्षित' : '100% On-device privacy safe'}
+                {language === 'hi' ? 'मरीजों का डेटा डिवाइस में सुरक्षित रहता है' : 'Patient records stay private on your device'}
               </Text>
             </View>
           </View>
 
           <View style={styles.badgeRow}>
-            <Ionicons name="shield-checkmark" size={22} color={Colors.success} />
+            <Ionicons name="checkmark-done-circle" size={22} color={Colors.success} />
             <View style={styles.badgeInfo}>
               <Text style={styles.badgeHeading}>
-                {language === 'hi' ? 'मानवीय पुष्टि नियम' : 'Human-in-the-Loop'}
+                {language === 'hi' ? 'कार्यकर्ता पुष्टि' : 'Worker Verification'}
               </Text>
               <Text style={styles.badgeSub}>
-                {language === 'hi' ? 'पारदर्शी नियम इंजन एवं कार्यकर्ता अनुमोदन' : 'Transparent rule engine with worker review'}
+                {language === 'hi' ? 'सभी जांच आपके व्यक्तिगत अनुमोदन के बाद ही दर्ज होती हैं' : 'All health records require your personal review'}
               </Text>
             </View>
           </View>
         </View>
 
-        {/* On-Device AI Models Card (PRD §52-54) */}
+        {/* On-Device AI Models Card */}
         <View style={styles.sectionCard}>
           <View style={styles.sectionHeaderRow}>
             <Text style={styles.sectionTitle}>
-              {language === 'hi' ? 'ऑन-डिवाइस AI मॉडल प्रबंधन' : 'On-Device AI Models'}
+              {language === 'hi' ? 'जांच रिपोर्ट सारांश गति' : 'Summary Detail & Speed'}
             </Text>
-            <View style={styles.badgePill}>
-              <Text style={styles.badgePillText}>PRD §52-54</Text>
-            </View>
           </View>
-          <Text style={styles.buildTag}>build {BUILD_TAG}</Text>
 
           <Text style={styles.modelHelpText}>
             {language === 'hi'
-              ? 'नैदानिक सारांश (Clinical Summary) के लिए मॉडल चुनें। 2GB/3GB RAM फोन के लिए 0.6B अनुशंसित है।'
-              : 'Select your preferred LLM for clinical summarization. 0.6B is recommended for phones with 2-3GB RAM.'}
+              ? 'जांच रिपोर्ट सारांश के लिए अपनी पसंद चुनें।'
+              : 'Select summary detail level for screening reports.'}
           </Text>
 
           {/* Model Selection Radio Pills */}
@@ -343,10 +339,10 @@ export default function WorkerPerformanceScreen() {
                   styles.preferencePillTitle,
                   preferredSummary === 'qwen3-0.6b' && styles.preferencePillTitleActive
                 ]}>
-                  Qwen3 0.6B (376 MB)
+                  {language === 'hi' ? 'तेज़ एवं हल्का (अनुशंसित)' : 'Fast Summary (Recommended)'}
                 </Text>
                 <Text style={styles.preferencePillSub}>
-                  {language === 'hi' ? 'हल्का / अनुशंसित (फास्ट)' : 'Lightweight / Recommended'}
+                  {language === 'hi' ? 'तुरंत सारांश, कम स्टोरेज' : 'Quick summary, less storage'}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -369,10 +365,10 @@ export default function WorkerPerformanceScreen() {
                   styles.preferencePillTitle,
                   preferredSummary === 'qwen3-1.7b' && styles.preferencePillTitleActive
                 ]}>
-                  Qwen3 1.7B (1 GB)
+                  {language === 'hi' ? 'विस्तृत सारांश' : 'Detailed Summary'}
                 </Text>
                 <Text style={styles.preferencePillSub}>
-                  {language === 'hi' ? 'विस्तृत सारांश (उच्च रैम)' : 'Detailed reasoning (Higher RAM)'}
+                  {language === 'hi' ? 'अधिक विस्तृत रिपोर्ट' : 'Comprehensive reports'}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -384,17 +380,20 @@ export default function WorkerPerformanceScreen() {
               const isDownloading = downloadingId === m.id;
               const isReady = m.status === 'ready';
 
+              const cleanNameHi = m.id === 'needle3' ? 'आवाज़ से आंकड़े निष्कर्षण' : m.id === 'qwen3-0.6b' ? 'त्वरित जांच सारांश' : 'विस्तृत जांच सारांश';
+              const cleanNameEn = m.id === 'needle3' ? 'Voice Data Extraction' : m.id === 'qwen3-0.6b' ? 'Fast Screening Summary' : 'Detailed Screening Summary';
+
               return (
                 <View key={m.id} style={styles.modelItemCard}>
                   <View style={styles.modelItemTop}>
                     <View style={styles.modelItemInfo}>
                       <Text style={styles.modelItemName}>
-                        {language === 'hi' ? m.name_hi : m.name}
+                        {language === 'hi' ? cleanNameHi : cleanNameEn}
                       </Text>
                       <Text style={styles.modelItemMeta}>
-                        {m.sizeFormatted} • {m.quantization} • v{m.version}
+                        {m.sizeFormatted} • {isReady ? (language === 'hi' ? 'सक्रिय' : 'Active') : (language === 'hi' ? 'उपलब्ध' : 'Available')}
                         {m.status === 'ready' && m.sizeOnDisk
-                          ? ` • ${(m.sizeOnDisk / 1048576).toFixed(0)}MB on disk`
+                          ? ` • ${(m.sizeOnDisk / 1048576).toFixed(0)}MB`
                           : ''}
                       </Text>
                       {m.status === 'error' && m.error ? (
@@ -433,7 +432,7 @@ export default function WorkerPerformanceScreen() {
                         >
                           <Ionicons name="cloud-download-outline" size={15} color={Colors.primary} />
                           <Text style={styles.modelActionBtnText}>
-                            {language === 'hi' ? 'डाउनलोड करें' : 'Download Weights'}
+                            {language === 'hi' ? 'डाउनलोड करें' : 'Download'}
                           </Text>
                         </TouchableOpacity>
                       ) : (
@@ -444,7 +443,7 @@ export default function WorkerPerformanceScreen() {
                         >
                           <Ionicons name="trash-outline" size={15} color={Colors.danger} />
                           <Text style={[styles.modelActionBtnText, { color: Colors.danger }]}>
-                            {language === 'hi' ? 'हटाएं' : 'Delete'}
+                            {language === 'hi' ? 'हटाएं' : 'Remove'}
                           </Text>
                         </TouchableOpacity>
                       )}
@@ -459,12 +458,12 @@ export default function WorkerPerformanceScreen() {
         {/* Android Native Speech Recognition Info Card */}
         <View style={styles.sectionCard}>
           <Text style={styles.sectionTitle}>
-            {language === 'hi' ? 'आवाज़ पहचान (Android Speech)' : 'Speech Recognition (Android)'}
+            {language === 'hi' ? 'ऑफ़लाइन आवाज़ सहायता' : 'Offline Voice Help'}
           </Text>
           <Text style={styles.modelHelpText}>
             {language === 'hi'
-              ? 'आवाज़ पहचान डिवाइस की मूल Android Speech Recognition सेवा (Google Speech) का उपयोग करती है। ऑफ़लाइन उपयोग के लिए Android Settings → Google → Voice Settings → Offline Speech Recognition में जाकर Hindi (हिंदी) ऑफ़लाइन पैक डाउनलोड कर सकते हैं।'
-              : 'Voice recognition uses the native Android Speech Recognition service. For offline usage, you can install the Hindi offline pack via Android Settings → Google → Voice → Offline speech recognition.'}
+              ? 'बिना इंटरनेट बोलकर जांच दर्ज करने के लिए फोन की सेटिंग में हिंदी वॉइस पैक डाउनलोड रखें।'
+              : 'To record speech without internet, ensure Hindi offline voice pack is enabled on your phone.'}
           </Text>
         </View>
 

@@ -767,3 +767,22 @@ Append-only chronological record. Entries are prefixed `## [YYYY-MM-DD] <op> | <
   - Updated `tests/sync_idempotency_test.py` to use `limit=500` avoiding pagination boundary clipping on local databases with >100 entries.
 - Documented findings in `wiki/analyses/qwen-model-download-and-packaging-2026-10.md` and indexed in `wiki/index.md`.
 - Full test pass: All 82 tests green across all 6 test suites; mobile TypeScript typecheck clean (0 errors).
+
+## [2026-10-10] fix-ui | UI Technical Jargon Cleanup, Summary Hydration & Priority Badge Fix
+
+- **Elimination of Developer/ML Jargon Across UI**:
+  - `apps/mobile/app/(tabs)/profile.tsx`: Replaced "System Integrity", "On-Device Audio Pipeline", and "Human-in-the-Loop" cards with frontline-appropriate "सुरक्षा एवं गोपनीयता" / "Security & Privacy". Replaced "PRD §52-54" and build tag badges with clean worker info. Replaced raw quantization strings ("INT4 / Cactus", "CQ2 / Needle engine") and "Download Weights" buttons with friendly model names ("Voice Data Extraction", "Fast Screening Summary", "Detailed Screening Summary") and action buttons ("Download", "Remove").
+  - `apps/mobile/constants/translations.ts`: Replaced technical prompts ("100% On-Device Offline AI", "Run AI Extraction & Review", "Local Store-and-Forward Queue", "Clinical Validation & Human Approval", "Evaluate Protocol & Save") with clear, conversational Hindi and English strings.
+  - `apps/mobile/services/ai/modelManager.ts` & `services/api/main.py`: Aligned model metadata catalogs across frontend and backend with user-friendly names.
+  - `apps/dashboard/index.html`: Cleaned up supervisor dashboard status badges and footer (removed "Monorepo Architecture", "FastAPI Synchronization", "Live Sync Engine Active").
+- **UI Bug Fixes**:
+  - `apps/mobile/app/screening/summary.tsx`: Fixed missing vitals and questions when viewing historical screenings from beneficiary profile or home list. Added database hydration fallback via `screeningRepository.getById(params.screeningId)` when orchestrator memory is empty.
+  - `apps/mobile/app/(tabs)/followups.tsx`: Fixed `medium` priority status badges falling through to green normal; properly renders warning chip with "सावधानी" / "Attention".
+- **Verification**:
+  - TypeScript type check clean (0 errors).
+  - All 18 clinical rules passed (`tests/clinical_rules_test.js`).
+  - All 13 sync idempotency & authentication tests passed (`tests/sync_idempotency_test.py`).
+  - All 15 edge cases passed (`tests/edge_cases_test.js`).
+  - All 32 multilingual model harness tests passed (`tests/model_harness_test.js`).
+  - All 4 route smoke tests passed (`tests/route_smoke_test.js`).
+
