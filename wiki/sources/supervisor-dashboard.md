@@ -6,81 +6,34 @@ sources: [sources/backend-api.md]
 tags: [dashboard, supervisor, web]
 ---
 
-# Supervisor Dashboard — `apps/dashboard/index.html`
+# Supervisor Dashboard — `apps/dashboard/`
 
-A single 253-line HTML file. No JS/CSS/asset directory, no build step. It is standalone in
-origin but **served by FastAPI** as a `FileResponse` on both `/` and `/dashboard`
-(`services/api/main.py:47-54`), so it is same-origin with the API.
+A modern React 18 + Vite SPA architecture with Tailwind CSS, Lucide icons, and zero-dependency bilingual engine (`hi` / `en`).
 
-## Path resolution
+## Build & Production Serving
 
-```python
-DASHBOARD_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..",
-                                              "apps", "dashboard", "index.html"))  # main.py:47
-```
+- **Source Code:** `apps/dashboard/src/` (`App.tsx`, `main.tsx`, `views/`, `components/`, `context/`, `i18n/`, `services/api.ts`).
+- **Production Build:** `npm run build --workspace=@asha/dashboard` compiles into `apps/dashboard/dist/`.
+- **FastAPI Serving (`services/api/main.py`):**
+  - Mounts `/assets` statically from `apps/dashboard/dist/assets`.
+  - Serves `dist/index.html` on `/` and `/dashboard` (falling back to `apps/dashboard/index.html` if unbuilt).
+  - Dev server proxy forwards API calls from `localhost:5173` to `127.0.0.1:8000`.
 
-Two `..` hops from `services/api/` reaches the repo root. Registered via stacked decorators on
-one handler (`main.py:49-50`), falling back to a JSON message if the file is missing
-(`:52-54`). There is no `StaticFiles` mount.
+## Architecture & Features (Milestones 1–4)
 
-## Styling
-
-CDN Tailwind with an inline config (`index.html:7`, `:11-29`) plus Google Fonts (Inter, Material
-Symbols). The palette deliberately mirrors the mobile theme: `primary #0F766E`,
-`primaryBright #14B8A6`, `primaryDark #005C55`, `clinicalDanger #DC2626`,
-`clinicalWarning #F59E0B`, `clinicalSuccess #16A34A` (`index.html:15-22`) — the same clinical
-teal/amber/crimson system as `apps/mobile/constants/theme.ts`. A coherent choice for a
-triage UI: one visual language across the worker's phone and the supervisor's screen.
-
-## Data flow
-
-`API_BASE = window.location.origin` (`index.html:162`), then three **sequential** awaits in
-`fetchDashboardData()`:
-
-1. `GET /dashboard/summary` → fills `stat-patients`, `stat-screenings`, `stat-high-priority`,
-   `stat-followups` (`index.html:167-174`).
-2. `GET /dashboard/high-priority` → renders the 5-column triage table; empty state shows
-   "All clear!" (`:177-212`).
-3. `GET /dashboard/workers` → worker cards with `screening_count` (`:215-242`).
-
-Runs once on load and then **polls every 10 s** (`:249-250`). A manual refresh button calls the
-same function (`:49`). All failures are swallowed to `console.warn` (`:243-245`) with **no
-user-visible error state** — a supervisor looking at a stale or empty screen has no way to tell
-"no high-risk cases" from "the backend is down".
-
-## What it renders
-
-| Region | Content | Lines |
-| :--- | :--- | :--- |
-| KPI row | 4 cards: Total Patients, Screenings Recorded, High-Risk Triage, Pending Follow-ups | `:60-108` |
-| Triage table | Beneficiary, Village/Phone, Clinical Trigger, Due Date, Action — 5 columns | `:122-137` |
-| Worker panel | Field worker deployment cards | `:142-153` |
-| Footer | "Not an Autonomous Diagnosis System" disclaimer | `:158` |
-
-The disclaimer is the right instinct for a clinical triage surface: the tool positions itself as
-decision *support*, matching the deterministic-triage invariant
-([[concepts/deterministic-triage]]).
-
-## Three functional gaps
-
-1. **The triage button is a stub.** The "Referral Triage" control only fires a native
-   `alert()` (`index.html:204`). No `PATCH` ever reaches `PATCH /followups/{id}`
-   (`services/api/main.py:250-262`) — so **the dashboard cannot close a follow-up**. The
-   supervisor sees the queue and can acknowledge it in a browser dialog, and nothing else.
-2. **Active-worker count is hard-coded.** `active-workers-count` is static markup reading
-   "2 Active" (`index.html:148`) and is never updated by the fetch logic, despite
-   `DashboardSummary` having an `active_workers` field (`types.ts:145`).
-3. **`screening_count` per worker is wrong**, because of the `LEFT JOIN screenings s ON 1=1`
-   cross join in the endpoint it reads (`services/api/main.py:444`). Every worker card shows the
-   same global total. See [[sources/backend-api]].
-
-## Why it matters to the field loop
-
-This screen is the only place a PHC Medical Officer sees field activity, and it is the payoff
-for the entire offline-sync architecture — the reason a worker's queued records exist at all.
-It is also the thinnest-tested part of the system: no test touches it, its two data-critical
-controls are broken, and it has never been exercised against a populated database in this
-session's testing.
+1. **Zero-Dependency Bilingual Engine:** Synchronized Hindi & English dictionaries (`src/i18n/translations.ts`) with persistent storage and instant toggle.
+2. **Top Shell & Navigation:** Catchment indicator ("PHC Rampur · Sector 3"), real-time sync pill, and 5 primary navigation tabs:
+   - 🚨 **Triage & Surveillance (`/triage`)**: 4 KPI cards with trend indicators, urgent danger sign queue with triage button, and active field worker summary.
+   - 👥 **Beneficiary Directory (`/patients`)**: Search with debounce, village/hamlet filter chips, pagination (10/25/50), add/edit/archive modals.
+   - 📋 **Clinical Screenings (`/screenings`)**: Full inspection list with collapsible drawer for vitals breakdown, rule engine evaluations, AI summaries, and voice transcripts.
+   - 🏥 **Referrals & Follow-ups (`/followups`)**: Status tabs, priority filter chips, destination facility tracking, and interactive disposition modal.
+   - 👩‍⚕️ **Field Workers & Devices (`/workers`)**: Deployment grid with live sync health pills, screening counts, and registration modal.
+3. **Interactive CRUD Modals:**
+   - `PatientModal.tsx`: Beneficiary registration, edit, and monotonic soft delete.
+   - `FollowupModal.tsx`: Facility escalation, urgency classification, and assignee tracking via `PATCH /followups/:id`.
+   - `WorkerModal.tsx`: Registration of ASHA/ANM workers.
+4. **Live Polling & Visibility API:** Polls `/dashboard/summary` and `/dashboard/high-priority` every 15s; pauses automatically when tab is hidden (`document.hidden`).
+5. **CSV Export Action:** One-click download of filtered surveillance datasets into CSV format.
 
 ## Related
 

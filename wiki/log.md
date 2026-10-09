@@ -617,18 +617,31 @@ Append-only chronological record. Entries are prefixed `## [YYYY-MM-DD] <op> | <
   - Recognized Hindi/Hinglish speech streams live into `transcript` in `voice-capture.tsx`
     while speaking, followed by a final full decode on mic stop.
 - Guarded silence warning in `voice-capture.tsx` against populated live transcripts.
-## [2026-10-09] release | Production Release APK with Real-Time Streaming Whisper STT
+## [2026-10-10] feat | Supervisor Command Center — React 18 + Vite SPA & Zero-Conflict Dashboard
 
-- Rebuilt production release APK with periodic sliding-window Whisper decoding:
-  `assembleRelease --no-daemon` in `apps/mobile/android` (BUILD SUCCESSFUL in 1m 44s).
-- Artifact: `dist/ASHA-AI-Copilot-v1.0.0-release.apk`, 159,946,833 bytes.
-- Build Tag: `2026-10-09-whisper-stream` (configured in `apps/mobile/constants/build.ts`).
-- SHA-256: `DDFC4718DC7E55C829FB9C2FF4A4890E8FA5D9A71B45F22474206C611A3F88C0`.
-- apksigner: Verified (APK Signature Scheme v2: true, 1 signer).
-- Native Libraries Included (arm64-v8a): `libwhisper_asha.so`, `libneedle_jni.so`,
-  `libcactus_engine.so`, `libonnxruntime.so`, `libggml.so`, `libcrsqlite.so`.
-- Complete monorepo verification: `tsc 0`, Clinical Rules 13/13, Sync Idempotency 12/12,
-  Multilingual Model Harness 32/32, Route Smoke 4/4 (61/61 checks green).
+- Implemented Developer 1 requirements for the Supervisor Command Center in `apps/dashboard/`:
+  - **Milestone 1:** Initialized `@asha/dashboard` Vite + React 18 + TypeScript + Tailwind CSS project.
+    Configured clinical design tokens (`#0F766E` primary, clinical alerts), zero-dependency bilingual
+    engine (`hi`/`en`) with localStorage persistence, and top app shell with live sync indicator pill.
+  - **Milestone 2:** Implemented 5 primary core views:
+    - `TriageView.tsx`: 4 KPI metric cards with trend indicators, urgent danger sign queue with instant
+      triage disposition modal button, and active field worker deployment summary.
+    - `PatientsView.tsx`: Debounced search (Name/Phone/ABHA/Household), village and hamlet filter chips,
+      paginated beneficiary table, and add/edit modal actions.
+    - `ScreeningsView.tsx`: Comprehensive audit log with collapsible drawer displaying vitals breakdown,
+      triggered protocol rules, Qwen AI clinical summaries, and Whisper transcripts.
+    - `FollowupsView.tsx`: Status tabs, priority filter chips, referral destination facility tracker,
+      and interactive disposition management.
+    - `WorkersView.tsx`: Field deployment grid with live sync health pills, screening counts, and registration.
+  - **Milestone 3:** Developed interactive modals:
+    - `PatientModal.tsx`: Complete create/edit form validation with monotonic soft-delete confirmation.
+    - `FollowupModal.tsx`: Referral disposition, urgency classification, and assignee tracking via `PATCH /followups/:id`.
+    - `WorkerModal.tsx`: ASHA and ANM worker registration and catchment allocation.
+  - **Milestone 4:** Live 15s polling integration with Visibility API pause (`document.hidden`),
+    global toast notification on newly arrived critical emergencies, and CSV export for surveillance datasets.
+- Production build verified: `tsc && vite build` compiled cleanly into `apps/dashboard/dist/`.
+- Updated `services/api/main.py` to statically mount `/assets` and serve Vite's `dist/index.html` on `/` and `/dashboard`.
+
 
 
 
