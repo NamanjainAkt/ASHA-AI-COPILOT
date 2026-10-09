@@ -22,8 +22,6 @@ import { Colors, Spacing } from '../../constants/theme';
 import { useLanguage } from '../../context/LanguageContext';
 import { DEMO_SCENARIOS, DemoVoiceScenario } from '../../services/ai/simulatorDriver';
 import { screeningOrchestrator } from '../../services/ai/orchestrator';
-import { aiOrchestrator } from '../../services/ai/aiOrchestrator';
-import { modelManager } from '../../services/ai/modelManager';
 import { patientRepository } from '../../services/db/patientRepo';
 import { Patient, ScreeningType } from '@asha/shared';
 
@@ -66,6 +64,7 @@ export default function VoiceCaptureScreen() {
 
   // Live transcript & dictation text (starts completely empty, no dummy values)
   const [transcript, setTranscript] = useState<string>('');
+  const baseTextRef = useRef<string>('');
 
   // Live STT engine state: '' | 'GoogleSpeechLive' | 'OnDeviceAudioRecordFallback' | 'needs-network'
   const [sttEngine, setSttEngine] = useState<string>('');
@@ -81,20 +80,23 @@ export default function VoiceCaptureScreen() {
     let subPartial: any = null;
     let subVolume: any = null;
     let subError: any = null;
-    let subChunk: any = null;
     try {
       const module = NativeModules?.CactusNativeModule;
       if (module) {
         const emitter = new NativeEventEmitter(module);
         subResults = emitter.addListener('onSpeechResults', (event: any) => {
           if (event?.text && typeof event.text === 'string' && event.text.trim()) {
-            setTranscript(event.text.trim());
+            const recognized = event.text.trim();
+            const combined = baseTextRef.current ? `${baseTextRef.current} ${recognized}` : recognized;
+            setTranscript(combined);
             setSttHint('');
           }
         });
         subPartial = emitter.addListener('onSpeechPartialResults', (event: any) => {
           if (event?.text && typeof event.text === 'string' && event.text.trim()) {
-            setTranscript(event.text.trim());
+            const recognized = event.text.trim();
+            const combined = baseTextRef.current ? `${baseTextRef.current} ${recognized}` : recognized;
+            setTranscript(combined);
             setSttHint('');
           }
         });
@@ -119,24 +121,6 @@ export default function VoiceCaptureScreen() {
             waveAnim2.setValue(scale2);
           }
         });
-        subChunk = emitter.addListener('onSpeechChunk', async (event: any) => {
-          if (event?.pcmBase64 && aiOrchestrator.isLiveSessionActive()) {
-            try {
-              const { confirmed, pending } = await aiOrchestrator.pushLiveAudio(event.pcmBase64);
-              const live = (confirmed + (pending ? ' ' + pending : '')).trim();
-              if (live) {
-                setTranscript(live);
-                setSttHint('');
-              }
-            } catch (e: any) {
-              setSttHint(
-                language === 'hi'
-                  ? `व्हिस्पर त्रुटि (${e?.message || 'error'}) — रोकें और पुनः प्रयास करें।`
-                  : `Whisper error (${e?.message || 'error'}) — stop and retry.`
-              );
-            }
-          }
-        });
       }
     } catch (e) {
       console.warn('Native speech listener init notice:', e);
@@ -147,7 +131,6 @@ export default function VoiceCaptureScreen() {
       subPartial?.remove?.();
       subVolume?.remove?.();
       subError?.remove?.();
-      subChunk?.remove?.();
     };
   }, []);
 
@@ -272,77 +255,31 @@ export default function VoiceCaptureScreen() {
         }
       }
 
+      baseTextRef.current = transcript.trim();
       setDuration(0);
       setIsRecording(true);
       isRecordingRef.current = true;
       setSttHint('');
 
-      // 2. Speech Recognition routing to capture real speech without mic lock conflicts:
-      // Cactus Whisper streaming first (fully offline, weights from Profile → AI Models),
-      // platform dictation only as fallback when weights are absent.
+      // 2. Speech Recognition: Native Android SpeechRecognizer (Google Speech Services with offline Hindi/English pack)
       if (NativeModules?.CactusNativeModule?.startListening) {
         const langTag = language === 'hi' ? 'hi' : 'en';
-        let cactusLive = false;
-        let cactusStartError = '';
-        // Fresh disk probe: never decide readiness on possibly-stale memory.
-        let diskReport = '';
         try {
-          const report = await modelManager.refreshStatuses();
-          diskReport = ` [disk: tiny=${report['whisper-hindi'] || '?'}, base=${report['whisper-base'] || '?'}]`;
-        } catch (_) {}
-        const sttModel = modelManager.getActiveSttModel();
-        if (sttModel === null) {
-          // No STT weights on device: Cactus is skipped entirely. Fallback below
-          // needs internet for Hindi (hi-IN has no offline pack on most phones).
+          const res = await NativeModules.CactusNativeModule.startListening(langTag);
+          const engine = res?.engine || 'GoogleSpeechLive';
+          setSttEngine(engine);
           setSttHint(
             language === 'hi'
-              ? `वॉयस मॉडल डाउनलोड नहीं है — Profile → AI Models से Whisper डाउनलोड करें। बिना मॉडल के हिंदी सुनवाई को इंटरनेट चाहिए।${diskReport}`
-              : `Voice model not downloaded — get Whisper from Profile → AI Models. Fallback dictation needs internet.${diskReport}`
+              ? 'सुन रहा है… बोलें'
+              : 'Listening… speak now'
           );
-        } else if (NativeModules.CactusNativeModule.startAudioCapture) {
-          try {
-            await aiOrchestrator.startLiveSession(langTag);
-            const res = await NativeModules.CactusNativeModule.startAudioCapture();
-            setSttEngine('CactusWhisperLive');
-            setSttHint(language === 'hi' ? 'व्हिस्पर सुन रहा है… बोलें' : 'Whisper listening… speak now');
-            cactusLive = true;
-            void res;
-          } catch (liveErr: any) {
-            try {
-              await aiOrchestrator.stopLiveSession();
-            } catch (_) {}
-            cactusStartError = liveErr?.message || 'error';
-            setSttHint(
-              language === 'hi'
-                ? `व्हिस्पर शुरू नहीं हुआ (${cactusStartError}) — वैकल्पिक सुनवाई चालू।`
-                : `Whisper failed to start (${cactusStartError}) — trying fallback.`
-            );
-          }
-        }
-        if (!cactusLive) {
-          // Native Android: live platform dictation (hi-IN/en-IN) streaming into the notes box
-          try {
-            const res = await NativeModules.CactusNativeModule.startListening(langTag);
-            const engine = res?.engine || '';
-            setSttEngine(engine);
-            const whisperNote = cactusStartError ? ` (Whisper failed: ${cactusStartError})` : '';
-            if (engine === 'OnDeviceAudioRecordFallback') {
-              setSttHint(language === 'hi'
-                ? `इस डिवाइस पर लाइव लिखाई उपलब्ध नहीं${whisperNote} — मॉडल डाउनलोड करें या नीचे टाइप करें।`
-                : `Live transcription unavailable${whisperNote} — download voice model or type below.`);
-            } else {
-              setSttHint(language === 'hi'
-                ? `सुन रहा है… बोलें${whisperNote}`
-                : `Listening… speak now${whisperNote}`);
-            }
-          } catch (err: any) {
-            setSttEngine('start-failed');
-            setSttHint(
-              language === 'hi'
-                ? `सुनवाई शुरू नहीं हुई (${err?.message || 'error'}) — Profile से वॉयस मॉडल डाउनलोड करें या टाइप करें।`
-                : `Dictation failed to start (${err?.message || 'error'}) — download the voice model from Profile or type.`
-            );
-          }
+        } catch (err: any) {
+          setSttEngine('error');
+          setSttHint(
+            language === 'hi'
+              ? `सुनवाई शुरू नहीं हुई (${err?.message || 'error'}) — कृपया नीचे टाइप करें।`
+              : `Speech recognition failed (${err?.message || 'error'}) — please type below.`
+          );
         }
       } else if (Platform.OS === 'web' && typeof window !== 'undefined') {
         // Web / Chrome: Native browser Web Speech Recognition API
@@ -418,10 +355,13 @@ export default function VoiceCaptureScreen() {
       try {
         const res = await NativeModules.CactusNativeModule.stopListening();
         if (res?.text && typeof res.text === 'string' && res.text.trim()) {
-          setTranscript(res.text.trim());
+          const recognized = res.text.trim();
+          const combined = baseTextRef.current ? `${baseTextRef.current} ${recognized}` : recognized;
+          setTranscript(combined);
           setSttHint('');
           heardText = true;
         }
+        baseTextRef.current = '';
         if (res?.audioPath && typeof res.audioPath === 'string') {
           nativeAudioPath = res.audioPath;
           setAudioUri(res.audioPath);
@@ -430,31 +370,7 @@ export default function VoiceCaptureScreen() {
         console.warn('Native stopListening notice:', e);
       }
     }
-    // 1b. Flush an active Cactus live session (offline Whisper streaming tail)
-    if (aiOrchestrator.isLiveSessionActive()) {
-      try {
-        const live = await aiOrchestrator.stopLiveSession();
-        if (live.text) {
-          setTranscript(live.text);
-          setSttHint('');
-          heardText = true;
-        } else if (live.decodeTokens === 0) {
-          setSttHint(
-            language === 'hi'
-              ? 'व्हिस्पर ने 0 शब्द डिकोड किए (भाषा सेटिंग समस्या) — अंग्रेज़ी में बोलकर देखें।'
-              : 'Whisper decoded 0 tokens (language/prompt issue) — try English.'
-          );
-        } else {
-          setSttHint(
-            language === 'hi'
-              ? `व्हिस्पर ने ${live.decodeTokens} टोकन डिकोड किए पर शब्द नहीं बने — पुनः प्रयास करें।`
-              : `Whisper decoded ${live.decodeTokens} tokens but formed no words — retry.`
-          );
-        }
-      } catch (e) {
-        console.warn('Live session stop notice:', e);
-      }
-    }
+
 
     // 2. Stop Web Speech Recognition if active
     if (webRecognitionRef.current) {
@@ -556,10 +472,10 @@ export default function VoiceCaptureScreen() {
           );
         } catch (sttErr: any) {
           Alert.alert(
-            language === 'hi' ? 'वॉयस मॉडल उपलब्ध नहीं' : 'Voice Model Unavailable',
+            language === 'hi' ? 'आवाज़ पहचान में त्रुटि' : 'Speech Recognition Error',
             language === 'hi'
-              ? `ऑडियो दर्ज हुआ, पर Whisper मॉडल लोड नहीं है। Wi-Fi पर मॉडल डाउनलोड करें या लक्षण टाइप करें। (${sttErr?.message || ''})`
-              : `Audio captured, but the Whisper model is not loaded. Download it on Wi-Fi or type symptoms. (${sttErr?.message || ''})`
+              ? `आवाज़ पहचान विफल रही। कृपया लक्षण टाइप करें। (${sttErr?.message || ''})`
+              : `Speech recognition failed. Please type symptoms manually. (${sttErr?.message || ''})`
           );
           isProcessingRef.current = false;
           setIsProcessing(false);
@@ -818,7 +734,10 @@ export default function VoiceCaptureScreen() {
                 </View>
                 {transcript.length > 0 && (
                   <TouchableOpacity
-                    onPress={() => setTranscript('')}
+                    onPress={() => {
+                      setTranscript('');
+                      baseTextRef.current = '';
+                    }}
                     hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                     style={styles.clearBtn}
                     accessibilityLabel={language === 'hi' ? 'नोट्स साफ़ करें' : 'Clear notes'}

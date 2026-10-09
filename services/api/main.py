@@ -702,30 +702,6 @@ def reset_seed_data(current_user: dict = Depends(require_supervisor)):
 # the upstream CDN, so the phone downloads directly (Profile → AI Models).
 # size_bytes is the exact upstream byte count; the app rejects truncated files.
 MODELS_CATALOG = {
-    "whisper-hindi": {
-        "id": "whisper-hindi",
-        "name": "Whisper Tiny Hindi (Speech-to-Text)",
-        "name_hi": "व्हिस्पर टाइनी हिंदी (आवाज़ से टेक्स्ट)",
-        "version": "tiny-ggml",
-        "size_bytes": 77691713,
-        "size_formatted": "78 MB",
-        "quantization": "ggml / whisper.cpp",
-        "source_url": "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin",
-        "artifact": "ggml-tiny.bin",
-        "is_optional": False
-    },
-    "whisper-base": {
-        "id": "whisper-base",
-        "name": "Whisper Base Hindi (Larger STT)",
-        "name_hi": "व्हिस्पर बेस हिंदी (बेहतर पहचान)",
-        "version": "base-ggml",
-        "size_bytes": 147951465,
-        "size_formatted": "148 MB",
-        "quantization": "ggml / whisper.cpp",
-        "source_url": "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin",
-        "artifact": "ggml-base.bin",
-        "is_optional": True
-    },
     "needle3": {
         "id": "needle3",
         "name": "Needle 3 (Structured Extraction)",

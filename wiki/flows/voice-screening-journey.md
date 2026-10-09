@@ -1,7 +1,7 @@
 ---
 type: flow
 created: 2026-10-07
-updated: 2026-10-07
+updated: 2026-10-09
 sources: [sources/mobile-ui-navigation.md, entities/screening-orchestrator.md, entities/clinical-rule-engine.md, entities/local-sqlite-store.md]
 tags: [flow, clinical, voice, screening]
 ---
@@ -40,12 +40,12 @@ flipping type to `pregnancy` for a female under 45 (`:84-89`).
 
 `Audio.requestPermissionsAsync()` on mount (`:137-143`). `startRecording` (`:185-245`) →
 `stopRecording` (`:247-295`).
-- **Live dictation (2026-10-08, Cactus-first):** when Whisper weights are downloaded
-  (Profile → AI Models), native `AudioRecord` emits ~1s PCM chunks (`onSpeechChunk`)
-  and `AIOrchestrator` streams them through `Cactus.streamTranscribeStart/Process/Stop`
-  (`language: hi`), so confirmed + pending words fill the notes box in real time —
-  fully offline. Without weights, platform dictation remains the fallback with the
-  same inline hints. Post-record file transcription uses `transcribeAudio` (base64 PCM).
+- **Live dictation (2026-10-09, Native SpeechRecognizer):** utilizes Android's native
+  `SpeechRecognizer` engine (`hi-IN` / `en-IN`, `EXTRA_PREFER_OFFLINE = true`, `EXTRA_PARTIAL_RESULTS = true`).
+  Recognized speech streams live via `onSpeechPartialResults` and `onSpeechResults` directly into
+  the notes box in real time. Does not store or cache raw audio (`.pcm`) files, fully respecting
+  Privacy Invariant 3. Frontline workers can download the offline Hindi speech recognition
+  pack in Android system settings for full offline operation.
   Extraction uses Needle 3 (`needle_complete` + schema tools, field states
   known/unknown/uncertain/not_applicable) with deterministic `extractMultilingualScreeningData`
   fallback; summaries use the selected Qwen (0.6B default) with deterministic template

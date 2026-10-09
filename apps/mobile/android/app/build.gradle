@@ -188,7 +188,4 @@ dependencies {
     } else {
         implementation jscFlavor
     }
-
-    // ONNX Runtime Android for on-device ML model execution (Whisper / Needle / Qwen)
-    implementation("com.microsoft.onnxruntime:onnxruntime-android:1.19.2")
 }

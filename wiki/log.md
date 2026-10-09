@@ -630,5 +630,45 @@ Append-only chronological record. Entries are prefixed `## [YYYY-MM-DD] <op> | <
 - Complete monorepo verification: `tsc 0`, Clinical Rules 13/13, Sync Idempotency 12/12,
   Multilingual Model Harness 32/32, Route Smoke 4/4 (61/61 checks green).
 
+## [2026-10-09] refactor | Switch to Android Native SpeechRecognizer & Purge Whisper
+
+- Replaced Whisper Tiny/Base runtime and onnxruntime with Android's built-in `SpeechRecognizer`.
+  - Driven in `CactusNativeModule.kt` with `EXTRA_PREFER_OFFLINE = true`, `EXTRA_PARTIAL_RESULTS = true`,
+    and language tag matching (`hi-IN` / `en-IN`).
+  - Native callbacks `onSpeechPartialResults` and `onSpeechResults` stream transcribed text directly to UI.
+  - Zero raw audio or `.pcm` files written to disk (strictly enforces Privacy Invariant 3).
+- Purged Whisper assets, C++ libraries, and JNI bindings:
+  - Deleted `third-party/whispercpp/` (2,900+ files, ~1M lines of C/C++).
+  - Deleted `apps/mobile/android/app/src/main/cpp/whisper_jni.cpp`.
+  - Deleted `apps/mobile/android/app/src/main/java/org/health/asha/aicopilot/WhisperCppModule.kt`.
+  - Removed `com.microsoft.onnxruntime:onnxruntime-android:1.19.2` dependency from `build.gradle`.
+- Updated TypeScript orchestration & UI:
+  - `modelManager.ts`: pruned Whisper models and download entries; catalog now focuses on Needle 3 & Qwen.
+  - `aiOrchestrator.ts`: eliminated chunk buffers, sliding-window decoders, and A/B/C test runner.
+  - `cactusDriver.ts`: reports `ASHA Hybrid Engine (Native SpeechRecognizer + Needle 3 + Qwen)`.
+  - `voice-capture.tsx` & `profile.tsx`: streamlined for native recognition; added user instructions for
+    installing the offline Hindi speech recognition pack via Android System Settings.
+- Optimized Build & Release Artifact:
+  - APK Size reduced by ~74 MB: from 159.9 MB down to 86.0 MB (`dist/ASHA-AI-Copilot-v1.0.0-release.apk`).
+  - Build Tag: `2026-10-09-native-stt`.
+  - Verified with `apksigner` (v2 signature scheme valid). Confirmed zero Whisper/ONNX `.so` files in arm64-v8a.
+- All 61 automated tests green: TypeScript compilation (0 errors), Clinical rules (13/13),
+  Multilingual model harness (32/32), Sync idempotency & auth (12/12), Route smoke tests (4/4).
+
+## [2026-10-09] review | Continuous Utterance Accumulation & Real-time Live Dictation
+
+- Conducted comprehensive audit of voice screening page (`voice-capture.tsx`) and native bridge (`CactusNativeModule.kt`).
+- Enhanced speech stream continuity across natural clinical pauses:
+  - Added `accumulatedText` buffer in `CactusNativeModule.kt` to preserve prior sentences across recognizer resets.
+  - Added Android speech intent silence extras (`EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS`, `EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS`).
+  - Added bounded pause retry with `postDelayed` backoff on `ERROR_SPEECH_TIMEOUT` / `ERROR_NO_MATCH` so recognizer doesn't stall while worker examines vitals.
+- Enhanced UI text box binding:
+  - Added `baseTextRef` in `voice-capture.tsx` to seamlessly preserve pre-typed notes or quick clinical chips when dictation begins.
+  - Bound `TextInput` (`value={transcript}`) to native event stream (`onSpeechPartialResults` and `onSpeechResults`) for real-time word-by-word streaming.
+- Recompiled and verified release APK (`dist/ASHA-AI-Copilot-v1.0.0-release.apk`, 86.0 MB, apksigner v2 verified).
+- Full test suite passed (61/61 tests green).
+
+
+
 
 

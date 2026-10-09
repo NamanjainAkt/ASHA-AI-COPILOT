@@ -21,7 +21,6 @@ import { patientRepository } from '../../services/db/patientRepo';
 import { screeningOrchestrator } from '../../services/ai/orchestrator';
 import { clearAllData } from '../../services/db/database';
 import { modelManager, ModelMetadata, ModelId, SummaryModelId } from '../../services/ai/modelManager';
-import { aiOrchestrator, AbcVariantResult } from '../../services/ai/aiOrchestrator';
 import { BUILD_TAG } from '../../constants/build';
 
 export default function WorkerPerformanceScreen() {
@@ -201,56 +200,7 @@ export default function WorkerPerformanceScreen() {
     );
   };
 
-  // Hindi STT A/B/C self-test: record one Hindi clip, run three engine variants.
-  const [testRecording, setTestRecording] = useState(false);
-  const [testClipPath, setTestClipPath] = useState<string | null>(null);
-  const [abcRunning, setAbcRunning] = useState(false);
-  const [abcResults, setAbcResults] = useState<AbcVariantResult[] | null>(null);
 
-  const handleTestRecordToggle = async () => {
-    const native = NativeModules?.CactusNativeModule;
-    if (!native) {
-      Alert.alert('Error', 'Native audio module missing');
-      return;
-    }
-    if (!testRecording) {
-      try {
-        await modelManager.refreshStatuses();
-        setModels(modelManager.getAllModels());
-        await native.startAudioCapture();
-        setTestClipPath(null);
-        setAbcResults(null);
-        setTestRecording(true);
-      } catch (e: any) {
-        Alert.alert(language === 'hi' ? 'त्रुटि' : 'Error', e?.message || 'Mic start failed');
-      }
-    } else {
-      try {
-        const res = await native.stopListening();
-        setTestRecording(false);
-        if (res?.audioPath) setTestClipPath(res.audioPath);
-        else Alert.alert(language === 'hi' ? 'त्रुटि' : 'Error', 'No audio captured');
-      } catch (e: any) {
-        setTestRecording(false);
-        Alert.alert(language === 'hi' ? 'त्रुटि' : 'Error', e?.message || 'Mic stop failed');
-      }
-    }
-  };
-
-  const handleRunAbc = async () => {
-    if (!testClipPath || abcRunning) return;
-    setAbcRunning(true);
-    setAbcResults(null);
-    try {
-      const results = await aiOrchestrator.runSttAbcTest(testClipPath);
-      setAbcResults(results);
-    } catch (e: any) {
-      Alert.alert(language === 'hi' ? 'त्रुटि' : 'Error', e?.message || 'Self-test failed');
-    } finally {
-      setAbcRunning(false);
-      setModels(modelManager.getAllModels());
-    }
-  };
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
@@ -503,57 +453,16 @@ export default function WorkerPerformanceScreen() {
           </View>
         </View>
 
-        {/* Hindi STT A/B/C self-test (expert protocol, one clip, three variants) */}
+        {/* Android Native Speech Recognition Info Card */}
         <View style={styles.sectionCard}>
           <Text style={styles.sectionTitle}>
-            {language === 'hi' ? 'हिंदी STT स्व-परीक्षण (A/B/C)' : 'Hindi STT self-test (A/B/C)'}
+            {language === 'hi' ? 'आवाज़ पहचान (Android Speech)' : 'Speech Recognition (Android)'}
           </Text>
           <Text style={styles.modelHelpText}>
             {language === 'hi'
-              ? '10 सेकंड हिंदी बोलकर रिकॉर्ड करें, फिर एक ही क्लिप पर तीनों इंजन सेटिंग चलाएं।'
-              : 'Record 10 seconds of Hindi, then run all three engine settings on the same clip.'}
+              ? 'आवाज़ पहचान डिवाइस की मूल Android Speech Recognition सेवा (Google Speech) का उपयोग करती है। ऑफ़लाइन उपयोग के लिए Android Settings → Google → Voice Settings → Offline Speech Recognition में जाकर Hindi (हिंदी) ऑफ़लाइन पैक डाउनलोड कर सकते हैं।'
+              : 'Voice recognition uses the native Android Speech Recognition service. For offline usage, you can install the Hindi offline pack via Android Settings → Google → Voice → Offline speech recognition.'}
           </Text>
-          <View style={styles.modelActionRow}>
-            <TouchableOpacity
-              style={[styles.modelActionBtn, testRecording && styles.modelDeleteBtn]}
-              onPress={handleTestRecordToggle}
-              activeOpacity={0.8}
-            >
-              <Ionicons
-                name={testRecording ? 'stop-circle-outline' : 'mic-outline'}
-                size={15}
-                color={testRecording ? Colors.danger : Colors.primary}
-              />
-              <Text style={styles.modelActionBtnText}>
-                {testRecording
-                  ? (language === 'hi' ? 'रोकें' : 'Stop')
-                  : (language === 'hi' ? 'हिंदी रिकॉर्ड करें' : 'Record Hindi')}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.modelActionBtn, (!testClipPath || abcRunning) && styles.modelActionBtnDisabled]}
-              onPress={handleRunAbc}
-              disabled={!testClipPath || abcRunning}
-              activeOpacity={0.8}
-            >
-              <Ionicons name="flask-outline" size={15} color={Colors.primary} />
-              <Text style={styles.modelActionBtnText}>
-                {abcRunning
-                  ? (language === 'hi' ? 'चल रहा…' : 'Running…')
-                  : (language === 'hi' ? 'A/B/C चलाएं' : 'Run A/B/C')}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          {abcResults && (
-            <View style={styles.abcResults}>
-              {abcResults.map((r) => (
-                <View key={r.label} style={styles.abcRow}>
-                  <Text style={styles.abcLabel}>{r.label} • {r.segments} seg</Text>
-                  <Text style={styles.abcText}>{r.text || '(empty)'}</Text>
-                </View>
-              ))}
-            </View>
-          )}
         </View>
 
         {/* Clear Demo Data / Start Fresh Action */}
