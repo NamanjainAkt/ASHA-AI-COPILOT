@@ -139,6 +139,10 @@ export const followupRepository = {
       fields.push('outcome = ?');
       values.push(updates.outcome || null);
     }
+    if (updates.notes !== undefined) {
+      fields.push('notes = ?');
+      values.push(updates.notes || null);
+    }
 
     values.push(id);
     await runner.runAsync(

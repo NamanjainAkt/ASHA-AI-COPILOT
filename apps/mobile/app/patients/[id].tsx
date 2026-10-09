@@ -240,6 +240,7 @@ export default function PatientDetailScreen() {
                     {patient.phone_owner === 'self' ? (language === 'hi' ? 'स्वयं' : 'Self') :
                      patient.phone_owner === 'spouse' ? (language === 'hi' ? 'पति/पत्नी' : 'Spouse') :
                      patient.phone_owner === 'parent' ? (language === 'hi' ? 'माता/पिता' : 'Parent') :
+                     patient.phone_owner === 'neighbor' ? (language === 'hi' ? 'पड़ोसी' : 'Neighbor') :
                      (language === 'hi' ? 'अन्य' : 'Other')}
                   </Text>
                 </View>
