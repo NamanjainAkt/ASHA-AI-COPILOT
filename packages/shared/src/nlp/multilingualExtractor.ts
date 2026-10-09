@@ -28,7 +28,7 @@ function isNegated(text: string, term: string): boolean {
 
   // Negation keywords in Hindi, Hinglish, English
   const negBefore = /(?:no|not|without|nahi|nahin|na|bilkul\s+nahi|koi\s+nahi|kabhi\s+nahi|नहीं|ना|बिना)\s*$/i;
-  const negAfter = /^\s*(?:bilkul\s+|kabhi\s+|bhi\s+)?(?:nahi|nahin|na|nahi\s+hai|nahin\s+hai|not|never|नहीं|नहीं\s+है|ना)/i;
+  const negAfter = /^\s*(?:bilkul\s+|kabhi\s+|bhi\s+|भी\s+|बिल्कुल\s+)?(?:nahi|nahin|na|nahi\s+hai|nahin\s+hai|not|never|नहीं|नहीं\s+है|ना)/i;
 
   return negBefore.test(prefix.trim()) || negAfter.test(suffix.trim());
 }
@@ -257,7 +257,7 @@ export function extractMultilingualScreeningData(
   // Medication adherence (default true unless stated missed/stopped)
   const hasMissedMeds = hasClinicalSign(normalizedText, [
     'दवा नहीं', 'गोली नहीं', 'दवा छूट', 'छूट गई', 'बंद कर दी',
-    'missed medication', 'stopped medicines', 'dawa nahi li', 'goli band',
+    'missed medication', 'stopped medicines', 'dawa nahi li', 'dawa band', 'goli band',
     'dawa miss', 'goli miss', 'missed', 'chhut gayi', 'nahin le rahe'
   ]);
 
