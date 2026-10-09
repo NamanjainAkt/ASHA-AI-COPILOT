@@ -803,3 +803,12 @@ Append-only chronological record. Entries are prefixed `## [YYYY-MM-DD] <op> | <
   - `tests/clinical_rules_test.js`: 18/18 tests PASSED.
   - `npm run build --workspace=@asha/dashboard`: Built cleanly with 0 TypeScript/Vite errors.
   - Visual browser test (`browser_subagent`): Verified end-to-end rendering of dashboard at `http://localhost:8000/dashboard` with 0 console errors.
+
+## [2026-10-10] ops | Purge dummy seed data & launch Cloudflare Tunnel
+
+- Purged all synthetic test fixtures (`patients`, `screenings`, `followups`, `sync_events`, `devices`, and test workers) from `services/api/asha_backend.db`.
+- Changed `seed_demo_data()` default guard in `services/api/database.py` so demo data is never auto-seeded on restart (only seeded if `ASHA_SEED_DEMO="1"` or explicitly requested).
+- Downloaded and configured `cloudflared` v2026.10.0.
+- Established active public HTTPS tunnel routing to port 8000: `https://plymouth-holiday-cups-passage.trycloudflare.com`.
+- Verified live dashboard metrics over the tunnel: Total Patients = 0, Screenings = 0, High Risk Alerts = 0.
+

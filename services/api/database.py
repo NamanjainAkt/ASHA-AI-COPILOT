@@ -213,8 +213,8 @@ def init_db():
     conn.close()
 
 def seed_demo_data(force: bool = False):
-    # Guard: env var gate (ISS-150)
-    if not force and os.environ.get("ASHA_SEED_DEMO", "1") == "0":
+    # Guard: env var gate (ISS-150) - default to 0 so dummy data is never auto-seeded
+    if not force and os.environ.get("ASHA_SEED_DEMO", "0") != "1":
         return
 
     conn = get_db()
