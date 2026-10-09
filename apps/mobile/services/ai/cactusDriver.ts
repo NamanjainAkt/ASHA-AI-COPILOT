@@ -16,16 +16,12 @@ import type { FieldState } from './needle3Schemas';
  */
 export class CactusNativeDriver implements AIEngineDriver {
   get name(): string {
-    const parts: string[] = [];
-    const stt = modelManager.getActiveSttModel();
-    if (stt === 'whisper-base') parts.push('Whisper.cpp Base Hindi');
-    else if (stt === 'whisper-hindi') parts.push('Whisper.cpp Tiny Hindi');
+    const parts: string[] = ['Native SpeechRecognizer'];
     if (modelManager.isModelReady('needle3')) parts.push('Needle 3');
     const qwen = modelManager.getActiveSummaryModel();
     if (qwen === 'qwen3-0.6b') parts.push('Qwen 0.6B');
     if (qwen === 'qwen3-1.7b') parts.push('Qwen 1.7B');
-    if (parts.length === 0) return 'ASHA Multilingual NLP Engine (Offline Rule Driver)';
-    return `Cactus Neural Engine (${parts.join(' + ')})`;
+    return `ASHA Hybrid Engine (${parts.join(' + ')})`;
   }
 
   async isAvailable(): Promise<boolean> {
@@ -38,14 +34,11 @@ export class CactusNativeDriver implements AIEngineDriver {
   }
 
   async transcribe(audioUri: string): Promise<string> {
-    if (!audioUri || audioUri.trim().length === 0 || audioUri === 'live_voice_session.m4a') {
-      throw new Error('No recorded audio file to transcribe. Record on-device audio first.');
+    // With Native SpeechRecognizer, transcription is streamed directly from live audio
+    if (!audioUri || audioUri.trim().length === 0) {
+      throw new Error('No speech transcript found. Please speak into the microphone or type symptoms manually.');
     }
-    const text = await aiOrchestrator.transcribeAudio(audioUri);
-    if (!text) {
-      throw new Error('Whisper produced no transcript (silent audio or decode failure). Type symptoms manually.');
-    }
-    return text;
+    return audioUri.trim();
   }
 
   async extractScreeningData(transcript: string, type: ScreeningType): Promise<StructuredScreeningData> {

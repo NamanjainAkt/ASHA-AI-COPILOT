@@ -11,7 +11,7 @@ import com.facebook.react.uimanager.ViewManager
  */
 class CactusPackage : ReactPackage {
     override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
-        return listOf(CactusNativeModule(reactContext), NeedleModule(reactContext), WhisperCppModule(reactContext))
+        return listOf(CactusNativeModule(reactContext), NeedleModule(reactContext))
     }
 
     override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {

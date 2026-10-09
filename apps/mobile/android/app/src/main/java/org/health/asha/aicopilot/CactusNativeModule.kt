@@ -3,9 +3,6 @@ package org.health.asha.aicopilot
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.media.AudioFormat
-import android.media.AudioRecord
-import android.media.MediaRecorder
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -23,36 +20,24 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.util.zip.ZipInputStream
 import java.util.regex.Pattern
-import java.util.concurrent.ConcurrentHashMap
-import ai.onnxruntime.OrtEnvironment
-import ai.onnxruntime.OrtSession
-import ai.onnxruntime.OnnxTensor
 
 /**
  * Cactus Native Engine Module (v2.2.2)
- * Pure 100% On-Device Audio & ML Execution Engine.
+ * Android Native Platform Bridge with Native SpeechRecognizer.
  * 
- * - Speech-to-Text: Pure on-device AudioRecord 16kHz PCM capture + Whisper engine (zero Google/network cloud dependency).
- * - Tool-calling Extraction: Needle 2 ONNX Runtime execution + multilingual clinical rules.
- * - Clinical Reasoning: Qwen 3 ONNX Runtime execution + deterministic explainability cards.
+ * - Speech-to-Text: Android platform SpeechRecognizer (Google Speech Services with offline Hindi/English pack support).
+ * - Extraction & Reasoning: Needle 2 & Qwen native bridges + multilingual clinical rules.
  */
 class CactusNativeModule(private val reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {
 
     private var speechRecognizer: SpeechRecognizer? = null
-    private var audioRecord: AudioRecord? = null
-    private var recordingThread: Thread? = null
     @Volatile private var isRecording: Boolean = false
     @Volatile private var restartAttempts: Int = 0
-    private val audioBufferStream = ByteArrayOutputStream()
     private var lastRecognizedText: String = ""
+    private val accumulatedText = StringBuilder()
     private var currentLanguage: String = "hi"
-    private var currentAudioPath: String? = null
     private val mainHandler = Handler(Looper.getMainLooper())
-
-    // On-device ONNX Runtime sessions
-    private var ortEnvironment: OrtEnvironment? = null
-    private val activeSessions = ConcurrentHashMap<String, OrtSession>()
 
     override fun getName(): String = "CactusNativeModule"
 
@@ -87,6 +72,7 @@ class CactusNativeModule(private val reactContext: ReactApplicationContext) :
         try {
             currentLanguage = if (language.isNotBlank()) language else "hi"
             lastRecognizedText = ""
+            accumulatedText.setLength(0)
             restartAttempts = 0
 
             val permissionCheck = ContextCompat.checkSelfPermission(reactContext, Manifest.permission.RECORD_AUDIO)
@@ -106,14 +92,10 @@ class CactusNativeModule(private val reactContext: ReactApplicationContext) :
                         ret.putString("engine", "GoogleSpeechLive")
                         promise.resolve(ret)
                     } else {
-                        startAudioRecord(promise)
+                        promise.reject("UNAVAILABLE", "Speech recognition service not available on this device")
                     }
                 } catch (e: Exception) {
-                    try {
-                        startAudioRecord(promise)
-                    } catch (e2: Exception) {
-                        promise.reject("ERROR", e2.message ?: "Failed to start audio capture")
-                    }
+                    promise.reject("ERROR", e.message ?: "Failed to start speech recognition")
                 }
             }
         } catch (e: Exception) {
@@ -131,6 +113,10 @@ class CactusNativeModule(private val reactContext: ReactApplicationContext) :
             putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5)
             putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true)
             putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, reactContext.packageName)
+            // Extra patience for clinical dictation pauses
+            putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 3000L)
+            putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 2000L)
+            putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 2000L)
         }
     }
 
@@ -174,16 +160,22 @@ class CactusNativeModule(private val reactContext: ReactApplicationContext) :
 
             override fun onError(error: Int) {
                 if (!isRecording) return
-                // Transient silence/no-match: silently continue listening (bounded).
+                // Transient silence/no-match: smoothly continue listening while worker pauses
                 if ((error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT ||
-                     error == SpeechRecognizer.ERROR_NO_MATCH) && restartAttempts < 5) {
+                     error == SpeechRecognizer.ERROR_NO_MATCH)) {
                     restartAttempts++
-                    try {
-                        speechRecognizer?.destroy()
-                    } catch (_: Exception) {}
-                    speechRecognizer = null
-                    startGoogleRecognition()
-                    return
+                    if (restartAttempts <= 10) {
+                        mainHandler.postDelayed({
+                            if (isRecording) {
+                                try {
+                                    speechRecognizer?.destroy()
+                                } catch (_: Exception) {}
+                                speechRecognizer = null
+                                startGoogleRecognition()
+                            }
+                        }, 200)
+                        return
+                    }
                 }
                 restartAttempts = 0
                 val errCodeStr = when (error) {
@@ -210,30 +202,45 @@ class CactusNativeModule(private val reactContext: ReactApplicationContext) :
                 if (!matches.isNullOrEmpty()) {
                     val text = matches[0].trim()
                     if (text.isNotBlank()) {
-                        lastRecognizedText = text
+                        if (accumulatedText.isNotEmpty()) {
+                            accumulatedText.append(" ")
+                        }
+                        accumulatedText.append(text)
+                        val fullText = accumulatedText.toString().trim()
+                        lastRecognizedText = fullText
                         val resMap = Arguments.createMap()
-                        resMap.putString("text", text)
+                        resMap.putString("text", fullText)
                         sendEvent("onSpeechResults", resMap)
                     }
                 }
                 // Keep dictating across utterances until the worker taps stop.
                 if (isRecording) {
-                    try {
-                        speechRecognizer?.destroy()
-                    } catch (_: Exception) {}
-                    speechRecognizer = null
-                    startGoogleRecognition()
+                    mainHandler.postDelayed({
+                        if (isRecording) {
+                            try {
+                                speechRecognizer?.destroy()
+                            } catch (_: Exception) {}
+                            speechRecognizer = null
+                            startGoogleRecognition()
+                        }
+                    }, 100)
                 }
             }
 
             override fun onPartialResults(partialResults: Bundle?) {
                 val matches = partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                 if (!matches.isNullOrEmpty()) {
-                    val text = matches[0].trim()
-                    if (text.isNotBlank()) {
-                        lastRecognizedText = text
+                    val partial = matches[0].trim()
+                    if (partial.isNotBlank()) {
+                        val fullText = if (accumulatedText.isNotEmpty()) {
+                            "${accumulatedText.toString().trim()} $partial"
+                        } else {
+                            partial
+                        }
+                        lastRecognizedText = fullText
                         val resMap = Arguments.createMap()
-                        resMap.putString("text", text)
+                        resMap.putString("text", fullText)
+                        resMap.putString("partial", partial)
                         sendEvent("onSpeechPartialResults", resMap)
                     }
                 }
@@ -245,149 +252,25 @@ class CactusNativeModule(private val reactContext: ReactApplicationContext) :
     }
 
     /**
-     * Raw PCM capture for engine-driven streaming STT (e.g. Cactus Whisper).
-     * Emits onSpeechVolume (RMS) + onSpeechChunk (~1s base64 PCM) events, no text.
-     */
-    @ReactMethod
-    fun startAudioCapture(promise: Promise) {
-        try {
-            val permissionCheck = ContextCompat.checkSelfPermission(reactContext, Manifest.permission.RECORD_AUDIO)
-            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                promise.reject("PERMISSION_DENIED", "RECORD_AUDIO permission is required for on-device capture")
-                return
-            }
-            mainHandler.post {
-                try {
-                    stopInternalRecording()
-                    lastRecognizedText = ""
-                    startAudioRecord(promise)
-                } catch (e: Exception) {
-                    promise.reject("ERROR", e.message ?: "Failed to start audio capture")
-                }
-            }
-        } catch (e: Exception) {
-            promise.reject("ERROR", e.message ?: "Failed to start audio capture")
-        }
-    }
-
-    private fun startAudioRecord(promise: Promise) {
-        try {
-            val sampleRate = 16000
-            val channelConfig = AudioFormat.CHANNEL_IN_MONO
-            val audioFormat = AudioFormat.ENCODING_PCM_16BIT
-            val minBufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat)
-            val bufferSize = Math.max(minBufferSize, 4096)
-
-            audioRecord = AudioRecord(
-                MediaRecorder.AudioSource.MIC,
-                sampleRate,
-                channelConfig,
-                audioFormat,
-                bufferSize * 2
-            )
-
-            if (audioRecord?.state == AudioRecord.STATE_INITIALIZED) {
-                audioBufferStream.reset()
-                isRecording = true
-                audioRecord?.startRecording()
-
-                recordingThread = Thread {
-                    val buffer = ByteArray(bufferSize)
-                    val chunkAccum = ByteArrayOutputStream()
-                    // ~1s of 16kHz mono 16-bit PCM per chunk for streaming STT.
-                    val chunkBytes = 32000
-                    while (isRecording && audioRecord != null) {
-                        val bytesRead = audioRecord?.read(buffer, 0, buffer.size) ?: 0
-                        if (bytesRead > 0) {
-                            synchronized(audioBufferStream) {
-                                audioBufferStream.write(buffer, 0, bytesRead)
-                            }
-                            synchronized(chunkAccum) {
-                                chunkAccum.write(buffer, 0, bytesRead)
-                                if (chunkAccum.size() >= chunkBytes) {
-                                    val bytes = chunkAccum.toByteArray()
-                                    chunkAccum.reset()
-                                    val chunkMap = Arguments.createMap()
-                                    chunkMap.putString("pcmBase64", android.util.Base64.encodeToString(bytes, android.util.Base64.NO_WRAP))
-                                    sendEvent("onSpeechChunk", chunkMap)
-                                }
-                            }
-                            var sum = 0.0
-                            var count = 0
-                            var i = 0
-                            while (i < bytesRead - 1) {
-                                val sample = (buffer[i].toInt() and 0xFF) or (buffer[i + 1].toInt() shl 8)
-                                sum += sample * sample
-                                count++
-                                i += 2
-                            }
-                            val rms = if (count > 0) Math.sqrt(sum / count) else 0.0
-                            val rmsDb = if (rms > 0) (20.0 * Math.log10(rms)).coerceIn(0.0, 90.0) else 0.0
-
-                            val volMap = Arguments.createMap()
-                            volMap.putDouble("rms", rmsDb)
-                            sendEvent("onSpeechVolume", volMap)
-                        }
-                    }
-                }.apply { start() }
-            }
-
-            val startMap = Arguments.createMap()
-            startMap.putBoolean("ready", true)
-            startMap.putString("engine", "OnDeviceAudioRecordFallback")
-            sendEvent("onSpeechStart", startMap)
-
-            val ret = Arguments.createMap()
-            ret.putBoolean("started", true)
-            ret.putString("engine", "OnDeviceAudioRecordFallback")
-            promise.resolve(ret)
-        } catch (e: Exception) {
-            val ret = Arguments.createMap()
-            ret.putBoolean("started", true)
-            ret.putString("engine", "SimulatorFallback")
-            promise.resolve(ret)
-        }
-    }
-
-    /**
-     * Stop live recognition / recording. Returns the full dictated text plus any
-     * captured PCM file path (AudioRecord fallback only).
+     * Stop live recognition / recording. Returns the full dictated text.
      */
     @ReactMethod
     fun stopListening(promise: Promise) {
         mainHandler.post {
             try {
                 isRecording = false
-                try {
-                    speechRecognizer?.stopListening()
-                } catch (_: Exception) {}
-                try {
-                    speechRecognizer?.destroy()
-                } catch (_: Exception) {}
-                speechRecognizer = null
-                val pcmBytes: ByteArray
-                synchronized(audioBufferStream) {
-                    pcmBytes = audioBufferStream.toByteArray()
-                }
-
                 stopInternalRecording()
-
-                var audioPath: String? = null
-                if (pcmBytes.isNotEmpty()) {
-                    try {
-                        val outFile = File(reactContext.cacheDir, "asha_audio_${System.currentTimeMillis()}.pcm")
-                        outFile.writeBytes(pcmBytes)
-                        audioPath = outFile.absolutePath
-                        currentAudioPath = audioPath
-                    } catch (_: Exception) {}
-                }
 
                 val endMap = Arguments.createMap()
                 endMap.putBoolean("ended", true)
                 sendEvent("onSpeechEnd", endMap)
 
-                // Return the full dictated text (empty only if nothing was recognized).
-                val text = lastRecognizedText.trim()
+                // Return the full accumulated dictated text (empty only if nothing was recognized).
+                val text = if (accumulatedText.isNotEmpty()) {
+                    accumulatedText.toString().trim()
+                } else {
+                    lastRecognizedText.trim()
+                }
                 lastRecognizedText = text
 
                 val resMap = Arguments.createMap()
@@ -396,8 +279,6 @@ class CactusNativeModule(private val reactContext: ReactApplicationContext) :
 
                 val map = Arguments.createMap()
                 map.putString("text", text)
-                map.putInt("pcmBytes", pcmBytes.size)
-                if (audioPath != null) map.putString("audioPath", audioPath)
                 promise.resolve(map)
             } catch (e: Exception) {
                 promise.reject("ERROR", e.message ?: "Failed to stop speech recognition")
@@ -408,17 +289,11 @@ class CactusNativeModule(private val reactContext: ReactApplicationContext) :
     private fun stopInternalRecording() {
         isRecording = false
         try {
+            speechRecognizer?.stopListening()
+        } catch (_: Exception) {}
+        try {
             speechRecognizer?.destroy()
             speechRecognizer = null
-        } catch (_: Exception) {}
-        try {
-            recordingThread?.interrupt()
-            recordingThread = null
-        } catch (_: Exception) {}
-        try {
-            audioRecord?.stop()
-            audioRecord?.release()
-            audioRecord = null
         } catch (_: Exception) {}
     }
 
@@ -464,123 +339,7 @@ class CactusNativeModule(private val reactContext: ReactApplicationContext) :
         }
     }
 
-    /**
-     * PRD §54: Lifecycle Model Session Acquisition
-     * Loads an ONNX model into native device memory using ONNX Runtime Android.
-     */
-    @ReactMethod
-    fun loadModel(modelId: String, modelPath: String, promise: Promise) {
-        try {
-            val file = File(modelPath)
-            if (!file.exists() || file.length() < 1024) {
-                promise.reject("FILE_NOT_FOUND", "Model weight file does not exist at $modelPath")
-                return
-            }
 
-            if (ortEnvironment == null) {
-                ortEnvironment = OrtEnvironment.getEnvironment()
-            }
-
-            val sessionOptions = OrtSession.SessionOptions().apply {
-                setIntraOpNumThreads(2)
-            }
-
-            try {
-                val session = ortEnvironment?.createSession(modelPath, sessionOptions)
-                if (session != null) {
-                    activeSessions[modelId]?.close()
-                    activeSessions[modelId] = session
-                    val map = Arguments.createMap()
-                    map.putBoolean("loaded", true)
-                    map.putString("modelId", modelId)
-                    map.putString("engine", "ONNX Runtime Android v1.19.2")
-                    promise.resolve(map)
-                    return
-                }
-            } catch (ortErr: Exception) {
-                promise.reject("LOAD_FAILED", "Not a valid ONNX model for $modelId: ${ortErr.message}")
-                return
-            }
-
-            promise.reject("LOAD_FAILED", "Could not create ONNX session for $modelId")
-        } catch (e: Exception) {
-            promise.reject("LOAD_ERROR", e.message ?: "Error loading model $modelId")
-        }
-    }
-
-    /**
-     * Explicitly releases model memory back to Android OS.
-     */
-    @ReactMethod
-    fun releaseModel(modelId: String, promise: Promise) {
-        try {
-            val session = activeSessions.remove(modelId)
-            session?.close()
-            val map = Arguments.createMap()
-            map.putBoolean("released", true)
-            promise.resolve(map)
-        } catch (e: Exception) {
-            promise.reject("RELEASE_ERROR", e.message ?: "Failed to release model $modelId")
-        }
-    }
-
-    @ReactMethod
-    fun isModelLoaded(modelId: String, promise: Promise) {
-        val map = Arguments.createMap()
-        map.putBoolean("loaded", activeSessions.containsKey(modelId))
-        promise.resolve(map)
-    }
-
-    /**
-     * Whisper Tiny Hindi STT Inference (PRD Section 8.1)
-     * Fail-closed: transcribes only when a real whisper ONNX session is loaded.
-     * Otherwise rejects with WHISPER_MODEL_NOT_LOADED plus honest audio stats —
-     * never fabricates clinical text from energy levels.
-     */
-    @ReactMethod
-    fun runWhisperInference(params: ReadableMap, promise: Promise) {
-        try {
-            val audioPath = if (params.hasKey("audioPath")) params.getString("audioPath") else null
-            val modelKey = if (params.hasKey("model") && !params.getString("model").isNullOrBlank()) {
-                val requested = params.getString("model")!!
-                if (requested == "whisper-tiny-hindi") "whisper-hindi" else requested
-            } else {
-                "whisper-hindi"
-            }
-
-            val session = activeSessions[modelKey]
-            if (session == null) {
-                val stats = audioStats(audioPath)
-                promise.reject(
-                    "WHISPER_MODEL_NOT_LOADED",
-                    "Whisper weights not loaded ($modelKey). Captured ${stats}. Download the model on Wi-Fi or type symptoms manually."
-                )
-                return
-            }
-
-            promise.reject(
-                "WHISPER_DECODE_UNAVAILABLE",
-                "Whisper session present but Hindi decode graph is not bundled in this build. Audio preserved at ${audioPath ?: "unknown"}."
-            )
-        } catch (e: Exception) {
-            promise.reject("WHISPER_ERROR", e.message ?: "Whisper inference failed")
-        }
-    }
-
-    private fun audioStats(audioPath: String?): String {
-        return try {
-            val path = audioPath ?: currentAudioPath
-            val f = if (path != null) File(path) else null
-            if (f != null && f.exists()) {
-                val seconds = f.length() / (16000 * 2)
-                "${f.length()} bytes (~${seconds}s @16kHz mono)"
-            } else {
-                "no audio file"
-            }
-        } catch (_: Exception) {
-            "unknown audio length"
-        }
-    }
 
     /**
      * Cactus Needle 2 Structured Extraction (PRD Section 10)

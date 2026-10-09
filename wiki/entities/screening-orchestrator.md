@@ -1,7 +1,7 @@
 ---
 type: entity
 created: 2026-10-07
-updated: 2026-10-08
+updated: 2026-10-09
 sources: [sources/mobile-services.md, sources/shared-package.md]
 tags: [ai, pipeline, orchestrator]
 ---
@@ -56,12 +56,11 @@ async getActiveDriver(): Promise<AIEngineDriver> {          // orchestrator.ts:5
 now provides them (`apps/mobile/android/.../CactusNativeModule.kt`, registered in
 `MainApplication.kt:26`) provides Android platform bridges.
 
-With the resolution of `ISS-158`, `modelManager.ts` governs weights storage and availability.
-`cactusDriver.ts:13-35` now dynamically queries `modelManager.getActiveSummaryModel()` and
-`modelManager.isModelReady()`. If weights are present, it reports
-`Cactus Neural Engine (Whisper + Needle 2 + Qwen 0.5B/1.7B)`. When weights are absent, it
-transparently runs the bundled multilingual NLP engine and reports honest provenance. On iOS and
-Expo Go, `simulatorDriver.ts` runs the `@asha/shared/src/nlp/multilingualExtractor.ts` NLP engine,
+With the transition from Whisper to Native Android SpeechRecognizer (2026-10-09), `CactusNativeModule.kt`
+provides direct platform speech recognition via Android's `SpeechRecognizer` (`hi-IN` / `en-IN` with offline
+speech pack support). `modelManager.ts` governs weights storage for Needle 3 and Qwen 3 (0.6B / 1.7B).
+`cactusDriver.ts` now dynamically reports `ASHA Hybrid Engine (Native SpeechRecognizer + Needle 3 + Qwen)`.
+On iOS and Expo Go, `simulatorDriver.ts` runs the `@asha/shared/src/nlp/multilingualExtractor.ts` NLP engine,
 reporting `ASHA Multilingual NLP Engine (Offline Rule Driver)`.
 
 `isAvailable()` returns `true` unconditionally for the simulator (`simulatorDriver.ts:63-65`),

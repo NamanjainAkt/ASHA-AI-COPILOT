@@ -20,13 +20,13 @@ import * as FileSystem from 'expo-file-system';
 import { logger } from '../log';
 import { cactusInit, cactusDestroy } from './cactusBridge';
 
-export type ModelId = 'whisper-hindi' | 'whisper-base' | 'needle3' | 'qwen3-0.6b' | 'qwen3-1.7b';
+export type ModelId = 'needle3' | 'qwen3-0.6b' | 'qwen3-1.7b';
 
 export type SummaryModelId = 'qwen3-0.6b' | 'qwen3-1.7b';
 
 export type ModelStatus = 'not_downloaded' | 'downloading' | 'ready' | 'error';
 
-export type ModelRuntime = 'cactus' | 'needle' | 'whispercpp';
+export type ModelRuntime = 'cactus' | 'needle';
 
 export interface ModelMetadata {
   id: ModelId;
@@ -49,32 +49,6 @@ export interface ModelMetadata {
 }
 
 export const MODEL_CATALOG: Record<ModelId, Omit<ModelMetadata, 'status' | 'progressPercent' | 'localPath' | 'nativeHandle' | 'sizeOnDisk' | 'error'>> = {
-  'whisper-hindi': {
-    id: 'whisper-hindi',
-    name: 'Whisper Tiny Hindi (Speech-to-Text)',
-    name_hi: 'व्हिस्पर टाइनी हिंदी (आवाज़ से टेक्स्ट)',
-    version: 'tiny-ggml',
-    sizeBytes: 77_691_713,
-    sizeFormatted: '78 MB',
-    quantization: 'ggml / whisper.cpp',
-    sourceUrl: 'https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin',
-    artifactFile: 'ggml-tiny.bin',
-    runtime: 'whispercpp',
-    isOptional: false,
-  },
-  'whisper-base': {
-    id: 'whisper-base',
-    name: 'Whisper Base Hindi (Larger STT)',
-    name_hi: 'व्हिस्पर बेस हिंदी (बेहतर पहचान)',
-    version: 'base-ggml',
-    sizeBytes: 147_951_465,
-    sizeFormatted: '148 MB',
-    quantization: 'ggml / whisper.cpp',
-    sourceUrl: 'https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin',
-    artifactFile: 'ggml-base.bin',
-    runtime: 'whispercpp',
-    isOptional: true,
-  },
   'needle3': {
     id: 'needle3',
     name: 'Needle 3 (Structured Extraction)',
@@ -188,15 +162,7 @@ class AIModelManager {
     return null;
   }
 
-  /**
-   * Whisper selection: base when downloaded (far better Hindi), else tiny.
-   * Returns null when no STT weights are on the device.
-   */
-  getActiveSttModel(): 'whisper-hindi' | 'whisper-base' | null {
-    if (this.isModelReady('whisper-base')) return 'whisper-base';
-    if (this.isModelReady('whisper-hindi')) return 'whisper-hindi';
-    return null;
-  }
+
 
   /**
    * Re-probes artifact files on disk and syncs in-memory status.
@@ -304,19 +270,6 @@ class AIModelManager {
         const initPath = await this.prepareCactusPath(model);
         const handle = await cactusInit(initPath);
         model.nativeHandle = handle;
-      } else if (model.runtime === 'whispercpp') {
-        const whisper = (NativeModules as any)?.WhisperCppModule;
-        if (!whisper || typeof whisper.load !== 'function') {
-          this.lastLoadError = 'WhisperCpp native module not linked in this build';
-          logger.warn('AIModelManager', this.lastLoadError);
-          return false;
-        }
-        const res = await whisper.load(toNativePath(model.localPath));
-        if (!res || res.loaded === false || !res.handle) {
-          this.lastLoadError = `whisper.cpp load rejected (${res?.error || JSON.stringify(res)})`;
-          return false;
-        }
-        model.nativeHandle = res.handle;
       } else {
         const needle = (NativeModules as any)?.NeedleModule;
         if (!needle || typeof needle.load !== 'function') {
@@ -350,13 +303,6 @@ class AIModelManager {
       if (model?.nativeHandle) {
         if (model.runtime === 'cactus') {
           await cactusDestroy(model.nativeHandle);
-        } else if (model.runtime === 'whispercpp') {
-          const whisper = (NativeModules as any)?.WhisperCppModule;
-          if (whisper?.unload) {
-            try {
-              await whisper.unload(model.nativeHandle);
-            } catch (_) {}
-          }
         } else {
           const needle = (NativeModules as any)?.NeedleModule;
           if (needle?.reset) {
