@@ -365,6 +365,7 @@ class AIModelManager {
       await reportProgress(10, 150);
 
       let downloadSuccess = false;
+      let transportError: string | null = null;
       try {
         const downloadUrl = MODEL_CATALOG[id].sourceUrl;
         const resumable = FileSystem.createDownloadResumable(
@@ -382,14 +383,19 @@ class AIModelManager {
         );
         this.downloadResumables.set(id, resumable);
         const result = await resumable.downloadAsync();
-        if (result && result.status === 200) downloadSuccess = true;
-      } catch (netErr) {
-        logger.warn('AIModelManager', `Download transport failed for ${id}`, { error: String(netErr) });
+        if (result && result.status >= 200 && result.status < 300) {
+          downloadSuccess = true;
+        } else if (result) {
+          transportError = `HTTP ${result.status}`;
+        }
+      } catch (netErr: any) {
+        transportError = netErr?.message || String(netErr);
+        logger.warn('AIModelManager', `Download transport failed for ${id}`, { error: transportError });
       }
 
       if (!downloadSuccess) {
         model.status = 'error';
-        model.error = `Download failed for ${id}: origin unreachable. Connect on Wi-Fi and retry.`;
+        model.error = `Download failed for ${id}: ${transportError || 'origin unreachable'}. Connect on Wi-Fi and retry.`;
         return false;
       }
 
