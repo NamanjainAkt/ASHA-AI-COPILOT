@@ -677,6 +677,72 @@ Append-only chronological record. Entries are prefixed `## [YYYY-MM-DD] <op> | <
   - Bound `TextInput` (`value={transcript}`) to native event stream (`onSpeechPartialResults` and `onSpeechResults`) for real-time word-by-word streaming.
 - Full test suite passed (61/61 tests green).
 
+
+
+
+
+
+## [2026-10-09] refactor | Voice-First, Visit-Based ASHA Workflow & Enhanced Forms Directory
+
+- Transitioned system from speech-to-JSON screening demo to comprehensive, visit-based frontline ASHA field workflow.
+- Updated root specification documents:
+  - FORMS.md: Canonical architecture for Module A (Beneficiary Registration with ABHA, hamlet, phone owner, consent), Module B (6-prompt Common Visit intake), Condition-Specific Modules (CBAC 30+, ANC Maternal, PNC/HBNC Child, General Illness, Family Planning), Adaptive AI safety prompts, and Action/Referral lifecycle tracking.
+  - EXTRACTED_DATA.md: Comprehensive dataset with field-status provenance ('confirmed', 'not_asked', 'explicit_denial', 'uncertain'), eliminating hallucinated symptoms (dizziness in s-001, swelling in s-002), and updated wire schemas.
+- Enhanced shared contract (@asha/shared):
+  - Added types: VisitType, FieldStatus, FieldProvenance, CommonVisitData, CBACScreeningData, PNCChildScreeningData, ReferralActionData.
+  - Enhanced Patient interface: hamlet_tola, phone_owner, relationship_to_head, abha_id, disability_access_needs, consent_obtained.
+  - Enhanced FollowUp interface: destination, urgency, facility_reached, responsible_person, outcome.
+  - Enhanced validation: added ABHA ID format check, CBAC waist range check, and PNC infant birth weight plausibility bounds.
+  - Enhanced multilingualExtractor.ts: added adaptive AI safety follow-up prompts for hypertension/danger signs, common visit extraction, and provenance tagging.
+- Enhanced Mobile App (apps/mobile):
+  - new.tsx: added full Module A inputs (hamlet/tola, relationship to head, ABHA ID, phone ownership pills, disability needs, informed consent switch).
+  - manual-entry.tsx: added Module B common complaints (main complaint, onset, course), CBAC waist, and referral action selector (destination, urgency, responsible person).
+  - summary.tsx: bound and preserved common_visit, cbac, and referral_action across human-in-the-loop review.
+  - database.ts & repos: added migration v2 for patient and followup action tracking columns.
+- Enhanced Backend API (services/api):
+  - models.py: updated Pydantic models (PatientCreate, ScreeningCreate, FollowUpCreate) to support optional visit-based fields.
+- Verified test suites:
+  - Clinical Rules Test: 13 / 13 passed (100%)
+  - Edge Cases Test: 15 / 15 passed (100%)
+  - Multilingual Model Harness: 32 / 32 passed (100%)
+  - Sync Idempotency & Auth Test: 12 / 12 passed (100%)
+
+## [2026-10-09] fix | Expo Android CLI targets mobile workspace from monorepo root
+
+- **Issue:** Running bare `npx expo run:android` from the repository root selected the root
+  Expo project, attempted the fallback `node_modules/expo/AppEntry.js`, and failed to resolve
+  `../../App`. The root `npm run android` script already delegates to `@asha/mobile`
+  (`package.json:16`); invoking `npx` directly bypasses npm scripts. The actual app declares
+  `apps/mobile/index.js` as its entry (`apps/mobile/package.json:4`, `apps/mobile/index.js:1`).
+- **Resolution:** Use `npx expo run:android apps/mobile` from the repository root, or keep using
+  `npm run android`. The accidental untracked root `app.json` and `android/` were left untouched.
+- **Verification:** `npx expo run:android apps/mobile` built successfully and installed/opened
+  `org.health.asha.aicopilot`. Since port 8081 was already occupied, ran
+  `npx expo run:android --port 8082 apps/mobile`; the mobile Metro server's `/status` reported
+  running and
+  `/.expo/.virtual-metro-entry.bundle?platform=android&dev=true&minify=false&hot=false&lazy=true`
+  returned HTTP 200 (8,619,861 bytes) with no `Unable to resolve` error.
+
+## [2026-10-09] feat | Complete UI form integration, beneficiary edit flow, clinical rule engine & backend sync
+
+- **Beneficiary Edit Flow**:
+  - Implemented `apps/mobile/app/patients/edit.tsx` for full Module A editing (ABHA ID, Hamlet/Tola, Head Relation, Phone Owner, Disability Access Needs, Consent).
+  - Extended `patientRepository.update()` in `patientRepo.ts` with atomic transaction & `sync_queue` enqueue.
+  - Added header edit button and demographic badge chips (ABHA, Hamlet, Relation, Phone Owner, Disability) to `apps/mobile/app/patients/[id].tsx`.
+- **Screening Verification Gate & Reactive UI**:
+  - Enhanced `apps/mobile/app/screening/summary.tsx` with live editing cards for Module B Common Visit (main complaint, onset, course chips, missed meds switch), CBAC waist circumference (cm), Pregnancy danger signs (convulsions, leaking fluid), PNC/Newborn danger signs, and Referral & Action plan (destination and urgency chips).
+  - Dynamically recalculates risk warnings via memoized `evaluateRules(currentStructuredData)` upon user edits.
+  - Automatically enqueues follow-ups with destination and urgency attributes upon verification and save.
+- **Deterministic Clinical Rule Engine**:
+  - Added 6 new clinical rules in `packages/shared/src/engine.ts`: `RULE_CBAC_WAIST_CIRCUMFERENCE` (waist >= 85 cm), `RULE_COMMON_VISIT_MISSED_MEDS`, `RULE_PREG_CONVULSIONS` (eclampsia 108 referral), `RULE_PREG_LEAKING_FLUID` (PROM danger sign), `RULE_PNC_NEWBORN_DANGER`, and `RULE_PNC_LOW_BIRTH_WEIGHT`.
+- **Backend & SQLite Persistence**:
+  - Updated SQLite schema in `services/api/database.py` and added migration alters for `patients` and `followups`.
+  - Updated `create_patient`, `create_followup`, `update_followup`, and `/sync/push` in `services/api/main.py`.
+- **Automated Verification**:
+  - Extended `tests/clinical_rules_test.js` (18/18 tests passed).
+  - Extended `tests/sync_idempotency_test.py` (13/13 tests passed, including roundtrip verification of extended fields).
+  - 100% pass across all suites (`tsc` 0 errors, shared build clean).
+
 ## [2026-10-09] sync-rebase | Qwen3 0.6B Workflow Audit & Edge Cases Harness Integration
 
 - Rebased with `origin/main` containing `EDGE_CASES.md`, `tests/edge_cases_test.js`, `tests/qwen_summary_test.js`, and `tests/qwen_cli.js`.

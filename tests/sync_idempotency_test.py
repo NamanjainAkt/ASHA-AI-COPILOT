@@ -92,8 +92,8 @@ assert data1["processed"][0]["status"] == "created"
 print("[PASS] Step 1: Initial multi-entity sync push succeeded with status: created")
 
 # Get counts
-patients_after_push1 = len(client.get("/patients", headers=headers).json())
-screenings_after_push1 = len(client.get("/screenings", headers=headers).json())
+patients_after_push1 = len(client.get("/patients?limit=500", headers=headers).json())
+screenings_after_push1 = len(client.get("/screenings?limit=500", headers=headers).json())
 
 from services.api.database import get_db
 conn = get_db()
@@ -108,8 +108,8 @@ assert res2.status_code == 200, f"Push 2 failed: {res2.text}"
 data2 = res2.json()
 assert data2["success"] is True
 
-patients_after_push2 = len(client.get("/patients", headers=headers).json())
-screenings_after_push2 = len(client.get("/screenings", headers=headers).json())
+patients_after_push2 = len(client.get("/patients?limit=500", headers=headers).json())
+screenings_after_push2 = len(client.get("/screenings?limit=500", headers=headers).json())
 assert patients_after_push1 == patients_after_push2, "Duplicate replay must not duplicate patients"
 assert screenings_after_push1 == screenings_after_push2, "Duplicate replay must not duplicate screenings"
 
@@ -312,7 +312,77 @@ assert critical_flw_res.json()["priority"] == "critical"
 assert critical_flw_res.json()["sync_status"] == "pending"
 print("[PASS] Step 10: Foreign key enforcement and critical priority/sync_status validated (ISS-131, ISS-151)")
 
-total_checkpoints = 12  # Step 0, 0b, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 = 12 checkpoints
+# Step 11: Extended Form Fields (ABHA, Hamlet, Phone Owner, Destination, Urgency) via sync/push & sync/pull
+ext_patient_id = f"test-p-ext-{uuid.uuid4()}"
+ext_followup_id = f"test-f-ext-{uuid.uuid4()}"
+ext_payload = {
+    "device_id": "test-device-ext",
+    "worker_id": "test-worker-001",
+    "records": [
+        {
+            "client_record_id": ext_patient_id,
+            "entity": "patient",
+            "operation": "create",
+            "timestamp": "2026-10-09T10:00:00Z",
+            "payload": {
+                "name": "सुषमा पटेल (Sushma Patel)",
+                "age": 34,
+                "sex": "female",
+                "phone": "+91 9876543211",
+                "phone_owner": "self",
+                "village": "रामपुर (Rampur)",
+                "hamlet_tola": "पटेल नगर (Patel Nagar)",
+                "household_id": "HH-501",
+                "relationship_to_head": "पत्नी (Wife)",
+                "abha_id": "14-1234-5678-9012",
+                "disability_access_needs": "दृष्टि दोष (Vision impaired)",
+                "consent_obtained": True
+            }
+        },
+        {
+            "client_record_id": ext_followup_id,
+            "entity": "followup",
+            "operation": "create",
+            "timestamp": "2026-10-09T10:05:00Z",
+            "payload": {
+                "patient_id": ext_patient_id,
+                "reason": "मातृ स्वास्थ्य जांच (Maternal health visit)",
+                "priority": "high",
+                "due_date": "2026-10-15",
+                "status": "pending",
+                "destination": "phc",
+                "urgency": "immediate",
+                "facility_reached": False,
+                "responsible_person": "asha",
+                "outcome": "रेफरल पर्ची जारी (Referral slip issued)"
+            }
+        }
+    ]
+}
+ext_res = client.post("/sync/push", json=ext_payload, headers=headers)
+assert ext_res.status_code == 200, f"Extended fields push failed: {ext_res.text}"
+ext_data = ext_res.json()
+assert ext_data["success"] is True
+
+# Pull and verify all fields survived roundtrip
+pull_ext = client.get(f"/patients/{ext_patient_id}", headers=headers).json()
+assert pull_ext["phone_owner"] == "self"
+assert pull_ext["hamlet_tola"] == "पटेल नगर (Patel Nagar)"
+assert pull_ext["relationship_to_head"] == "पत्नी (Wife)"
+assert pull_ext["abha_id"] == "14-1234-5678-9012"
+assert pull_ext["disability_access_needs"] == "दृष्टि दोष (Vision impaired)"
+assert pull_ext["consent_obtained"] in (1, True)
+
+pull_f_ext = client.get("/sync/pull", headers=headers).json()
+matched_f = next((f for f in pull_f_ext["followups"] if f["id"] == ext_followup_id), None)
+assert matched_f is not None, "Followup must be present in pull"
+assert matched_f["destination"] == "phc"
+assert matched_f["urgency"] == "immediate"
+assert matched_f["responsible_person"] == "asha"
+assert matched_f["outcome"] == "रेफरल पर्ची जारी (Referral slip issued)"
+print("[PASS] Step 11: Extended form fields (ABHA, Hamlet, Phone Owner, Destination, Urgency) roundtrip verified")
+
+total_checkpoints = 13  # Step 0, 0b, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 = 13 checkpoints
 print("----------------------------------------------------")
 print(f"ALL SYNC IDEMPOTENCY & AUTH TESTS PASSED ({total_checkpoints}/{total_checkpoints})")
 print("----------------------------------------------------")

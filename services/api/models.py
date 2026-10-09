@@ -20,8 +20,14 @@ class PatientCreate(BaseModel):
     age: Optional[int] = None
     sex: Literal["female", "male", "other"]
     phone: Optional[str] = None
+    phone_owner: Optional[Literal["self", "spouse", "parent", "neighbor", "other"]] = None
     village: str
+    hamlet_tola: Optional[str] = None
     household_id: Optional[str] = None
+    relationship_to_head: Optional[str] = None
+    abha_id: Optional[str] = None
+    disability_access_needs: Optional[str] = None
+    consent_obtained: Optional[bool] = None
     created_at: Optional[str] = None
     sync_status: Optional[Literal["pending", "synced", "failed"]] = "synced"
 
@@ -32,7 +38,8 @@ class PatientResponse(PatientCreate):
 class ScreeningCreate(BaseModel):
     id: str = Field(..., description="Client-generated UUID")
     patient_id: str
-    screening_type: Literal["ncd", "pregnancy", "general"]
+    screening_type: str = "ncd"
+    visit_type: Optional[str] = None
     transcript: Optional[str] = None
     structured_data: Dict[str, Any]
     rule_results: List[Dict[str, Any]]
@@ -53,12 +60,22 @@ class FollowUpCreate(BaseModel):
     priority: Literal["low", "medium", "high", "critical"]
     due_date: str
     status: Literal["pending", "completed", "cancelled"] = "pending"
+    destination: Optional[Literal["sub_center", "phc", "chc", "sub_district_hospital", "district_hospital"]] = None
+    urgency: Optional[Literal["immediate", "urgent", "routine"]] = None
+    facility_reached: Optional[bool] = None
+    responsible_person: Optional[Literal["asha", "anm", "medical_officer"]] = None
+    outcome: Optional[str] = None
     notes: Optional[str] = None
     created_at: Optional[str] = None
     sync_status: Optional[Literal["pending", "synced", "failed"]] = "synced"
 
 class FollowUpUpdate(BaseModel):
     status: Literal["pending", "completed", "cancelled"]
+    destination: Optional[Literal["sub_center", "phc", "chc", "sub_district_hospital", "district_hospital"]] = None
+    urgency: Optional[Literal["immediate", "urgent", "routine"]] = None
+    facility_reached: Optional[bool] = None
+    responsible_person: Optional[Literal["asha", "anm", "medical_officer"]] = None
+    outcome: Optional[str] = None
     notes: Optional[str] = None
 
 class FollowUpResponse(FollowUpCreate):

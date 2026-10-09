@@ -66,7 +66,21 @@ export default function VisitSummaryScreen() {
   const patientName = patientRecord?.name || params.patientName || (language === 'hi' ? 'लाभार्थी' : 'Beneficiary');
   const screeningType: ScreeningType = (params.screeningType as ScreeningType) || 'ncd';
 
-  // State for editable structured data (ISS-102: Do not manufacture vitals defaults)
+  // Module B: Common Visit
+  const [mainComplaint, setMainComplaint] = useState<string>(
+    initialResult?.extracted?.common_visit?.main_complaint || ''
+  );
+  const [complaintOnset, setComplaintOnset] = useState<string>(
+    initialResult?.extracted?.common_visit?.complaint_onset || ''
+  );
+  const [complaintCourse, setComplaintCourse] = useState<'worsening' | 'improving' | 'unchanged' | 'fluctuating'>(
+    initialResult?.extracted?.common_visit?.complaint_course || 'unchanged'
+  );
+  const [missedMeds, setMissedMeds] = useState<boolean>(
+    initialResult?.extracted?.common_visit?.missed_medication_doses ?? false
+  );
+
+  // Vitals & CBAC
   const [systolic, setSystolic] = useState<string>(
     initialResult?.extracted?.ncd?.bp_systolic != null ? String(initialResult.extracted.ncd.bp_systolic) : ''
   );
@@ -76,11 +90,41 @@ export default function VisitSummaryScreen() {
   const [glucose, setGlucose] = useState<string>(
     initialResult?.extracted?.ncd?.blood_glucose != null ? String(initialResult.extracted.ncd.blood_glucose) : ''
   );
+  const [waistCm, setWaistCm] = useState<string>(
+    initialResult?.extracted?.cbac?.waist_circumference_cm != null ? String(initialResult.extracted.cbac.waist_circumference_cm) : ''
+  );
+
+  // Pregnancy Danger Signs
   const [gestationalWeeks, setGestationalWeeks] = useState<string>(
     initialResult?.extracted?.pregnancy?.gestational_age_weeks != null ? String(initialResult.extracted.pregnancy.gestational_age_weeks) : ''
   );
   const [hasBleeding, setHasBleeding] = useState<boolean>(
     initialResult?.extracted?.pregnancy?.vaginal_bleeding ?? false
+  );
+  const [hasConvulsions, setHasConvulsions] = useState<boolean>(
+    initialResult?.extracted?.pregnancy?.convulsions ?? false
+  );
+  const [hasLeakingFluid, setHasLeakingFluid] = useState<boolean>(
+    initialResult?.extracted?.pregnancy?.leaking_fluid ?? false
+  );
+
+  // PNC / Newborn
+  const [poorFeeding, setPoorFeeding] = useState<boolean>(
+    initialResult?.extracted?.pnc_child?.poor_feeding_or_sucking ?? false
+  );
+  const [fastBreathing, setFastBreathing] = useState<boolean>(
+    initialResult?.extracted?.pnc_child?.fast_breathing_or_indrawing ?? false
+  );
+  const [birthWeight, setBirthWeight] = useState<string>(
+    initialResult?.extracted?.pnc_child?.birth_weight_kg != null ? String(initialResult.extracted.pnc_child.birth_weight_kg) : ''
+  );
+
+  // Referral / Action
+  const [referralDestination, setReferralDestination] = useState<'sub_center' | 'phc' | 'chc' | 'sub_district_hospital' | 'district_hospital'>(
+    initialResult?.extracted?.referral_action?.destination || 'phc'
+  );
+  const [referralUrgency, setReferralUrgency] = useState<'immediate' | 'urgent' | 'routine'>(
+    initialResult?.extracted?.referral_action?.urgency || 'urgent'
   );
 
   const [summaryText, setSummaryText] = useState<string>(
@@ -91,26 +135,73 @@ export default function VisitSummaryScreen() {
   const [isHumanConfirmed, setIsHumanConfirmed] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
-  // Dynamically re-evaluate rules based on current editable values (ISS-233: memoized)
+  // Dynamically re-evaluate rules based on current editable values
   const currentStructuredData: StructuredScreeningData = useMemo(() => ({
     screening_type: screeningType,
-    ncd: screeningType === 'ncd' ? {
+    visit_type: screeningType,
+    common_visit: {
+      ...initialResult?.extracted?.common_visit,
+      main_complaint: mainComplaint.trim() || undefined,
+      complaint_onset: complaintOnset.trim() || undefined,
+      complaint_course: complaintCourse,
+      missed_medication_doses: missedMeds,
+    },
+    cbac: {
+      ...initialResult?.extracted?.cbac,
+      waist_circumference_cm: waistCm ? parseFloat(waistCm) : null,
+    },
+    referral_action: {
+      ...initialResult?.extracted?.referral_action,
+      referral_recommended: hasBleeding || hasConvulsions || hasLeakingFluid || poorFeeding || fastBreathing,
+      destination: referralDestination,
+      urgency: referralUrgency,
+    },
+    ncd: (screeningType === 'ncd' || screeningType === 'general') ? {
       bp_systolic: systolic ? parseInt(systolic, 10) : null,
       bp_diastolic: diastolic ? parseInt(diastolic, 10) : null,
       blood_glucose: glucose ? parseInt(glucose, 10) : null,
       known_hypertension: initialResult?.extracted?.ncd?.known_hypertension ?? false,
-      medication_adherence: initialResult?.extracted?.ncd?.medication_adherence ?? true,
+      medication_adherence: !missedMeds,
     } : undefined,
     pregnancy: screeningType === 'pregnancy' ? {
       pregnancy_status: 'pregnant',
       gestational_age_weeks: gestationalWeeks ? parseInt(gestationalWeeks, 10) : undefined,
       vaginal_bleeding: hasBleeding,
+      convulsions: hasConvulsions,
+      leaking_fluid: hasLeakingFluid,
       severe_headache: initialResult?.extracted?.pregnancy?.severe_headache ?? false,
       severe_abdominal_pain: initialResult?.extracted?.pregnancy?.severe_abdominal_pain ?? false,
       swelling: initialResult?.extracted?.pregnancy?.swelling ?? false,
-      follow_up_required: hasBleeding,
+      follow_up_required: hasBleeding || hasConvulsions || hasLeakingFluid,
+    } : undefined,
+    pnc_child: ((screeningType as string) === 'pnc' || (screeningType as any) === 'child_hbnc' || initialResult?.extracted?.pnc_child) ? {
+      ...initialResult?.extracted?.pnc_child,
+      poor_feeding_or_sucking: poorFeeding,
+      fast_breathing_or_indrawing: fastBreathing,
+      convulsions: hasConvulsions,
+      birth_weight_kg: birthWeight ? parseFloat(birthWeight) : null,
     } : undefined
-  }), [screeningType, systolic, diastolic, glucose, gestationalWeeks, hasBleeding, initialResult]);
+  }), [
+    screeningType,
+    mainComplaint,
+    complaintOnset,
+    complaintCourse,
+    missedMeds,
+    waistCm,
+    systolic,
+    diastolic,
+    glucose,
+    gestationalWeeks,
+    hasBleeding,
+    hasConvulsions,
+    hasLeakingFluid,
+    poorFeeding,
+    fastBreathing,
+    birthWeight,
+    referralDestination,
+    referralUrgency,
+    initialResult
+  ]);
 
   const dynamicRules: RuleResult[] = useMemo(() => {
     return evaluateRules(currentStructuredData);
@@ -186,17 +277,22 @@ export default function VisitSummaryScreen() {
             patient_id: patientId,
             screening_id: screeningId,
             reason: language === 'hi' ? (highRuleReasonHi(highRisk)) : highRisk.reason,
-            priority: 'high',
+            priority: highRisk.priority,
             due_date: dateStr,
             status: 'pending',
+            destination: referralDestination,
+            urgency: referralUrgency,
             sync_status: 'pending'
           }, db);
 
           await syncQueueRepository.enqueue('followup', followupId, 'create', {
             patient_id: patientId,
+            screening_id: screeningId,
             reason: highRisk.reason,
-            priority: 'high',
-            due_date: dateStr
+            priority: highRisk.priority,
+            due_date: dateStr,
+            destination: referralDestination,
+            urgency: referralUrgency
           }, db);
         }
 
@@ -259,22 +355,87 @@ export default function VisitSummaryScreen() {
           </View>
         </View>
 
-        {/* Structured Fields (Editable by Worker) */}
+        {/* Module B: Common Visit Intake */}
         <View style={styles.sectionCard}>
           <View style={styles.sectionHeaderRow}>
-            <Ionicons name="create-outline" size={16} color={Colors.primary} />
+            <Ionicons name="clipboard-outline" size={16} color={Colors.primary} />
+            <Text style={styles.sectionTitle}>
+              {language === 'hi' ? 'सामान्य मुलाकात विवरण (Common Visit)' : 'Common Visit Intake'}
+            </Text>
+          </View>
+          <View style={styles.fieldsGrid}>
+            <View style={[styles.fieldItem, { minWidth: '48%' }]}>
+              <Text style={styles.fieldLabel}>{language === 'hi' ? 'मुख्य समस्या' : 'Main Complaint'}</Text>
+              <TextInput
+                style={styles.fieldInput}
+                value={mainComplaint}
+                onChangeText={setMainComplaint}
+                placeholder={language === 'hi' ? 'उदा. बुखार, सिरदर्द' : 'e.g. Fever, Cough'}
+                placeholderTextColor={Colors.textMuted}
+              />
+            </View>
+            <View style={[styles.fieldItem, { minWidth: '48%' }]}>
+              <Text style={styles.fieldLabel}>{language === 'hi' ? 'अवधि / शुरुआत' : 'Onset / Duration'}</Text>
+              <TextInput
+                style={styles.fieldInput}
+                value={complaintOnset}
+                onChangeText={setComplaintOnset}
+                placeholder={language === 'hi' ? 'उदा. 3 दिन से' : 'e.g. 3 days'}
+                placeholderTextColor={Colors.textMuted}
+              />
+            </View>
+          </View>
+
+          <View style={{ marginTop: 8 }}>
+            <Text style={styles.fieldLabel}>{language === 'hi' ? 'समस्या की स्थिति' : 'Complaint Course'}</Text>
+            <View style={styles.chipRow}>
+              {(['worsening', 'unchanged', 'improving', 'fluctuating'] as const).map((course) => (
+                <TouchableOpacity
+                  key={course}
+                  style={[styles.choiceChip, complaintCourse === course && styles.choiceChipActive]}
+                  onPress={() => setComplaintCourse(course)}
+                >
+                  <Text style={[styles.choiceChipText, complaintCourse === course && styles.choiceChipTextActive]}>
+                    {course === 'worsening' ? (language === 'hi' ? 'बढ़ रही है' : 'Worsening') :
+                     course === 'unchanged' ? (language === 'hi' ? 'वैसी ही है' : 'Same') :
+                     course === 'improving' ? (language === 'hi' ? 'सुधार है' : 'Improving') :
+                     (language === 'hi' ? 'उतार-चढ़ाव' : 'Fluctuating')}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+
+          <View style={styles.fieldItemSwitch}>
+            <Text style={styles.fieldLabel}>
+              {language === 'hi' ? 'दवाई छूट गई है? (Missed Medication)' : 'Missed Medication Doses?'}
+            </Text>
+            <Switch
+              value={missedMeds}
+              onValueChange={setMissedMeds}
+              trackColor={{ false: Colors.border, true: Colors.warning }}
+              thumbColor={missedMeds ? Colors.surface : Colors.outline}
+            />
+          </View>
+        </View>
+
+        {/* Structured Fields & Vitals */}
+        <View style={styles.sectionCard}>
+          <View style={styles.sectionHeaderRow}>
+            <Ionicons name="fitness-outline" size={16} color={Colors.primary} />
             <Text style={styles.sectionTitle}>{t.extractedVitalsTitle}</Text>
           </View>
 
           {screeningType === 'pregnancy' ? (
             <View style={styles.fieldsGrid}>
-              <View style={styles.fieldItem}>
+              <View style={[styles.fieldItem, { minWidth: '100%' }]}>
                 <Text style={styles.fieldLabel}>{t.gestationalWeeksLabel}</Text>
                 <TextInput
                   style={styles.fieldInput}
                   value={gestationalWeeks}
                   onChangeText={setGestationalWeeks}
                   keyboardType="numeric"
+                  placeholder="24"
                 />
               </View>
               <View style={styles.fieldItemSwitch}>
@@ -284,6 +445,63 @@ export default function VisitSummaryScreen() {
                   onValueChange={setHasBleeding}
                   trackColor={{ false: Colors.border, true: Colors.danger }}
                   thumbColor={hasBleeding ? Colors.surface : Colors.outline}
+                />
+              </View>
+              <View style={styles.fieldItemSwitch}>
+                <Text style={styles.fieldLabel}>
+                  {language === 'hi' ? 'दौरे / ऐंठन (Convulsions/Fits)' : 'Convulsions / Fits'}
+                </Text>
+                <Switch
+                  value={hasConvulsions}
+                  onValueChange={setHasConvulsions}
+                  trackColor={{ false: Colors.border, true: Colors.danger }}
+                  thumbColor={hasConvulsions ? Colors.surface : Colors.outline}
+                />
+              </View>
+              <View style={styles.fieldItemSwitch}>
+                <Text style={styles.fieldLabel}>
+                  {language === 'hi' ? 'पानी छूटना (Leaking Fluid / PROM)' : 'Leaking Fluid (Water Break)'}
+                </Text>
+                <Switch
+                  value={hasLeakingFluid}
+                  onValueChange={setHasLeakingFluid}
+                  trackColor={{ false: Colors.border, true: Colors.danger }}
+                  thumbColor={hasLeakingFluid ? Colors.surface : Colors.outline}
+                />
+              </View>
+            </View>
+          ) : (screeningType as string) === 'pnc' || (screeningType as any) === 'child_hbnc' ? (
+            <View style={styles.fieldsGrid}>
+              <View style={[styles.fieldItem, { minWidth: '100%' }]}>
+                <Text style={styles.fieldLabel}>{language === 'hi' ? 'जन्म वजन (किलो)' : 'Birth Weight (kg)'}</Text>
+                <TextInput
+                  style={styles.fieldInput}
+                  value={birthWeight}
+                  onChangeText={setBirthWeight}
+                  keyboardType="numeric"
+                  placeholder="2.5"
+                />
+              </View>
+              <View style={styles.fieldItemSwitch}>
+                <Text style={styles.fieldLabel}>
+                  {language === 'hi' ? 'दूध नहीं पी पा रहा / सुस्त' : 'Poor feeding / Sucking'}
+                </Text>
+                <Switch
+                  value={poorFeeding}
+                  onValueChange={setPoorFeeding}
+                  trackColor={{ false: Colors.border, true: Colors.danger }}
+                  thumbColor={poorFeeding ? Colors.surface : Colors.outline}
+                />
+              </View>
+              <View style={styles.fieldItemSwitch}>
+                <Text style={styles.fieldLabel}>
+                  {language === 'hi' ? 'तेज़ सांस / पसली चलना' : 'Fast breathing / Chest indrawing'}
+                </Text>
+                <Switch
+                  value={fastBreathing}
+                  onValueChange={setFastBreathing}
+                  trackColor={{ false: Colors.border, true: Colors.danger }}
+                  thumbColor={fastBreathing ? Colors.surface : Colors.outline}
                 />
               </View>
             </View>
@@ -319,8 +537,72 @@ export default function VisitSummaryScreen() {
                   placeholder="100"
                 />
               </View>
+              <View style={[styles.fieldItem, { minWidth: '100%', marginTop: 6 }]}>
+                <Text style={styles.fieldLabel}>
+                  {language === 'hi' ? 'कमर का घेरा (Waist Circumference - cm)' : 'Waist Circumference (cm)'}
+                </Text>
+                <TextInput
+                  style={styles.fieldInput}
+                  value={waistCm}
+                  onChangeText={setWaistCm}
+                  keyboardType="numeric"
+                  placeholder={language === 'hi' ? 'उदा. 86' : 'e.g. 86'}
+                />
+              </View>
             </View>
           )}
+        </View>
+
+        {/* Referral & Action Plan Card */}
+        <View style={styles.sectionCard}>
+          <View style={styles.sectionHeaderRow}>
+            <Ionicons name="navigate-outline" size={16} color={Colors.primary} />
+            <Text style={styles.sectionTitle}>
+              {language === 'hi' ? 'रेफरल एवं कार्य योजना (Referral & Action)' : 'Referral & Action Plan'}
+            </Text>
+          </View>
+          <Text style={styles.fieldLabel}>
+            {language === 'hi' ? 'रेफरल केंद्र (Destination)' : 'Referral Destination'}
+          </Text>
+          <View style={styles.chipRow}>
+            {([
+              { key: 'sub_center', labelHi: 'उप-केंद्र', labelEn: 'Sub-Center' },
+              { key: 'phc', labelHi: 'PHC (प्राथमिक)', labelEn: 'PHC' },
+              { key: 'chc', labelHi: 'CHC (सामुदायिक)', labelEn: 'CHC' },
+              { key: 'district_hospital', labelHi: 'जिला अस्पताल', labelEn: 'District Hosp' }
+            ] as const).map((dest) => (
+              <TouchableOpacity
+                key={dest.key}
+                style={[styles.choiceChip, referralDestination === dest.key && styles.choiceChipActive]}
+                onPress={() => setReferralDestination(dest.key)}
+              >
+                <Text style={[styles.choiceChipText, referralDestination === dest.key && styles.choiceChipTextActive]}>
+                  {language === 'hi' ? dest.labelHi : dest.labelEn}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          <Text style={[styles.fieldLabel, { marginTop: 10 }]}>
+            {language === 'hi' ? 'प्राथमिकता (Urgency)' : 'Referral Urgency'}
+          </Text>
+          <View style={styles.chipRow}>
+            {([
+              { key: 'immediate', labelHi: 'तत्काल (108 / Urgent)', labelEn: 'Immediate (108)' },
+              { key: 'urgent', labelHi: '24 घंटे में', labelEn: 'Within 24h' },
+              { key: 'routine', labelHi: 'नियमित', labelEn: 'Routine' }
+            ] as const).map((urg) => (
+              <TouchableOpacity
+                key={urg.key}
+                style={[styles.choiceChip, referralUrgency === urg.key && styles.choiceChipActive]}
+                onPress={() => setReferralUrgency(urg.key)}
+              >
+                <Text style={[styles.choiceChipText, referralUrgency === urg.key && styles.choiceChipTextActive]}>
+                  {language === 'hi' ? urg.labelHi : urg.labelEn}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
 
         {/* Clinical Risk Alerts Section */}
@@ -587,5 +869,31 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     color: Colors.surface,
+  },
+  chipRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginTop: 4,
+  },
+  choiceChip: {
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    backgroundColor: Colors.surfaceContainer,
+  },
+  choiceChipActive: {
+    borderColor: Colors.primary,
+    backgroundColor: Colors.primaryLight,
+  },
+  choiceChipText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: Colors.textSecondary,
+  },
+  choiceChipTextActive: {
+    color: Colors.primary,
   },
 });

@@ -194,8 +194,21 @@ export function extractMultilingualScreeningData(
       measurement_date: todayStr
     } : undefined;
 
+    const missingSafetyPrompts: string[] = [];
+    if (bp.systolic !== null && bp.systolic >= 140 && !hasHeadache && !hasBlurredVision) {
+      missingSafetyPrompts.push('क्या मरीज को सिरदर्द, आंखों में धुंधलापन या पेट दर्द है?');
+    }
+    if (weeks !== null && weeks >= 24 && !hasReducedMovement && !normalizedText.includes('हलचल')) {
+      missingSafetyPrompts.push('क्या शिशु की हलचल सामान्य महसूस हो रही है?');
+    }
+
     return {
       screening_type: 'pregnancy',
+      visit_type: 'pregnancy',
+      common_visit: {
+        visit_purpose: 'scheduled_anc',
+        main_complaint: hasBleeding ? 'रक्तस्राव (Bleeding)' : hasHeadache ? 'सिरदर्द (Headache)' : undefined
+      },
       pregnancy: {
         pregnancy_status: 'pregnant',
         gestational_age_weeks: weeks !== null ? weeks : undefined,
@@ -221,7 +234,14 @@ export function extractMultilingualScreeningData(
         fever: hasFever ? 'present' : 'missing',
         bp_systolic: bp.systolic !== null ? 'present' : 'missing',
         bp_diastolic: bp.diastolic !== null ? 'present' : 'missing'
-      }
+      },
+      field_provenance: {
+        pregnancy_status: 'worker_spoken_input',
+        gestational_age_weeks: weeks !== null ? 'worker_spoken_input' : 'not_asked',
+        bp_systolic: bp.systolic !== null ? 'worker_spoken_input' : 'not_asked',
+        bp_diastolic: bp.diastolic !== null ? 'worker_spoken_input' : 'not_asked'
+      },
+      missing_safety_prompts: missingSafetyPrompts
     };
   }
 
@@ -269,8 +289,29 @@ export function extractMultilingualScreeningData(
     'शराब', 'दारू', 'alcohol', 'drinking'
   ]);
 
+  const missingSafetyPrompts: string[] = [];
+  if ((bp.systolic !== null && bp.systolic >= 140) || (bp.diastolic !== null && bp.diastolic >= 90)) {
+    if (!hasHeadache && !hasChestPain) {
+      missingSafetyPrompts.push('क्या मरीज को अभी तेज सिरदर्द, सीने में दर्द, सांस लेने में परेशानी या कोई अन्य गंभीर लक्षण है?');
+    }
+  }
+  if (glucose.glucose !== null && glucose.glucose >= 200) {
+    missingSafetyPrompts.push('क्या मरीज को अत्यधिक प्यास, बार-बार पेशाब या अत्यधिक थकान महसूस हो रही है?');
+  }
+
   return {
     screening_type: 'ncd',
+    visit_type: 'ncd',
+    common_visit: {
+      visit_purpose: 'ncd_screening',
+      main_complaint: symptoms.length > 0 ? symptoms[0] : undefined,
+      known_conditions: [
+        ...(hasKnownHypertension ? ['hypertension'] : []),
+        ...(hasKnownDiabetes ? ['diabetes'] : [])
+      ],
+      current_medications: (hasKnownHypertension || hasKnownDiabetes) ? (hasMissedMeds ? 'दवा अनियमित/छूट गई' : 'नियमित दवा') : undefined,
+      missed_medication_doses: hasMissedMeds
+    },
     ncd: {
       bp_systolic: bp.systolic !== null ? bp.systolic : undefined,
       bp_diastolic: bp.diastolic !== null ? bp.diastolic : undefined,
@@ -291,6 +332,13 @@ export function extractMultilingualScreeningData(
       known_hypertension: 'present',
       known_diabetes: 'present',
       medication_adherence: 'present'
-    }
+    },
+    field_provenance: {
+      bp_systolic: bp.systolic !== null ? 'worker_spoken_input' : 'not_asked',
+      bp_diastolic: bp.diastolic !== null ? 'worker_spoken_input' : 'not_asked',
+      blood_glucose: glucose.glucose !== null ? 'worker_spoken_input' : 'not_asked',
+      medication_adherence: 'worker_spoken_input'
+    },
+    missing_safety_prompts: missingSafetyPrompts
   };
 }

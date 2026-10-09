@@ -27,8 +27,14 @@ export default function NewPatientScreen() {
   const [age, setAge] = useState('');
   const [sex, setSex] = useState<Gender>('female');
   const [phone, setPhone] = useState('');
+  const [phoneOwner, setPhoneOwner] = useState<'self' | 'spouse' | 'parent' | 'neighbor' | 'other'>('self');
   const [village, setVillage] = useState(language === 'hi' ? 'रामपुर' : 'Rampur');
+  const [hamletTola, setHamletTola] = useState('');
   const [householdId, setHouseholdId] = useState('HH-');
+  const [relationshipToHead, setRelationshipToHead] = useState(language === 'hi' ? 'स्वयं' : 'Self');
+  const [abhaId, setAbhaId] = useState('');
+  const [disabilityAccessNeeds, setDisabilityAccessNeeds] = useState('');
+  const [consentObtained, setConsentObtained] = useState(true);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -62,8 +68,14 @@ export default function NewPatientScreen() {
         age: ageNum,
         sex,
         phone: phone.trim() || undefined,
+        phone_owner: phoneOwner,
         village: village.trim(),
+        hamlet_tola: hamletTola.trim() || undefined,
         household_id: householdId.trim() || undefined,
+        relationship_to_head: relationshipToHead.trim() || undefined,
+        abha_id: abhaId.trim() || undefined,
+        disability_access_needs: disabilityAccessNeeds.trim() || undefined,
+        consent_obtained: consentObtained,
         sync_status: 'pending' as const
       };
 
@@ -165,26 +177,103 @@ export default function NewPatientScreen() {
             onChangeText={setPhone}
             keyboardType="phone-pad"
           />
+          <View style={[styles.genderRow, { marginTop: 6 }]}>
+            {(['self', 'spouse', 'parent', 'other'] as const).map(owner => (
+              <TouchableOpacity
+                key={owner}
+                style={[styles.genderBtn, phoneOwner === owner && styles.genderBtnActive]}
+                onPress={() => setPhoneOwner(owner)}
+              >
+                <Text style={[styles.genderText, phoneOwner === owner && styles.genderTextActive]}>
+                  {owner === 'self' ? (language === 'hi' ? 'स्वयं' : 'Self') :
+                   owner === 'spouse' ? (language === 'hi' ? 'पति/पत्नी' : 'Spouse') :
+                   owner === 'parent' ? (language === 'hi' ? 'माता/पिता' : 'Parent') :
+                   (language === 'hi' ? 'अन्य' : 'Other')}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        <View style={styles.row}>
+          <View style={[styles.formGroup, { flex: 1 }]}>
+            <Text style={styles.label}>{t.villageLabel}</Text>
+            <TextInput
+              style={styles.input}
+              value={village}
+              onChangeText={setVillage}
+            />
+          </View>
+          <View style={[styles.formGroup, { flex: 1 }]}>
+            <Text style={styles.label}>{language === 'hi' ? 'टोला / मोहल्ला' : 'Hamlet / Tola'}</Text>
+            <TextInput
+              style={styles.input}
+              placeholder={language === 'hi' ? 'उदा. पटेल नगर' : 'e.g. Patel Nagar'}
+              placeholderTextColor={Colors.textMuted}
+              value={hamletTola}
+              onChangeText={setHamletTola}
+            />
+          </View>
+        </View>
+
+        <View style={styles.row}>
+          <View style={[styles.formGroup, { flex: 1 }]}>
+            <Text style={styles.label}>{t.householdLabel}</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="HH-101"
+              placeholderTextColor={Colors.textMuted}
+              value={householdId}
+              onChangeText={setHouseholdId}
+            />
+          </View>
+          <View style={[styles.formGroup, { flex: 1 }]}>
+            <Text style={styles.label}>{language === 'hi' ? 'मुखिया से संबंध' : 'Relation to Head'}</Text>
+            <TextInput
+              style={styles.input}
+              placeholder={language === 'hi' ? 'स्वयं / पत्नी / बेटा' : 'Self / Spouse / Child'}
+              placeholderTextColor={Colors.textMuted}
+              value={relationshipToHead}
+              onChangeText={setRelationshipToHead}
+            />
+          </View>
         </View>
 
         <View style={styles.formGroup}>
-          <Text style={styles.label}>{t.villageLabel}</Text>
+          <Text style={styles.label}>{language === 'hi' ? 'आभा कार्ड संख्या (ABHA ID - 14 अंक)' : 'ABHA Health ID (14 digits)'}</Text>
           <TextInput
             style={styles.input}
-            value={village}
-            onChangeText={setVillage}
-          />
-        </View>
-
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>{t.householdLabel}</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="HH-101"
+            placeholder="12-3456-7890-1234"
             placeholderTextColor={Colors.textMuted}
-            value={householdId}
-            onChangeText={setHouseholdId}
+            value={abhaId}
+            onChangeText={setAbhaId}
+            keyboardType="numeric"
           />
+        </View>
+
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>{language === 'hi' ? 'दिव्यांगता / विशेष सहायता' : 'Disability / Access Needs'}</Text>
+          <TextInput
+            style={styles.input}
+            placeholder={language === 'hi' ? 'यदि कोई हो (उदा. चलने में असमर्थ)' : 'If any (e.g. mobility assistance)'}
+            placeholderTextColor={Colors.textMuted}
+            value={disabilityAccessNeeds}
+            onChangeText={setDisabilityAccessNeeds}
+          />
+        </View>
+
+        <View style={[styles.formGroup, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 4 }]}>
+          <Text style={[styles.label, { marginBottom: 0, flex: 1 }]}>
+            {language === 'hi' ? 'लाभार्थी की सहमति ली गई (Consent)' : 'Informed Consent Obtained'}
+          </Text>
+          <TouchableOpacity
+            style={[styles.genderBtn, { flex: 0, paddingHorizontal: 16 }, consentObtained && styles.genderBtnActive]}
+            onPress={() => setConsentObtained(!consentObtained)}
+          >
+            <Text style={[styles.genderText, consentObtained && styles.genderTextActive]}>
+              {consentObtained ? (language === 'hi' ? 'हाँ (Yes)' : 'Yes') : (language === 'hi' ? 'नहीं (No)' : 'No')}
+            </Text>
+          </TouchableOpacity>
         </View>
 
         <TouchableOpacity

@@ -59,8 +59,8 @@ export const followupRepository = {
     const syncStatus: SyncStatus = followup.sync_status || 'pending';
 
     await runner.runAsync(
-      `INSERT INTO followups (id, patient_id, screening_id, reason, priority, due_date, status, created_at, updated_at, sync_status)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO followups (id, patient_id, screening_id, reason, priority, due_date, status, destination, urgency, facility_reached, responsible_person, outcome, created_at, updated_at, sync_status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         followup.id,
         followup.patient_id,
@@ -69,6 +69,11 @@ export const followupRepository = {
         followup.priority,
         followup.due_date,
         followup.status,
+        followup.destination || null,
+        followup.urgency || null,
+        followup.facility_reached ? 1 : 0,
+        followup.responsible_person || null,
+        followup.outcome || null,
         now,
         now,
         syncStatus
@@ -89,6 +94,60 @@ export const followupRepository = {
     await runner.runAsync(
       'UPDATE followups SET status = ?, sync_status = ?, updated_at = ? WHERE id = ?',
       [status, 'pending', now, id]
+    );
+  },
+
+  async update(id: string, updates: Partial<FollowUp>, tx?: SQLite.SQLiteDatabase): Promise<void> {
+    const runner = tx || (await getDatabase());
+    const now = new Date().toISOString();
+    const fields: string[] = ['updated_at = ?', 'sync_status = ?'];
+    const values: (string | number | null)[] = [now, 'pending'];
+
+    if (updates.status !== undefined) {
+      fields.push('status = ?');
+      values.push(updates.status);
+    }
+    if (updates.priority !== undefined) {
+      fields.push('priority = ?');
+      values.push(updates.priority);
+    }
+    if (updates.reason !== undefined) {
+      fields.push('reason = ?');
+      values.push(updates.reason);
+    }
+    if (updates.due_date !== undefined) {
+      fields.push('due_date = ?');
+      values.push(updates.due_date);
+    }
+    if (updates.destination !== undefined) {
+      fields.push('destination = ?');
+      values.push(updates.destination || null);
+    }
+    if (updates.urgency !== undefined) {
+      fields.push('urgency = ?');
+      values.push(updates.urgency || null);
+    }
+    if (updates.facility_reached !== undefined) {
+      fields.push('facility_reached = ?');
+      values.push(updates.facility_reached ? 1 : 0);
+    }
+    if (updates.responsible_person !== undefined) {
+      fields.push('responsible_person = ?');
+      values.push(updates.responsible_person || null);
+    }
+    if (updates.outcome !== undefined) {
+      fields.push('outcome = ?');
+      values.push(updates.outcome || null);
+    }
+    if (updates.notes !== undefined) {
+      fields.push('notes = ?');
+      values.push(updates.notes || null);
+    }
+
+    values.push(id);
+    await runner.runAsync(
+      `UPDATE followups SET ${fields.join(', ')} WHERE id = ?`,
+      values
     );
   },
 
