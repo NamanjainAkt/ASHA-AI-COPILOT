@@ -54,8 +54,14 @@ export async function initDatabase(db: SQLite.SQLiteDatabase): Promise<void> {
       age INTEGER CHECK (age IS NULL OR (age BETWEEN 0 AND 130)),
       sex TEXT NOT NULL CHECK (sex IN ('female', 'male', 'other')),
       phone TEXT,
+      phone_owner TEXT,
       village TEXT NOT NULL,
+      hamlet_tola TEXT,
       household_id TEXT,
+      relationship_to_head TEXT,
+      abha_id TEXT,
+      disability_access_needs TEXT,
+      consent_obtained INTEGER DEFAULT 1,
       created_at TEXT NOT NULL,
       updated_at TEXT NOT NULL,
       sync_status TEXT NOT NULL CHECK (sync_status IN ('pending', 'synced', 'failed'))
@@ -84,6 +90,11 @@ export async function initDatabase(db: SQLite.SQLiteDatabase): Promise<void> {
       priority TEXT NOT NULL CHECK (priority IN ('low', 'medium', 'high', 'critical')),
       due_date TEXT,
       status TEXT NOT NULL CHECK (status IN ('pending', 'completed', 'cancelled')),
+      destination TEXT,
+      urgency TEXT,
+      facility_reached INTEGER DEFAULT 0,
+      responsible_person TEXT,
+      outcome TEXT,
       created_at TEXT NOT NULL,
       updated_at TEXT NOT NULL,
       sync_status TEXT NOT NULL CHECK (sync_status IN ('pending', 'synced', 'failed')),
@@ -123,11 +134,29 @@ export async function initDatabase(db: SQLite.SQLiteDatabase): Promise<void> {
   // PRAGMA user_version migration control with explicit switch list (ISS-231)
   const versionRow = await db.getFirstAsync<{ user_version: number }>('PRAGMA user_version;');
   const currentVersion = versionRow?.user_version ?? 0;
-  const TARGET_VERSION = 1;
+  const TARGET_VERSION = 2;
   for (let v = currentVersion + 1; v <= TARGET_VERSION; v++) {
     switch (v) {
       case 1:
         // Migration v1: Baseline schema with sub_center, check constraints, indexes, unique constraints
+        break;
+      case 2:
+        // Migration v2: Beneficiary profile fields and action tracking
+        try {
+          await db.execAsync(`
+            ALTER TABLE patients ADD COLUMN phone_owner TEXT;
+            ALTER TABLE patients ADD COLUMN hamlet_tola TEXT;
+            ALTER TABLE patients ADD COLUMN relationship_to_head TEXT;
+            ALTER TABLE patients ADD COLUMN abha_id TEXT;
+            ALTER TABLE patients ADD COLUMN disability_access_needs TEXT;
+            ALTER TABLE patients ADD COLUMN consent_obtained INTEGER DEFAULT 1;
+            ALTER TABLE followups ADD COLUMN destination TEXT;
+            ALTER TABLE followups ADD COLUMN urgency TEXT;
+            ALTER TABLE followups ADD COLUMN facility_reached INTEGER DEFAULT 0;
+            ALTER TABLE followups ADD COLUMN responsible_person TEXT;
+            ALTER TABLE followups ADD COLUMN outcome TEXT;
+          `);
+        } catch (_) {}
         break;
       default:
         break;

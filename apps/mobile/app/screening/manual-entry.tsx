@@ -28,14 +28,21 @@ export default function ManualEntryScreen() {
 
   const [patientName, setPatientName] = useState(params.patientName || '');
   const [screeningType, setScreeningType] = useState<ScreeningType>('ncd');
+  const [mainComplaint, setMainComplaint] = useState('');
+  const [complaintOnset, setComplaintOnset] = useState('');
+  const [complaintCourse, setComplaintCourse] = useState<'worsening' | 'improving' | 'unchanged'>('unchanged');
   const [systolic, setSystolic] = useState('');
   const [diastolic, setDiastolic] = useState('');
   const [glucose, setGlucose] = useState('');
+  const [waistCm, setWaistCm] = useState('');
   const [tobacco, setTobacco] = useState(false);
   const [missedMeds, setMissedMeds] = useState(false);
   const [gestationalWeeks, setGestationalWeeks] = useState('28');
   const [vaginalBleeding, setVaginalBleeding] = useState(false);
   const [severeHeadache, setSevereHeadache] = useState(false);
+  const [referralDestination, setReferralDestination] = useState<'sub_center' | 'phc' | 'chc' | 'district_hospital'>('phc');
+  const [referralUrgency, setReferralUrgency] = useState<'immediate' | 'urgent' | 'routine'>('urgent');
+  const [responsiblePerson, setResponsiblePerson] = useState<'asha' | 'anm' | 'medical_officer'>('anm');
   const [isHumanConfirmed, setIsHumanConfirmed] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -56,6 +63,18 @@ export default function ManualEntryScreen() {
     try {
       const structuredData: StructuredScreeningData = {
         screening_type: screeningType,
+        visit_type: screeningType,
+        common_visit: {
+          visit_purpose: screeningType === 'ncd' ? 'ncd_screening' : 'antenatal_care',
+          main_complaint: mainComplaint.trim() || undefined,
+          complaint_onset: complaintOnset.trim() || undefined,
+          complaint_course: complaintCourse,
+          missed_medication_doses: missedMeds
+        },
+        cbac: screeningType === 'ncd' ? {
+          waist_circumference_cm: waistCm ? parseFloat(waistCm) : null,
+          tobacco_frequency: tobacco ? 'daily' : 'never'
+        } : undefined,
         ncd: screeningType === 'ncd' ? {
           bp_systolic: systolic ? parseInt(systolic, 10) : null,
           bp_diastolic: diastolic ? parseInt(diastolic, 10) : null,
@@ -70,7 +89,13 @@ export default function ManualEntryScreen() {
           vaginal_bleeding: vaginalBleeding,
           severe_headache: severeHeadache,
           follow_up_required: vaginalBleeding || severeHeadache,
-        } : undefined
+        } : undefined,
+        referral_action: {
+          referral_recommended: Boolean(vaginalBleeding || severeHeadache || (systolic && parseInt(systolic, 10) >= 140)),
+          destination: referralDestination,
+          urgency: referralUrgency,
+          responsible_person: responsiblePerson
+        }
       };
 
       const patientId = params.patientId as string;
@@ -131,6 +156,9 @@ export default function ManualEntryScreen() {
             priority: 'high',
             due_date: dateStr,
             status: 'pending',
+            destination: referralDestination,
+            urgency: referralUrgency,
+            responsible_person: responsiblePerson,
             sync_status: 'pending'
           }, db);
 
@@ -140,7 +168,10 @@ export default function ManualEntryScreen() {
             reason: followupReason,
             priority: 'high',
             due_date: dateStr,
-            status: 'pending'
+            status: 'pending',
+            destination: referralDestination,
+            urgency: referralUrgency,
+            responsible_person: responsiblePerson
           }, db);
         }
       });
@@ -215,6 +246,51 @@ export default function ManualEntryScreen() {
           </View>
         </View>
 
+        {/* Module B: Common Visit Questions */}
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>
+            {language === 'hi' ? 'मुख्य शिकायत (मरीज के शब्दों में):' : 'Main Complaint (In patient’s words):'}
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder={language === 'hi' ? 'उदा. सिर में भारीपन, कमजोरी' : 'e.g. Heavy head, weakness'}
+            placeholderTextColor={Colors.textMuted}
+            value={mainComplaint}
+            onChangeText={setMainComplaint}
+          />
+        </View>
+
+        <View style={styles.row}>
+          <View style={[styles.formGroup, { flex: 1 }]}>
+            <Text style={styles.label}>{language === 'hi' ? 'शुरुआत (अवधि):' : 'Onset Duration:'}</Text>
+            <TextInput
+              style={styles.input}
+              placeholder={language === 'hi' ? 'उदा. 10 दिन' : 'e.g. 10 days'}
+              placeholderTextColor={Colors.textMuted}
+              value={complaintOnset}
+              onChangeText={setComplaintOnset}
+            />
+          </View>
+          <View style={[styles.formGroup, { flex: 1.2 }]}>
+            <Text style={styles.label}>{language === 'hi' ? 'स्थिति:' : 'Course:'}</Text>
+            <View style={styles.row}>
+              {(['worsening', 'unchanged', 'improving'] as const).map(c => (
+                <TouchableOpacity
+                  key={c}
+                  style={[styles.typeBtn, complaintCourse === c && styles.typeBtnActive, { paddingVertical: 6 }]}
+                  onPress={() => setComplaintCourse(c)}
+                >
+                  <Text style={[styles.typeBtnText, complaintCourse === c && styles.typeBtnTextActive, { fontSize: 10 }]}>
+                    {c === 'worsening' ? (language === 'hi' ? 'बढ़ रही' : 'Worse') :
+                     c === 'improving' ? (language === 'hi' ? 'घट रही' : 'Better') :
+                     (language === 'hi' ? 'स्थिर' : 'Same')}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </View>
+
         {/* Screening Specific Fields */}
         {screeningType === 'ncd' ? (
           <>
@@ -243,16 +319,29 @@ export default function ManualEntryScreen() {
               </View>
             </View>
 
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>{t.glucoseLabel}</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="110"
-                placeholderTextColor={Colors.textMuted}
-                value={glucose}
-                onChangeText={setGlucose}
-                keyboardType="numeric"
-              />
+            <View style={styles.row}>
+              <View style={[styles.formGroup, { flex: 1 }]}>
+                <Text style={styles.label}>{t.glucoseLabel}</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="110"
+                  placeholderTextColor={Colors.textMuted}
+                  value={glucose}
+                  onChangeText={setGlucose}
+                  keyboardType="numeric"
+                />
+              </View>
+              <View style={[styles.formGroup, { flex: 1 }]}>
+                <Text style={styles.label}>{language === 'hi' ? 'कमर का घेरा (सेमी - CBAC):' : 'Waist (cm - CBAC):'}</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="85"
+                  placeholderTextColor={Colors.textMuted}
+                  value={waistCm}
+                  onChangeText={setWaistCm}
+                  keyboardType="numeric"
+                />
+              </View>
             </View>
 
             <View style={styles.switchRow}>
@@ -316,6 +405,64 @@ export default function ManualEntryScreen() {
             </View>
           </>
         )}
+
+        {/* Action & Referral Plan */}
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>{language === 'hi' ? 'रेफरल केंद्र (Destination):' : 'Referral Destination:'}</Text>
+          <View style={styles.row}>
+            {(['sub_center', 'phc', 'chc', 'district_hospital'] as const).map(dest => (
+              <TouchableOpacity
+                key={dest}
+                style={[styles.typeBtn, referralDestination === dest && styles.typeBtnActive, { paddingVertical: 6 }]}
+                onPress={() => setReferralDestination(dest)}
+              >
+                <Text style={[styles.typeBtnText, referralDestination === dest && styles.typeBtnTextActive, { fontSize: 10 }]}>
+                  {dest === 'sub_center' ? (language === 'hi' ? 'उप-केंद्र' : 'HWC') :
+                   dest === 'phc' ? 'PHC' :
+                   dest === 'chc' ? 'CHC' :
+                   (language === 'hi' ? 'जिला अस्पताल' : 'DH')}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        <View style={styles.row}>
+          <View style={[styles.formGroup, { flex: 1 }]}>
+            <Text style={styles.label}>{language === 'hi' ? 'तात्कालिकता (Urgency):' : 'Urgency:'}</Text>
+            <View style={styles.row}>
+              {(['immediate', 'urgent', 'routine'] as const).map(u => (
+                <TouchableOpacity
+                  key={u}
+                  style={[styles.typeBtn, referralUrgency === u && styles.typeBtnActive, { paddingVertical: 6 }]}
+                  onPress={() => setReferralUrgency(u)}
+                >
+                  <Text style={[styles.typeBtnText, referralUrgency === u && styles.typeBtnTextActive, { fontSize: 10 }]}>
+                    {u === 'immediate' ? (language === 'hi' ? 'तत्काल' : 'Now') :
+                     u === 'urgent' ? (language === 'hi' ? 'आवश्यक' : 'Urgent') :
+                     (language === 'hi' ? 'सामान्य' : 'Routine')}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+          <View style={[styles.formGroup, { flex: 1 }]}>
+            <Text style={styles.label}>{language === 'hi' ? 'जिम्मेदार:' : 'Responsible:'}</Text>
+            <View style={styles.row}>
+              {(['asha', 'anm', 'medical_officer'] as const).map(p => (
+                <TouchableOpacity
+                  key={p}
+                  style={[styles.typeBtn, responsiblePerson === p && styles.typeBtnActive, { paddingVertical: 6 }]}
+                  onPress={() => setResponsiblePerson(p)}
+                >
+                  <Text style={[styles.typeBtnText, responsiblePerson === p && styles.typeBtnTextActive, { fontSize: 10 }]}>
+                    {p === 'asha' ? 'आशा' : p === 'anm' ? 'एएनएम' : 'डॉक्टर'}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </View>
 
         {/* Verification Check */}
         <View style={styles.verificationRow}>

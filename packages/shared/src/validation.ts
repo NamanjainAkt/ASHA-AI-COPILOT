@@ -48,6 +48,18 @@ export function validatePatient(patient: Partial<Patient>): ValidationIssue[] {
     }
   }
 
+  if (patient.abha_id && patient.abha_id.trim().length > 0) {
+    const cleanedAbha = patient.abha_id.replace(/[\s-]/g, '');
+    if (!/^[0-9]{14}$/.test(cleanedAbha) && !/^[A-Za-z0-9._@]{6,32}$/.test(patient.abha_id.trim())) {
+      issues.push({
+        field: 'abha_id',
+        code: 'INVALID_VALUE',
+        message: 'ABHA ID must be a 14-digit number or valid ABHA address',
+        message_hi: 'आभा आईडी 14 अंकों की संख्या या वैध आभा पता होनी चाहिए'
+      });
+    }
+  }
+
   return issues;
 }
 
@@ -163,6 +175,44 @@ export function validateScreeningData(
         });
         sanitized.field_status['gestational_age_weeks'] = 'uncertain';
         sanitized.pregnancy.gestational_age_weeks = undefined;
+      }
+    }
+  }
+
+  // CBAC Validation
+  if (sanitized.cbac) {
+    const cbac = sanitized.cbac;
+    if (cbac.waist_circumference_cm !== undefined && cbac.waist_circumference_cm !== null) {
+      if (isNaN(cbac.waist_circumference_cm) || cbac.waist_circumference_cm < 30 || cbac.waist_circumference_cm > 200) {
+        issues.push({
+          field: 'waist_circumference_cm',
+          code: 'OUT_OF_RANGE',
+          message: `Waist circumference (${cbac.waist_circumference_cm} cm) is outside plausible range (30-200 cm)`,
+          message_hi: `कमर का घेरा (${cbac.waist_circumference_cm} सेमी) असामान्य सीमा में है`
+        });
+        sanitized.field_status['waist_circumference_cm'] = 'uncertain';
+        sanitized.cbac.waist_circumference_cm = null;
+      } else {
+        sanitized.field_status['waist_circumference_cm'] = 'present';
+      }
+    }
+  }
+
+  // PNC & Child Validation
+  if (sanitized.pnc_child) {
+    const pnc = sanitized.pnc_child;
+    if (pnc.birth_weight_kg !== undefined && pnc.birth_weight_kg !== null) {
+      if (isNaN(pnc.birth_weight_kg) || pnc.birth_weight_kg < 0.4 || pnc.birth_weight_kg > 8.0) {
+        issues.push({
+          field: 'birth_weight_kg',
+          code: 'OUT_OF_RANGE',
+          message: `Birth weight (${pnc.birth_weight_kg} kg) is outside plausible range (0.4-8.0 kg)`,
+          message_hi: `जन्म के समय वजन (${pnc.birth_weight_kg} किग्रा) असामान्य सीमा में है`
+        });
+        sanitized.field_status['birth_weight_kg'] = 'uncertain';
+        sanitized.pnc_child.birth_weight_kg = null;
+      } else {
+        sanitized.field_status['birth_weight_kg'] = 'present';
       }
     }
   }

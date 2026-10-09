@@ -94,6 +94,10 @@ export default function VisitSummaryScreen() {
   // Dynamically re-evaluate rules based on current editable values (ISS-233: memoized)
   const currentStructuredData: StructuredScreeningData = useMemo(() => ({
     screening_type: screeningType,
+    visit_type: screeningType,
+    common_visit: initialResult?.extracted?.common_visit,
+    cbac: initialResult?.extracted?.cbac,
+    referral_action: initialResult?.extracted?.referral_action,
     ncd: screeningType === 'ncd' ? {
       bp_systolic: systolic ? parseInt(systolic, 10) : null,
       bp_diastolic: diastolic ? parseInt(diastolic, 10) : null,

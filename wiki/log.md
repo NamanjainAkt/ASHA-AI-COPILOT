@@ -682,3 +682,28 @@ Append-only chronological record. Entries are prefixed `## [YYYY-MM-DD] <op> | <
 
 
 
+
+## [2026-10-09] refactor | Voice-First, Visit-Based ASHA Workflow & Enhanced Forms Directory
+
+- Transitioned system from speech-to-JSON screening demo to comprehensive, visit-based frontline ASHA field workflow.
+- Updated root specification documents:
+  - FORMS.md: Canonical architecture for Module A (Beneficiary Registration with ABHA, hamlet, phone owner, consent), Module B (6-prompt Common Visit intake), Condition-Specific Modules (CBAC 30+, ANC Maternal, PNC/HBNC Child, General Illness, Family Planning), Adaptive AI safety prompts, and Action/Referral lifecycle tracking.
+  - EXTRACTED_DATA.md: Comprehensive dataset with field-status provenance ('confirmed', 'not_asked', 'explicit_denial', 'uncertain'), eliminating hallucinated symptoms (dizziness in s-001, swelling in s-002), and updated wire schemas.
+- Enhanced shared contract (@asha/shared):
+  - Added types: VisitType, FieldStatus, FieldProvenance, CommonVisitData, CBACScreeningData, PNCChildScreeningData, ReferralActionData.
+  - Enhanced Patient interface: hamlet_tola, phone_owner, relationship_to_head, abha_id, disability_access_needs, consent_obtained.
+  - Enhanced FollowUp interface: destination, urgency, facility_reached, responsible_person, outcome.
+  - Enhanced validation: added ABHA ID format check, CBAC waist range check, and PNC infant birth weight plausibility bounds.
+  - Enhanced multilingualExtractor.ts: added adaptive AI safety follow-up prompts for hypertension/danger signs, common visit extraction, and provenance tagging.
+- Enhanced Mobile App (apps/mobile):
+  - new.tsx: added full Module A inputs (hamlet/tola, relationship to head, ABHA ID, phone ownership pills, disability needs, informed consent switch).
+  - manual-entry.tsx: added Module B common complaints (main complaint, onset, course), CBAC waist, and referral action selector (destination, urgency, responsible person).
+  - summary.tsx: bound and preserved common_visit, cbac, and referral_action across human-in-the-loop review.
+  - database.ts & repos: added migration v2 for patient and followup action tracking columns.
+- Enhanced Backend API (services/api):
+  - models.py: updated Pydantic models (PatientCreate, ScreeningCreate, FollowUpCreate) to support optional visit-based fields.
+- Verified test suites:
+  - Clinical Rules Test: 13 / 13 passed (100%)
+  - Edge Cases Test: 15 / 15 passed (100%)
+  - Multilingual Model Harness: 32 / 32 passed (100%)
+  - Sync Idempotency & Auth Test: 12 / 12 passed (100%)

@@ -59,8 +59,8 @@ export const followupRepository = {
     const syncStatus: SyncStatus = followup.sync_status || 'pending';
 
     await runner.runAsync(
-      `INSERT INTO followups (id, patient_id, screening_id, reason, priority, due_date, status, created_at, updated_at, sync_status)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO followups (id, patient_id, screening_id, reason, priority, due_date, status, destination, urgency, facility_reached, responsible_person, outcome, created_at, updated_at, sync_status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         followup.id,
         followup.patient_id,
@@ -69,6 +69,11 @@ export const followupRepository = {
         followup.priority,
         followup.due_date,
         followup.status,
+        followup.destination || null,
+        followup.urgency || null,
+        followup.facility_reached ? 1 : 0,
+        followup.responsible_person || null,
+        followup.outcome || null,
         now,
         now,
         syncStatus
