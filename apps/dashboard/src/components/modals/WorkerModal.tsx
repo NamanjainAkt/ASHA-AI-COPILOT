@@ -24,8 +24,8 @@ export const WorkerModal: React.FC<WorkerModalProps> = ({
     name: '',
     role: 'asha',
     phone: '',
-    village: 'Rampur',
-    sub_center: 'सब-सेंटर रामपुर',
+    village: '',
+    sub_center: '',
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -84,7 +84,7 @@ export const WorkerModal: React.FC<WorkerModalProps> = ({
               value={formData.name || ''}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               className="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary"
-              placeholder="उदा. सुनीता दीदी (Sunita Devi)"
+              placeholder="कार्यकर्ता का नाम / Worker name"
             />
             {error && <p className="text-xs text-red-600 mt-1">{error}</p>}
           </div>
@@ -114,7 +114,7 @@ export const WorkerModal: React.FC<WorkerModalProps> = ({
                 value={formData.phone || ''}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 className="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary"
-                placeholder="+91 9876543210"
+                placeholder="मोबाइल नंबर / Mobile number"
               />
             </div>
           </div>
@@ -128,7 +128,7 @@ export const WorkerModal: React.FC<WorkerModalProps> = ({
               value={formData.village || ''}
               onChange={(e) => setFormData({ ...formData, village: e.target.value })}
               className="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary"
-              placeholder="रामपुर (Rampur)"
+              placeholder="गांव का नाम / Village name"
             />
           </div>
 
@@ -141,7 +141,7 @@ export const WorkerModal: React.FC<WorkerModalProps> = ({
               value={formData.sub_center || ''}
               onChange={(e) => setFormData({ ...formData, sub_center: e.target.value })}
               className="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary"
-              placeholder="सब-सेंटर रामपुर"
+              placeholder="उप-केंद्र / Sub-center"
             />
           </div>
 

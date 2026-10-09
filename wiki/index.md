@@ -19,7 +19,7 @@ Conventions: [[SCHEMA]]. Current synthesis: [[overview]]. History: [[log]].
 | [[sources/mobile-services]] | `services/ai` (orchestrator + both drivers), `services/db` (schema, singleton, seeds, 4 repos), `services/rules`, `services/sync` |
 | [[sources/shared-package]] | `types.ts`, `validation.ts`, the two protocol JSONs, the barrel, compiled `dist/` contract |
 | [[sources/backend-api]] | Every FastAPI endpoint, `/sync/push` upsert SQL, `/sync/pull`, dashboard JSON routes, Pydantic models, schema, seeding |
-| [[sources/supervisor-dashboard]] | `apps/dashboard/index.html` — KPIs, triage table, worker panel, polling, the non-functional triage button |
+| [[sources/supervisor-dashboard]] | `apps/dashboard/src/` — backend-backed KPIs, triage table, worker panel, polling, and empty-state behaviour |
 | [[sources/tests-and-tooling]] | The two test suites and exactly what they assert (and don't), plus APK build/signature/install/emulator tooling notes |
 
 ## Entities — load-bearing services, stores, components

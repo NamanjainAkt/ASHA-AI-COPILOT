@@ -1,7 +1,7 @@
 ---
 type: source
 created: 2026-10-07
-updated: 2026-10-07
+updated: 2026-10-10
 sources: [entities/supervisor-backend-service.md, flows/sync-lifecycle.md]
 tags: [backend, fastapi, sync, api]
 ---
@@ -41,12 +41,17 @@ root. The `uvicorn.run("services.api.main:app", …, reload=True)` call at `main
 already assumes the repo root is on `sys.path`. Adding `__init__.py` files would fix the root
 cause properly but would **not** make script-path invocation work — that needs absolute imports.
 
-## Bootstrap side effects
+## Bootstrap side effects and demo data
 
-`lifespan` calls `init_db()` then `seed_demo_data()` (`main.py:19-23`, wired at `:29`), **and**
-both are *also* called at import time (`main.py:41-42`, comment: "Also initialize immediately so
-DB is ready for any synchronous test/import"). So merely importing `services.api.main` writes to
-`services/api/asha_backend.db`. The Python test relies on this implicitly.
+`lifespan` calls `init_db()` then `seed_demo_data()` (`main.py:19-23`, wired at `:29`), and both
+are also called at import time (`main.py:41-42`). Importing `services.api.main` therefore still
+creates/updates the configured SQLite database and inserts the two built-in auth accounts when
+the `users` table is empty. `init_db()` no longer creates fictional worker records.
+
+`seed_demo_data()` is gated by `ASHA_SEED_DEMO=1` by default. The explicit `/seed-demo` route
+still calls it with `force=True`; it is a demo-only operation, not startup behavior. The
+supervisor and sync API tests set `ASHA_DB_PATH` to temporary databases so their test fixtures do
+not appear in the dashboard's persistent database.
 
 CORS is `allow_origins=["*"]` with `allow_credentials=True` (`main.py:32-38`) — browsers reject
 credentialed wildcard origins, so the combination is effectively dead config. It never applies in
@@ -149,25 +154,24 @@ workers with no device row. The dashboard renders this number directly
 
 ## Schema and seeding
 
-`services/api/asha_backend.db` (`database.py:7`). 6 tables (`database.py:18-85`): `workers`,
-`patients`, `screenings`, `followups` (all with `sync_status DEFAULT 'synced'`), plus
-`devices` and `sync_events` which exist only server-side. `followups.screening_id` has **no FK**
-to `screenings`, though `/dashboard/high-priority` left-joins on it (`main.py:426`).
+`services/api/asha_backend.db` by default, overridable with `ASHA_DB_PATH` (`database.py:8`). The
+schema contains `users`, `workers`, `patients`, `screenings`, `followups`, `devices`, and
+`sync_events`; `sync_status` defaults to `'synced'` on the synchronized entities.
+`followups.screening_id` has **no FK** to `screenings`, though `/dashboard/high-priority`
+left-joins on it (`main.py:426`).
 
 Connections are plain `sqlite3.connect(DB_PATH)` with `row_factory = sqlite3.Row`
 (`database.py:9-12`) — no context manager, no pooling, **no `PRAGMA foreign_keys = ON`**, so the
 declared foreign keys are inert under SQLite defaults. Every handler opens and closes its own
 connection; error paths that raise `HTTPException` before `conn.close()` rely on GC.
 
-`init_db()` seeds 2 workers only when empty (`database.py:88-97`): `worker-001` Sunita Devi
-(asha, Rampur) and `supervisor-001` Dr. Rajesh Verma (supervisor, PHC Rampur).
+`init_db()` no longer seeds workers (`database.py:186-200`). When `users` is empty, it still
+creates two built-in demo auth accounts for the dashboard's current auto-login flow.
 
-`seed_demo_data()` (`database.py:102-248`) runs **unconditionally** on every startup and every
-`/seed-demo` call, with `INSERT OR REPLACE`: 5 patients (`p-001`..`p-005`, `:106-112`),
-2 screenings (`s-001` NCD hypertension for Sunita, `:121-170`; `s-002` maternal danger signs for
-Meena, `:189-230`), 2 follow-ups (`:173-186`, `:232-245`). Because it runs at import time
-(`main.py:42`), **importing the app rewrites these rows** — including when the Python test
-imports it.
+`seed_demo_data()` (`database.py:202-205`) is disabled unless `ASHA_SEED_DEMO=1`; `/seed-demo`
+explicitly invokes it with `force=True` (`main.py:1184-1187`). This data is for deliberate demos
+only and is not inserted on normal app startup. Backend tests set `ASHA_DB_PATH` to a temporary
+SQLite database (`tests/supervisor_api_test.py:8-10`, `tests/sync_idempotency_test.py:6-8`).
 
 ## Pydantic models
 

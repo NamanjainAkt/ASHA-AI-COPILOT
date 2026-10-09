@@ -117,7 +117,7 @@ def login(req: LoginRequest):
         worker_id=user["id"],
         worker_name=user["name"],
         role=user["role"],
-        village=user["village"] or "रामपुर (Rampur)"
+        village=user["village"] or ""
     )
 
 # --- PATIENTS (ISS-005: Secured with verify_jwt) ---

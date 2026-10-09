@@ -153,7 +153,7 @@ export const FollowupsView: React.FC<FollowupsViewProps> = ({
                         {f.patient_name || f.patient_id.substring(0, 8)}
                       </span>
                       <span className="text-xs text-slate-400">
-                        {f.patient_village || 'Rampur'}
+                        {f.patient_village || '—'}
                       </span>
                     </td>
 
@@ -193,7 +193,7 @@ export const FollowupsView: React.FC<FollowupsViewProps> = ({
                     <td className="px-5 py-4">
                       <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-700">
                         <Building2 className="w-3.5 h-3.5 text-primary" />
-                        {(f.destination_facility || 'PHC').toUpperCase()}
+                        {(f.destination_facility || '—').toUpperCase()}
                       </span>
                     </td>
 

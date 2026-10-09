@@ -1,7 +1,7 @@
 import React from 'react';
 import { DashboardSummary, FollowUp, Worker } from '../types';
 import { useLanguage } from '../context/LanguageContext';
-import { Users, FileText, AlertTriangle, Clock, ShieldCheck, ArrowUpRight, ArrowRight } from 'lucide-react';
+import { Users, FileText, AlertTriangle, Clock, ShieldCheck, ArrowRight } from 'lucide-react';
 
 interface TriageViewProps {
   summary: DashboardSummary | null;
@@ -24,7 +24,7 @@ export const TriageView: React.FC<TriageViewProps> = ({
 
   return (
     <div className="space-y-8">
-      {/* KPI Row - Top 4 Metric KPI Cards with trend indicators */}
+      {/* KPI Row - Top 4 backend-derived metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {/* KPI Card 1: Total Patients */}
         <div
@@ -35,9 +35,6 @@ export const TriageView: React.FC<TriageViewProps> = ({
             <div className="w-12 h-12 rounded-xl bg-teal-50 text-primary flex items-center justify-center group-hover:bg-teal-100 transition">
               <Users className="w-6 h-6" />
             </div>
-            <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full flex items-center gap-1">
-              <ArrowUpRight className="w-3.5 h-3.5" /> +12%
-            </span>
           </div>
           <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">
             {t('kpiTotalPatients')}
@@ -59,9 +56,6 @@ export const TriageView: React.FC<TriageViewProps> = ({
             <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-100 transition">
               <FileText className="w-6 h-6" />
             </div>
-            <span className="text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full flex items-center gap-1">
-              <ArrowUpRight className="w-3.5 h-3.5" /> +8%
-            </span>
           </div>
           <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">
             {t('kpiTotalScreenings')}
@@ -83,9 +77,6 @@ export const TriageView: React.FC<TriageViewProps> = ({
             <div className="w-12 h-12 rounded-xl bg-red-100 text-clinicalDanger flex items-center justify-center group-hover:bg-red-200 transition">
               <AlertTriangle className="w-6 h-6" />
             </div>
-            <span className="text-xs font-bold text-red-700 bg-red-100 px-2.5 py-1 rounded-full animate-pulse">
-              Urgent
-            </span>
           </div>
           <p className="text-xs font-bold text-red-800 uppercase tracking-wider">
             {t('kpiHighRisk')}
@@ -107,9 +98,6 @@ export const TriageView: React.FC<TriageViewProps> = ({
             <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center group-hover:bg-amber-200 transition">
               <Clock className="w-6 h-6" />
             </div>
-            <span className="text-xs font-semibold text-amber-800 bg-amber-100 px-2.5 py-1 rounded-full">
-              Scheduled
-            </span>
           </div>
           <p className="text-xs font-bold text-amber-800 uppercase tracking-wider">
             {t('kpiPendingFollowups')}
@@ -189,7 +177,7 @@ export const TriageView: React.FC<TriageViewProps> = ({
                       {/* Col 2: Village / Phone */}
                       <td className="px-5 py-4">
                         <span className="text-slate-900 block font-medium">
-                          {item.patient_village || 'Rampur'}
+                          {item.patient_village || '—'}
                         </span>
                         <span className="text-xs text-slate-500">
                           {item.patient_phone || 'No phone'}

@@ -5,10 +5,8 @@ export const translations = {
     // Header & App Shell
     appTitle: 'आशा AI Copilot',
     appSubtitle: 'सुपरवाइजर कमांड सेंटर',
-    catchmentLocation: 'PHC रामपुर · सेक्टर 3',
-    liveSyncActive: 'लाइव सिंक सक्रिय',
+    catchmentLocation: 'सुपरवाइजर कार्यक्षेत्र',
     syncing: 'सिंक हो रहा है...',
-    syncOffline: 'ऑफ़लाइन',
     refresh: 'रिफ्रेश करें',
     logout: 'लॉग आउट',
     loggedAs: 'सुपरवाइजर',
@@ -22,13 +20,13 @@ export const translations = {
 
     // KPI Cards
     kpiTotalPatients: 'कुल पंजीकृत लाभार्थी',
-    kpiTotalPatientsSub: 'रामपुर सेक्टर क्षेत्र',
+    kpiTotalPatientsSub: 'सभी सक्रिय पंजीकरण',
     kpiTotalScreenings: 'जांच संपन्न',
-    kpiTotalScreeningsSub: '100% सत्यापित',
+    kpiTotalScreeningsSub: 'दर्ज की गई कुल जांच',
     kpiHighRisk: 'उच्च जोखिम अलर्ट',
-    kpiHighRiskSub: 'तत्काल चिकित्सा ध्यान',
+    kpiHighRiskSub: 'नियम-आधारित उच्च जोखिम मामले',
     kpiPendingFollowups: 'लंबित फॉलो-अप',
-    kpiPendingFollowupsSub: 'निर्धारित क्षेत्र दौरे',
+    kpiPendingFollowupsSub: 'स्थिति लंबित',
     kpiActiveWorkers: 'सक्रिय कार्यकर्ता',
 
     // Triage View
@@ -153,6 +151,8 @@ export const translations = {
     patientErrorNameReq: 'कृपया नाम दर्ज करें',
     patientErrorAgeReq: 'कृपया वैध आयु दर्ज करें',
     patientErrorVillageReq: 'कृपया गांव का नाम दर्ज करें',
+    patientErrorSexReq: 'कृपया लिंग चुनें',
+    patientSexSelect: 'लिंग चुनें',
 
     // Follow-up Modal
     followupModalTitle: 'रेफरल डिस्पोजिशन और एस्केलेशन',
@@ -191,10 +191,8 @@ export const translations = {
     // Header & App Shell
     appTitle: 'ASHA AI Copilot',
     appSubtitle: 'Supervisor Command Center',
-    catchmentLocation: 'PHC Rampur · Sector 3',
-    liveSyncActive: 'Live Sync Active',
+    catchmentLocation: 'Supervisor workspace',
     syncing: 'Syncing...',
-    syncOffline: 'Offline',
     refresh: 'Refresh',
     logout: 'Log Out',
     loggedAs: 'Supervisor',
@@ -208,13 +206,13 @@ export const translations = {
 
     // KPI Cards
     kpiTotalPatients: 'Total Registered Patients',
-    kpiTotalPatientsSub: 'Rampur Sector Area',
+    kpiTotalPatientsSub: 'All active registrations',
     kpiTotalScreenings: 'Screenings Recorded',
-    kpiTotalScreeningsSub: '100% Offline Verified',
+    kpiTotalScreeningsSub: 'Total screenings recorded',
     kpiHighRisk: 'High-Risk Alerts',
-    kpiHighRiskSub: 'Immediate MO Attention',
+    kpiHighRiskSub: 'Rule-based high-risk cases',
     kpiPendingFollowups: 'Pending Follow-ups',
-    kpiPendingFollowupsSub: 'Scheduled Field Visits',
+    kpiPendingFollowupsSub: 'Currently pending',
     kpiActiveWorkers: 'Active Field Workers',
 
     // Triage View
@@ -339,6 +337,8 @@ export const translations = {
     patientErrorNameReq: 'Full name is required',
     patientErrorAgeReq: 'Valid age is required',
     patientErrorVillageReq: 'Village is required',
+    patientErrorSexReq: 'Sex is required',
+    patientSexSelect: 'Select sex',
 
     // Follow-up Modal
     followupModalTitle: 'Referral Disposition & Escalation',

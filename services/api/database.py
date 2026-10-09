@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from typing import Dict, Any, List, Optional
 from .auth import hash_password
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "asha_backend.db")
+DB_PATH = os.environ.get("ASHA_DB_PATH", os.path.join(os.path.dirname(__file__), "asha_backend.db"))
 
 def get_db():
     conn = sqlite3.connect(DB_PATH, timeout=10.0, check_same_thread=False)
@@ -194,19 +194,6 @@ def init_db():
         cursor.execute(
             "INSERT INTO users (id, username, password_hash, role, name, village, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
             ("user-asha-001", "asha", hash_password("password123"), "asha", "सुनीता दीदी (Sunita Devi)", "रामपुर (Rampur)", now)
-        )
-
-    # Seed default worker if none exists
-    cursor.execute("SELECT COUNT(*) FROM workers")
-    if cursor.fetchone()[0] == 0:
-        now = datetime.utcnow().isoformat()
-        cursor.execute(
-            "INSERT INTO workers (id, name, role, phone, village, sub_center, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            ("worker-001", "सुनीता दीदी (Sunita Devi)", "asha", "+91 9876543210", "रामपुर (Rampur)", "सब-सेंटर रामपुर", now)
-        )
-        cursor.execute(
-            "INSERT INTO workers (id, name, role, phone, village, sub_center, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            ("supervisor-001", "डॉ. राजेश वर्मा (Dr. Rajesh Verma)", "supervisor", "+91 9876500000", "पीएचसी रामपुर (PHC Rampur)", "पीएचसी रामपुर", now)
         )
 
     conn.commit()

@@ -112,7 +112,6 @@ export const AppContent: React.FC = () => {
       <Header
         onRefresh={() => loadDashboardData(true)}
         isRefreshing={isRefreshing}
-        highPriorityCount={summary?.high_priority_cases}
       />
 
       {/* Primary Navigation Bar */}

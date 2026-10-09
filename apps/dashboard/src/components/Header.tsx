@@ -1,11 +1,10 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { RefreshCw, Activity, User, Globe } from 'lucide-react';
+import { RefreshCw, User, Globe } from 'lucide-react';
 
 interface HeaderProps {
   onRefresh: () => void;
   isRefreshing: boolean;
-  highPriorityCount?: number;
 }
 
 export const Header: React.FC<HeaderProps> = ({ onRefresh, isRefreshing }) => {
@@ -34,18 +33,8 @@ export const Header: React.FC<HeaderProps> = ({ onRefresh, isRefreshing }) => {
           </div>
         </div>
 
-        {/* Status Pill, Language Toggle & User Session */}
+        {/* Language Toggle & User Session */}
         <div className="flex items-center gap-2 sm:gap-4">
-          {/* Real-time Sync & Online Status Pill */}
-          <div className="hidden sm:inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-950/80 text-emerald-300 border border-emerald-600/50 shadow-sm">
-            <span className="relative flex h-2 w-2 mr-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <Activity className="w-3.5 h-3.5 mr-1 text-emerald-400" />
-            {isRefreshing ? t('syncing') : t('liveSyncActive')}
-          </div>
-
           {/* Refresh Action */}
           <button
             onClick={onRefresh}
@@ -73,7 +62,6 @@ export const Header: React.FC<HeaderProps> = ({ onRefresh, isRefreshing }) => {
             </div>
             <div className="hidden lg:block text-left">
               <p className="text-xs font-semibold leading-tight text-white">{t('loggedAs')}</p>
-              <p className="text-[10px] text-teal-200">MO Rampur</p>
             </div>
           </div>
         </div>

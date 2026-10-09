@@ -90,7 +90,7 @@ export async function createPatient(patientData: Partial<Patient>): Promise<Pati
     age: patientData.age ? Number(patientData.age) : null,
     sex: patientData.sex || 'female',
     phone: patientData.phone || null,
-    village: patientData.village || 'Rampur',
+    village: patientData.village,
     household_id: patientData.household_id || null,
     phone_owner: patientData.phone_owner || 'self',
     hamlet_tola: patientData.hamlet_tola || null,
@@ -207,7 +207,7 @@ export async function createWorker(data: Partial<Worker>): Promise<boolean> {
           name: data.name,
           role: data.role || 'asha',
           phone: data.phone || null,
-          village: data.village || 'Rampur',
+          village: data.village,
           sub_center: data.sub_center || null,
           created_at: new Date().toISOString()
         }

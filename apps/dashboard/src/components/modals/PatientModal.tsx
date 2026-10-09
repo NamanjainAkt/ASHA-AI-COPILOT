@@ -25,10 +25,10 @@ export const PatientModal: React.FC<PatientModalProps> = ({
   const [formData, setFormData] = useState<Partial<Patient>>({
     name: '',
     age: undefined,
-    sex: 'female',
+    sex: undefined,
     phone: '',
     phone_owner: 'self',
-    village: 'Rampur',
+    village: '',
     hamlet_tola: '',
     household_id: '',
     relationship_head: '',
@@ -46,10 +46,10 @@ export const PatientModal: React.FC<PatientModalProps> = ({
         id: patient.id,
         name: patient.name || '',
         age: patient.age ?? undefined,
-        sex: patient.sex || 'female',
+        sex: patient.sex || undefined,
         phone: patient.phone || '',
         phone_owner: patient.phone_owner || 'self',
-        village: patient.village || 'Rampur',
+        village: patient.village || '',
         hamlet_tola: patient.hamlet_tola || '',
         household_id: patient.household_id || '',
         relationship_head: patient.relationship_head || '',
@@ -60,10 +60,10 @@ export const PatientModal: React.FC<PatientModalProps> = ({
       setFormData({
         name: '',
         age: undefined,
-        sex: 'female',
+        sex: undefined,
         phone: '',
         phone_owner: 'self',
-        village: 'Rampur',
+        village: '',
         hamlet_tola: '',
         household_id: '',
         relationship_head: '',
@@ -84,6 +84,9 @@ export const PatientModal: React.FC<PatientModalProps> = ({
     }
     if (formData.age === undefined || formData.age === null || isNaN(Number(formData.age))) {
       errs.age = t('patientErrorAgeReq');
+    }
+    if (!formData.sex) {
+      errs.sex = t('patientErrorSexReq');
     }
     if (!formData.village?.trim()) {
       errs.village = t('patientErrorVillageReq');
@@ -166,7 +169,7 @@ export const PatientModal: React.FC<PatientModalProps> = ({
                   className={`w-full px-3.5 py-2 text-sm rounded-xl border ${
                     errors.name ? 'border-red-500 bg-red-50/30' : 'border-slate-300'
                   } focus:outline-none focus:ring-2 focus:ring-primary`}
-                  placeholder="उदा. सुमन देवी (Suman Devi)"
+                  placeholder="लाभार्थी का नाम / Beneficiary name"
                 />
                 {errors.name && <p className="text-xs text-red-600 mt-1">{errors.name}</p>}
               </div>
@@ -184,7 +187,7 @@ export const PatientModal: React.FC<PatientModalProps> = ({
                   className={`w-full px-3.5 py-2 text-sm rounded-xl border ${
                     errors.age ? 'border-red-500 bg-red-50/30' : 'border-slate-300'
                   } focus:outline-none focus:ring-2 focus:ring-primary`}
-                  placeholder="28"
+                  placeholder="आयु / Age"
                 />
                 {errors.age && <p className="text-xs text-red-600 mt-1">{errors.age}</p>}
               </div>
@@ -194,14 +197,16 @@ export const PatientModal: React.FC<PatientModalProps> = ({
                   {t('patientLabelSex')}
                 </label>
                 <select
-                  value={formData.sex || 'female'}
+                  value={formData.sex || ''}
                   onChange={(e) => setFormData({ ...formData, sex: e.target.value as any })}
                   className="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary bg-white"
                 >
+                  <option value="" disabled>{t('patientSexSelect')}</option>
                   <option value="female">{t('patientSexFemale')}</option>
                   <option value="male">{t('patientSexMale')}</option>
                   <option value="other">{t('patientSexOther')}</option>
                 </select>
+                {errors.sex && <p className="text-xs text-red-600 mt-1">{errors.sex}</p>}
               </div>
             </div>
           </div>
@@ -221,7 +226,7 @@ export const PatientModal: React.FC<PatientModalProps> = ({
                   value={formData.phone || ''}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   className="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="+91 9876543210"
+                  placeholder="मोबाइल नंबर / Mobile number"
                 />
               </div>
 
@@ -258,7 +263,7 @@ export const PatientModal: React.FC<PatientModalProps> = ({
                   value={formData.village || ''}
                   onChange={(e) => setFormData({ ...formData, village: e.target.value })}
                   className="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="रामपुर (Rampur)"
+                  placeholder="गांव का नाम / Village name"
                 />
                 {errors.village && <p className="text-xs text-red-600 mt-1">{errors.village}</p>}
               </div>
@@ -272,7 +277,7 @@ export const PatientModal: React.FC<PatientModalProps> = ({
                   value={formData.hamlet_tola || ''}
                   onChange={(e) => setFormData({ ...formData, hamlet_tola: e.target.value })}
                   className="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="पटेल टोला / Sector 3"
+                  placeholder="टोला / Hamlet"
                 />
               </div>
 
@@ -285,7 +290,7 @@ export const PatientModal: React.FC<PatientModalProps> = ({
                   value={formData.household_id || ''}
                   onChange={(e) => setFormData({ ...formData, household_id: e.target.value })}
                   className="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="HH-1024"
+                  placeholder="Household ID"
                 />
               </div>
             </div>

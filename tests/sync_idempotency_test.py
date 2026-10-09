@@ -1,8 +1,11 @@
 import sys
 import os
+import tempfile
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import uuid
+_test_db_dir = tempfile.TemporaryDirectory(prefix="asha-sync-idempotency-test-")
+os.environ["ASHA_DB_PATH"] = os.path.join(_test_db_dir.name, "asha_backend.db")
 from fastapi.testclient import TestClient
 from services.api.main import app
 

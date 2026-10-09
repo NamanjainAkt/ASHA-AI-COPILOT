@@ -1,7 +1,7 @@
 ---
 type: entity
 created: 2026-10-07
-updated: 2026-10-07
+updated: 2026-10-10
 sources: [sources/backend-api.md, sources/supervisor-dashboard.md]
 tags: [backend, runtime, fastapi]
 ---
@@ -20,30 +20,20 @@ python -m services.api.main
 # INFO:     Application startup complete.
 ```
 
-Confirmed live on 2026-10-06: `GET /patients` returned **200** with 5 seeded patients plus
-records from earlier test pushes. The docset's `python services/api/main.py` fails with
-`ImportError` ([[sources/backend-api]]).
+Confirmed live on 2026-10-10: the backend served the dashboard and `/health` returned **200**.
+The dashboard database was subsequently purged of known demo/test records. The docset's
+`python services/api/main.py` fails with `ImportError` ([[sources/backend-api]]).
 
 ## Import-time database mutation
 
-```python
-init_db()             # main.py:41
-seed_demo_data()      # main.py:42  — "Also initialize immediately so DB is ready for any synchronous test/import"
-```
+`init_db()` and `seed_demo_data()` run at module import (`main.py:41-42`), in addition to the
+`lifespan` handler (`:19-23`). Importing `services.api.main` creates/updates the configured
+SQLite database and inserts the two built-in auth accounts when `users` is empty. `init_db()`
+does not create sample workers.
 
-Both run at **module import**, in addition to the `lifespan` handler (`:19-23`). Three
-consequences:
-
-1. Importing `services.api.main` **writes to `services/api/asha_backend.db`** as a side effect.
-2. `tests/sync_idempotency_test.py:7` depends on this implicitly — the DB is seeded by the import.
-3. `seed_demo_data()` uses `INSERT OR REPLACE` unconditionally (`database.py:102-248`), so **every
-   process start and every `/seed-demo` call overwrites the demo rows.** Any real record that
-   happens to share a demo id (`p-001`…`p-005`, `s-001`, `s-002`, `f-001`, `f-002`) is destroyed
-   on restart. That is fine for a demo and unacceptable for any deployment where those ids might
-   collide — and client-generated ids (`p-${Date.now()}`) make collision unlikely, which is the
-   only reason this is survivable today.
-
-`withTestClient` and any future non-test import inherits the same mutation.
+`seed_demo_data()` returns unless `ASHA_SEED_DEMO=1`; `/seed-demo` explicitly calls it with
+`force=True`. `DB_PATH` is configurable through `ASHA_DB_PATH`. Both backend API test scripts use
+temporary SQLite files through that setting, so test fixtures stay out of the dashboard database.
 
 ## CORS
 

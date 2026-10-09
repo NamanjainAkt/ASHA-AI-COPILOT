@@ -819,4 +819,10 @@ Append-only chronological record. Entries are prefixed `## [YYYY-MM-DD] <op> | <
 - Updated CORS middleware in `services/api/main.py` with `allow_origin_regex=r".*"` to seamlessly accept mobile app sync requests over Cloudflare tunnel URLs.
 - Verified end-to-end sync over active Cloudflare tunnel (`https://temporary-reproduced-kerry-clothes.trycloudflare.com`) with HTTP 200 OK.
 
+## [2026-10-10] fix | Remove dummy data from supervisor dashboard
 
+- Purged 90 patients, 120 screenings, 100 follow-ups, 53 workers, 3 devices, and 396 sync events identified by known demo/test IDs from the backend dashboard database; preserved 2 auth accounts.
+- Removed automatic default worker insertion and made the backend database path overridable with `ASHA_DB_PATH`.
+- Isolated the supervisor API and sync test scripts to temporary SQLite databases to stop test fixtures from reappearing in the dashboard.
+- Removed fictional catchment/worker labels, fake KPI trends/status indicators, and location/facility fallbacks from the React dashboard. New patient/worker forms no longer prefill a sample catchment; patient sex now requires an explicit selection.
+- Verified the dashboard build and both backend API suites; see [[sources/supervisor-dashboard]] and [[entities/supervisor-backend-service]].
