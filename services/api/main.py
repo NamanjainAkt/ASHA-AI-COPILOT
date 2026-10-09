@@ -49,21 +49,30 @@ init_db()
 seed_demo_data()
 
 from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
 
-DASHBOARD_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "apps", "dashboard", "index.html"))
+DASHBOARD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "apps", "dashboard"))
+DASHBOARD_DIST_HTML = os.path.join(DASHBOARD_DIR, "dist", "index.html")
+DASHBOARD_SRC_HTML = os.path.join(DASHBOARD_DIR, "index.html")
+DASHBOARD_ASSETS = os.path.join(DASHBOARD_DIR, "dist", "assets")
+
+if os.path.exists(DASHBOARD_ASSETS):
+    app.mount("/assets", StaticFiles(directory=DASHBOARD_ASSETS), name="assets")
 
 @app.get("/")
 @app.get("/dashboard")
 def serve_dashboard():
-    if os.path.exists(DASHBOARD_PATH):
+    target_path = DASHBOARD_DIST_HTML if os.path.exists(DASHBOARD_DIST_HTML) else DASHBOARD_SRC_HTML
+    if os.path.exists(target_path):
         # ISS-012: Add Content-Security-Policy header
         return FileResponse(
-            DASHBOARD_PATH,
+            target_path,
             headers={
                 "Content-Security-Policy": (
                     "default-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; "
                     "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; "
-                    "style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; "
+                    "style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com; "
+                    "font-src 'self' https://fonts.gstatic.com; "
                     "img-src 'self' data: https:;"
                 )
             }
