@@ -12,11 +12,11 @@ export const translations = {
     loggedAs: 'सुपरवाइजर',
 
     // Navigation Tabs
-    tabTriage: '🚨 ट्राइएज और निगरानी',
-    tabPatients: '👥 लाभार्थी निर्देशिका',
-    tabScreenings: '📋 क्लिनिकल जांच',
-    tabFollowups: '🏥 रेफरल और फॉलो-अप',
-    tabWorkers: '👩‍⚕️ आशा कार्यकर्ता एवं उपकरण',
+    tabTriage: 'ट्राइएज और निगरानी',
+    tabPatients: 'लाभार्थी निर्देशिका',
+    tabScreenings: 'क्लिनिकल जांच',
+    tabFollowups: 'रेफरल और फॉलो-अप',
+    tabWorkers: 'आशा कार्यकर्ता एवं उपकरण',
 
     // KPI Cards
     kpiTotalPatients: 'कुल पंजीकृत लाभार्थी',
@@ -180,7 +180,7 @@ export const translations = {
 
     // Export & Toast
     exportCsv: 'निगरानी रिपोर्ट डाउनलोड (CSV)',
-    toastNewCritical: '🚨 नई उच्च जोखिम वाली आपातकालीन स्थिति दर्ज की गई!',
+    toastNewCritical: 'नई उच्च जोखिम वाली आपातकालीन स्थिति दर्ज की गई!',
     toastSuccess: 'सफलतापूर्वक सहेजा गया',
     toastError: 'त्रुटि: कार्रवाई विफल रही',
 
@@ -198,11 +198,11 @@ export const translations = {
     loggedAs: 'Supervisor',
 
     // Navigation Tabs
-    tabTriage: '🚨 Triage & Surveillance',
-    tabPatients: '👥 Beneficiary Directory',
-    tabScreenings: '📋 Clinical Screenings',
-    tabFollowups: '🏥 Referrals & Actions',
-    tabWorkers: '👩‍⚕️ Field Workers & Devices',
+    tabTriage: 'Triage & Surveillance',
+    tabPatients: 'Beneficiary Directory',
+    tabScreenings: 'Clinical Screenings',
+    tabFollowups: 'Referrals & Actions',
+    tabWorkers: 'Field Workers & Devices',
 
     // KPI Cards
     kpiTotalPatients: 'Total Registered Patients',
@@ -366,7 +366,7 @@ export const translations = {
 
     // Export & Toast
     exportCsv: 'Export Surveillance Report (CSV)',
-    toastNewCritical: '🚨 New High-Risk Critical Emergency Recorded!',
+    toastNewCritical: 'New High-Risk Critical Emergency Recorded!',
     toastSuccess: 'Saved successfully',
     toastError: 'Error: Action failed',
 

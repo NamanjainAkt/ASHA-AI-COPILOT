@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Screening } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { fetchScreenings, exportToCSV } from '../services/api';
-import { Filter, Download, ChevronDown, ChevronUp, Activity, Mic, Brain, HeartPulse } from 'lucide-react';
+import { Filter, Download, ChevronDown, ChevronUp, Activity, Mic, Brain, HeartPulse, Droplets, Wind, AlertOctagon, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
 interface ScreeningsViewProps {
   onError: (msg: string) => void;
@@ -162,16 +162,19 @@ export const ScreeningsView: React.FC<ScreeningsViewProps> = ({ onError }) => {
                         {/* Severity Tag */}
                         <td className="px-5 py-4">
                           {maxSeverity === 'high' ? (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-red-100 text-red-700">
-                              उच्च जोखिम (High)
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold bg-rose-100 text-rose-700 border border-rose-200">
+                              <AlertOctagon className="w-3.5 h-3.5 text-rose-600" />
+                              <span>उच्च जोखिम (High)</span>
                             </span>
                           ) : maxSeverity === 'medium' ? (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-amber-100 text-amber-800">
-                              समीक्षा (Medium)
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                              <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                              <span>समीक्षा (Medium)</span>
                             </span>
                           ) : (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800">
-                              सामान्य (Normal)
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                              <span>सामान्य (Normal)</span>
                             </span>
                           )}
                         </td>
@@ -185,7 +188,7 @@ export const ScreeningsView: React.FC<ScreeningsViewProps> = ({ onError }) => {
                         <td className="px-5 py-4 text-right">
                           <button
                             onClick={() => toggleExpand(sc.id)}
-                            className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition inline-flex items-center gap-1"
+                            className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition inline-flex items-center gap-1.5 cursor-pointer shadow-2xs"
                           >
                             <span>{isExpanded ? 'Hide' : t('screeningsViewDetails')}</span>
                             {isExpanded ? (
@@ -206,27 +209,39 @@ export const ScreeningsView: React.FC<ScreeningsViewProps> = ({ onError }) => {
                               <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-3">
                                 <h4 className="text-xs font-bold text-slate-900 uppercase flex items-center gap-1.5 border-b border-slate-100 pb-2">
                                   <HeartPulse className="w-4 h-4 text-primary" />
-                                  {t('screeningsTableHeadVitals')}
+                                  <span>{t('screeningsTableHeadVitals')}</span>
                                 </h4>
                                 <div className="grid grid-cols-2 gap-2 text-xs">
-                                  <div className="p-2 bg-slate-50 rounded-lg">
-                                    <span className="text-slate-400 block">{t('screeningsVitalsBp')}</span>
+                                  <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                                    <span className="text-slate-400 flex items-center gap-1 mb-0.5">
+                                      <HeartPulse className="w-3 h-3 text-rose-500" />
+                                      <span>{t('screeningsVitalsBp')}</span>
+                                    </span>
                                     <span className="font-bold text-slate-800">
                                       {vitals?.bp_systolic ? `${vitals.bp_systolic}/${vitals.bp_diastolic} mmHg` : 'Not recorded'}
                                     </span>
                                   </div>
-                                  <div className="p-2 bg-slate-50 rounded-lg">
-                                    <span className="text-slate-400 block">{t('screeningsVitalsGlucose')}</span>
+                                  <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                                    <span className="text-slate-400 flex items-center gap-1 mb-0.5">
+                                      <Droplets className="w-3 h-3 text-amber-500" />
+                                      <span>{t('screeningsVitalsGlucose')}</span>
+                                    </span>
                                     <span className="font-bold text-slate-800">
                                       {vitals?.blood_glucose ? `${vitals.blood_glucose} mg/dL` : 'Not recorded'}
                                     </span>
                                   </div>
-                                  <div className="p-2 bg-slate-50 rounded-lg">
-                                    <span className="text-slate-400 block">{t('screeningsVitalsPulse')}</span>
+                                  <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                                    <span className="text-slate-400 flex items-center gap-1 mb-0.5">
+                                      <Activity className="w-3 h-3 text-emerald-500" />
+                                      <span>{t('screeningsVitalsPulse')}</span>
+                                    </span>
                                     <span className="font-bold text-slate-800">76 bpm</span>
                                   </div>
-                                  <div className="p-2 bg-slate-50 rounded-lg">
-                                    <span className="text-slate-400 block">{t('screeningsVitalsSpo2')}</span>
+                                  <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                                    <span className="text-slate-400 flex items-center gap-1 mb-0.5">
+                                      <Wind className="w-3 h-3 text-sky-500" />
+                                      <span>{t('screeningsVitalsSpo2')}</span>
+                                    </span>
                                     <span className="font-bold text-slate-800">98%</span>
                                   </div>
                                 </div>

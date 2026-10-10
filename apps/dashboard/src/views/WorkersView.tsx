@@ -1,7 +1,7 @@
 import React from 'react';
 import { Worker } from '../types';
 import { useLanguage } from '../context/LanguageContext';
-import { Plus, ShieldCheck, MapPin, Calendar, Smartphone } from 'lucide-react';
+import { Plus, ShieldCheck, MapPin, Calendar, Smartphone, Wifi, Users } from 'lucide-react';
 
 interface WorkersViewProps {
   workers: Worker[];
@@ -28,10 +28,10 @@ export const WorkersView: React.FC<WorkersViewProps> = ({
         </div>
         <button
           onClick={onOpenWorkerModal}
-          className="self-start sm:self-auto px-4 py-2 bg-primary hover:bg-primaryDark text-white rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5"
+          className="self-start sm:self-auto px-4 py-2 bg-primary hover:bg-primaryDark text-white rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
-          {t('workersAddBtn')}
+          <span>{t('workersAddBtn')}</span>
         </button>
       </div>
 
@@ -42,7 +42,8 @@ export const WorkersView: React.FC<WorkersViewProps> = ({
         </div>
       ) : workers.length === 0 ? (
         <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-400">
-          {t('workersEmpty')}
+          <Users className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+          <p className="font-semibold text-slate-500">{t('workersEmpty')}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -70,9 +71,9 @@ export const WorkersView: React.FC<WorkersViewProps> = ({
                       </div>
                     </div>
                     {/* Sync Health Pill */}
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-2xs">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
-                      {t('workersStatusSynced')}
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-2xs">
+                      <Wifi className="w-3 h-3 text-emerald-600" />
+                      <span>{t('workersStatusSynced')}</span>
                     </span>
                   </div>
 

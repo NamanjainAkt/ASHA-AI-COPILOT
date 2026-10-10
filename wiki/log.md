@@ -884,3 +884,16 @@ Append-only chronological record. Entries are prefixed `## [YYYY-MM-DD] <op> | <
   - npm run build --workspace=@asha/shared: Clean build.
   - npm run build --workspace=@asha/dashboard: Clean Vite/Tailwind build into dist/.
   - npx tsc --noEmit --project apps/mobile/tsconfig.json: Clean typecheck (0 errors).
+
+## [2026-10-10] ui-polish | Supervisor Dashboard UI Polish & Emoji Purge
+
+- **Emoji Removal**: Fully purged all unicode emojis (`🚨`, `👥`, `📋`, `🏥`, `👩‍⚕️`) from `translations.ts` (both Hindi & English dictionaries) and removed raw Unicode checkmarks (`✓`) in empty states.
+- **Icon Enrichment (Lucide Icons)**:
+  - Navigation: Replaced generic representations with clinical icons: `AlertOctagon` for Triage, `Users` for Directory, `ClipboardCheck` for Screenings, `Hospital` for Referrals, and `ShieldCheck` for Workers.
+  - Header: Added pulsing Live Surveillance status pill, subtle border tokens, and updated action icons.
+  - Triage View: Replaced empty-state checkmark with `CheckCircle2` icon badge; added `AlertOctagon`, `Activity`, `UserCheck`, `MapPin`, `Phone`, `ArrowUpRight`, `Wifi`, and `Clock` across KPI metrics, tables, and worker sidebar.
+  - Beneficiary Directory: Added `User`, `Phone`, `MapPin`, and `Shield` to table rows and `Users` empty-state illustration.
+  - Screenings View: Enriched vitals drawer with dedicated clinical icons (`HeartPulse` for BP, `Droplets` for Blood Glucose, `Activity` for Pulse, `Wind` for SpO2) and status badges (`AlertOctagon`, `AlertTriangle`, `CheckCircle2`).
+  - Referrals View: Added dedicated Lucide icons (`AlertOctagon`, `AlertTriangle`, `Clock`, `CheckCircle2`) to priority filter chips and table status rows.
+  - Workers View: Added `Wifi` sync indicators, `Users` empty state, and verified authorization badges.
+- **Compilation & Serving**: Built production bundle with `npm run build --workspace=@asha/dashboard` (1585 modules transformed into `dist/assets/`), verified on both Vite dev server (`:5173`) and FastAPI static mount (`:8000/dashboard`).

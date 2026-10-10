@@ -22,12 +22,12 @@ A modern React 18 + Vite SPA architecture with Tailwind CSS, Lucide icons, and z
 ## Architecture & Features (Milestones 1–4)
 
 1. **Zero-Dependency Bilingual Engine:** Synchronized Hindi & English dictionaries (`src/i18n/translations.ts`) with persistent storage and instant toggle.
-2. **Top Shell & Navigation:** Generic supervisor workspace label and 5 primary navigation tabs:
-   - 🚨 **Triage & Surveillance (`/triage`)**: 4 backend-derived KPI cards, danger sign queue with triage button, and field worker summary.
-   - 👥 **Beneficiary Directory (`/patients`)**: Search with debounce, village/hamlet filter chips, pagination (10/25/50), add/edit/archive modals.
-   - 📋 **Clinical Screenings (`/screenings`)**: Full inspection list with collapsible drawer for vitals breakdown, rule engine evaluations, AI summaries, and voice transcripts.
-   - 🏥 **Referrals & Follow-ups (`/followups`)**: Status tabs, priority filter chips, destination facility tracking, and interactive disposition modal.
-   - 👩‍⚕️ **Field Workers & Devices (`/workers`)**: Worker grid with recorded sync state, screening counts, and registration modal.
+2. **Top Shell & Navigation:** Generic supervisor workspace label and 5 primary navigation tabs (rendered with Lucide icons, with all unicode emojis purged):
+   - **Triage & Surveillance (`/triage`)**: 4 backend-derived KPI cards, danger sign queue with triage button, and field worker summary.
+   - **Beneficiary Directory (`/patients`)**: Search with debounce, village/hamlet filter chips, pagination (10/25/50), add/edit/archive modals.
+   - **Clinical Screenings (`/screenings`)**: Full inspection list with collapsible drawer for vitals breakdown, rule engine evaluations, AI summaries, and voice transcripts.
+   - **Referrals & Follow-ups (`/followups`)**: Status tabs, priority filter chips, destination facility tracking, and interactive disposition modal.
+   - **Field Workers & Devices (`/workers`)**: Worker grid with recorded sync state, screening counts, and registration modal.
 3. **Interactive CRUD Modals:**
    - `PatientModal.tsx`: Beneficiary registration, edit, and monotonic soft delete.
    - `FollowupModal.tsx`: Facility escalation, urgency classification, and assignee tracking via `PATCH /followups/:id`.

@@ -1,7 +1,7 @@
 import React from 'react';
 import { TabType } from '../types';
 import { useLanguage } from '../context/LanguageContext';
-import { AlertTriangle, Users, FileText, GitPullRequest, ShieldCheck } from 'lucide-react';
+import { AlertOctagon, Users, ClipboardCheck, Hospital, ShieldCheck } from 'lucide-react';
 
 interface NavigationProps {
   activeTab: TabType;
@@ -18,59 +18,85 @@ export const Navigation: React.FC<NavigationProps> = ({
 }) => {
   const { t } = useLanguage();
 
-  const tabs: { id: TabType; labelKey: keyof typeof import('../i18n/translations').translations['hi']; icon: React.ReactNode; badge?: number; badgeColor?: string }[] = [
+  const tabs: {
+    id: TabType;
+    labelKey: keyof typeof import('../i18n/translations').translations['hi'];
+    icon: (isActive: boolean) => React.ReactNode;
+    badge?: number;
+    badgeColor?: string;
+  }[] = [
     {
       id: 'triage',
       labelKey: 'tabTriage',
-      icon: <AlertTriangle className="w-4 h-4 text-clinicalDanger" />,
+      icon: (isActive) => (
+        <AlertOctagon
+          className={`w-4 h-4 transition ${isActive ? 'text-rose-600' : 'text-slate-400 group-hover:text-rose-500'}`}
+        />
+      ),
       badge: highPriorityCount > 0 ? highPriorityCount : undefined,
-      badgeColor: 'bg-red-600 text-white animate-pulse',
+      badgeColor: 'bg-rose-600 text-white animate-pulse',
     },
     {
       id: 'patients',
       labelKey: 'tabPatients',
-      icon: <Users className="w-4 h-4" />,
+      icon: (isActive) => (
+        <Users
+          className={`w-4 h-4 transition ${isActive ? 'text-primary' : 'text-slate-400 group-hover:text-slate-700'}`}
+        />
+      ),
     },
     {
       id: 'screenings',
       labelKey: 'tabScreenings',
-      icon: <FileText className="w-4 h-4" />,
+      icon: (isActive) => (
+        <ClipboardCheck
+          className={`w-4 h-4 transition ${isActive ? 'text-primary' : 'text-slate-400 group-hover:text-slate-700'}`}
+        />
+      ),
     },
     {
       id: 'followups',
       labelKey: 'tabFollowups',
-      icon: <GitPullRequest className="w-4 h-4" />,
+      icon: (isActive) => (
+        <Hospital
+          className={`w-4 h-4 transition ${isActive ? 'text-primary' : 'text-slate-400 group-hover:text-slate-700'}`}
+        />
+      ),
       badge: pendingFollowupCount > 0 ? pendingFollowupCount : undefined,
       badgeColor: 'bg-amber-600 text-white',
     },
     {
       id: 'workers',
       labelKey: 'tabWorkers',
-      icon: <ShieldCheck className="w-4 h-4" />,
+      icon: (isActive) => (
+        <ShieldCheck
+          className={`w-4 h-4 transition ${isActive ? 'text-primary' : 'text-slate-400 group-hover:text-slate-700'}`}
+        />
+      ),
     },
   ];
 
   return (
     <nav className="bg-white border-b border-slate-200 sticky top-16 z-30 shadow-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex space-x-1 sm:space-x-4 overflow-x-auto py-2 no-scrollbar">
+        <div className="flex space-x-1 sm:space-x-2 overflow-x-auto py-2.5 no-scrollbar">
           {tabs.map((tab) => {
             const isActive = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer ${
+                className={`group flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer ${
                   isActive
-                    ? 'bg-teal-50 text-primary border border-teal-200/80 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-transparent'
+                    ? 'bg-teal-50 text-teal-900 border border-teal-200 shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-transparent'
                 }`}
               >
-                <span>{tab.icon}</span>
+                <span>{tab.icon(isActive)}</span>
                 <span>{t(tab.labelKey)}</span>
                 {tab.badge !== undefined && (
                   <span
-                    className={`ml-1.5 px-2 py-0.5 text-[11px] font-bold rounded-full ${tab.badgeColor}`}
+                    className={`ml-1.5 px-2 py-0.5 text-[11px] font-bold rounded-full shadow-2xs ${tab.badgeColor}`}
                   >
                     {tab.badge}
                   </span>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FollowUp } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { fetchFollowups, exportToCSV } from '../services/api';
-import { Download, Building2, CheckCircle2, XCircle, ArrowRight } from 'lucide-react';
+import { Download, Building2, CheckCircle2, XCircle, ArrowUpRight, AlertOctagon, AlertTriangle, Clock, MapPin } from 'lucide-react';
 
 interface FollowupsViewProps {
   onOpenDispositionModal: (followup: FollowUp) => void;
@@ -53,11 +53,11 @@ export const FollowupsView: React.FC<FollowupsViewProps> = ({
   ];
 
   const priorityChips = [
-    { id: 'all', labelKey: 'followupsPriorityAll' as const, color: 'bg-slate-100 text-slate-700' },
-    { id: 'critical', labelKey: 'followupsPriorityCritical' as const, color: 'bg-red-100 text-red-800' },
-    { id: 'high', labelKey: 'followupsPriorityHigh' as const, color: 'bg-amber-100 text-amber-800' },
-    { id: 'medium', labelKey: 'followupsPriorityMedium' as const, color: 'bg-yellow-100 text-yellow-800' },
-    { id: 'low', labelKey: 'followupsPriorityLow' as const, color: 'bg-emerald-100 text-emerald-800' },
+    { id: 'all', labelKey: 'followupsPriorityAll' as const, color: 'bg-slate-100 text-slate-700', icon: null },
+    { id: 'critical', labelKey: 'followupsPriorityCritical' as const, color: 'bg-rose-100 text-rose-800 border-rose-200', icon: AlertOctagon },
+    { id: 'high', labelKey: 'followupsPriorityHigh' as const, color: 'bg-amber-100 text-amber-800 border-amber-200', icon: AlertTriangle },
+    { id: 'medium', labelKey: 'followupsPriorityMedium' as const, color: 'bg-yellow-100 text-yellow-800 border-yellow-200', icon: Clock },
+    { id: 'low', labelKey: 'followupsPriorityLow' as const, color: 'bg-emerald-100 text-emerald-800 border-emerald-200', icon: CheckCircle2 },
   ];
 
   return (
@@ -72,7 +72,7 @@ export const FollowupsView: React.FC<FollowupsViewProps> = ({
         </div>
         <button
           onClick={handleExport}
-          className="self-start sm:self-auto px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-bold transition border border-slate-200 shadow-xs flex items-center gap-1.5"
+          className="self-start sm:self-auto px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-bold transition border border-slate-200 shadow-xs flex items-center gap-1.5 cursor-pointer"
         >
           <Download className="w-4 h-4 text-slate-500" />
           <span>{t('exportCsv')}</span>
@@ -87,7 +87,7 @@ export const FollowupsView: React.FC<FollowupsViewProps> = ({
             <button
               key={tab.id}
               onClick={() => setActiveStatusTab(tab.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
                 activeStatusTab === tab.id
                   ? 'bg-white text-slate-900 shadow-xs'
                   : 'text-slate-500 hover:text-slate-900'
@@ -100,19 +100,23 @@ export const FollowupsView: React.FC<FollowupsViewProps> = ({
 
         {/* Priority Filter Chips */}
         <div className="flex flex-wrap items-center gap-2">
-          {priorityChips.map((chip) => (
-            <button
-              key={chip.id}
-              onClick={() => setSelectedPriority(chip.id)}
-              className={`px-3 py-1 rounded-full text-xs font-semibold transition border ${
-                selectedPriority === chip.id
-                  ? `${chip.color} border-current ring-1 ring-current`
-                  : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
-              }`}
-            >
-              {t(chip.labelKey)}
-            </button>
-          ))}
+          {priorityChips.map((chip) => {
+            const IconComponent = chip.icon;
+            return (
+              <button
+                key={chip.id}
+                onClick={() => setSelectedPriority(chip.id)}
+                className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold transition border cursor-pointer ${
+                  selectedPriority === chip.id
+                    ? `${chip.color} border-current ring-1 ring-current shadow-2xs`
+                    : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+                }`}
+              >
+                {IconComponent && <IconComponent className="w-3 h-3 shrink-0" />}
+                <span>{t(chip.labelKey)}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -152,8 +156,9 @@ export const FollowupsView: React.FC<FollowupsViewProps> = ({
                       <span className="font-bold text-slate-900 block">
                         {f.patient_name || f.patient_id.substring(0, 8)}
                       </span>
-                      <span className="text-xs text-slate-400">
-                        {f.patient_village || '—'}
+                      <span className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+                        <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
+                        <span>{f.patient_village || '—'}</span>
                       </span>
                     </td>
 
@@ -161,7 +166,7 @@ export const FollowupsView: React.FC<FollowupsViewProps> = ({
                     <td className="px-5 py-4">
                       <span className="font-medium text-slate-800 block">{f.reason}</span>
                       {f.notes && (
-                        <span className="text-[11px] text-slate-400 block truncate max-w-xs">
+                        <span className="text-[11px] text-slate-400 block truncate max-w-xs mt-0.5">
                           {f.notes}
                         </span>
                       )}
@@ -170,44 +175,50 @@ export const FollowupsView: React.FC<FollowupsViewProps> = ({
                     {/* Priority Badge */}
                     <td className="px-5 py-4">
                       {f.priority === 'critical' ? (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-red-100 text-red-800 border border-red-200 animate-pulse">
-                          Critical
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200 animate-pulse">
+                          <AlertOctagon className="w-3.5 h-3.5 text-rose-600" />
+                          <span>Critical</span>
                         </span>
                       ) : f.priority === 'high' ? (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200">
-                          High
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                          <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                          <span>High</span>
                         </span>
                       ) : (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-slate-100 text-slate-700">
-                          {f.priority}
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">
+                          <Clock className="w-3.5 h-3.5 text-slate-500" />
+                          <span className="capitalize">{f.priority}</span>
                         </span>
                       )}
                     </td>
 
                     {/* Due Date */}
                     <td className="px-5 py-4 text-xs font-semibold text-slate-700">
-                      {f.due_date}
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-3 h-3 text-slate-400 shrink-0" />
+                        <span>{f.due_date}</span>
+                      </span>
                     </td>
 
                     {/* Destination Facility */}
                     <td className="px-5 py-4">
-                      <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-700">
+                      <span className="inline-flex items-center gap-1 text-xs font-semibold text-slate-800 bg-slate-50 px-2 py-1 rounded-lg border border-slate-200">
                         <Building2 className="w-3.5 h-3.5 text-primary" />
-                        {(f.destination_facility || '—').toUpperCase()}
+                        <span>{(f.destination_facility || '—').toUpperCase()}</span>
                       </span>
                     </td>
 
                     {/* Facility Reached? */}
                     <td className="px-5 py-4">
                       {f.facility_reached ? (
-                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700">
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                           <CheckCircle2 className="w-3.5 h-3.5" />
-                          {t('followupsReachedYes')}
+                          <span>{t('followupsReachedYes')}</span>
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-400">
-                          <XCircle className="w-3.5 h-3.5" />
-                          {t('followupsReachedNo')}
+                        <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-500 bg-slate-50 px-2 py-0.5 rounded-full border border-slate-200">
+                          <XCircle className="w-3.5 h-3.5 text-slate-400" />
+                          <span>{t('followupsReachedNo')}</span>
                         </span>
                       )}
                     </td>
@@ -216,10 +227,10 @@ export const FollowupsView: React.FC<FollowupsViewProps> = ({
                     <td className="px-5 py-4 text-right">
                       <button
                         onClick={() => onOpenDispositionModal(f)}
-                        className="px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg text-xs font-bold transition inline-flex items-center gap-1 border border-primary/20"
+                        className="px-3.5 py-1.5 bg-teal-50 hover:bg-teal-100 text-teal-800 rounded-xl text-xs font-bold transition inline-flex items-center gap-1 border border-teal-200 cursor-pointer shadow-2xs"
                       >
                         <span>{t('followupsDispositionBtn')}</span>
-                        <ArrowRight className="w-3 h-3" />
+                        <ArrowUpRight className="w-3.5 h-3.5" />
                       </button>
                     </td>
                   </tr>
