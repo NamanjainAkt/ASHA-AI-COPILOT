@@ -831,107 +831,209 @@ def sync_push(req: SyncPushRequest, current_user: dict = Depends(get_current_use
                 if rec_sync_status not in ("pending", "synced", "failed"):
                     rec_sync_status = "synced"
 
-                cursor.execute("""
-                    INSERT OR REPLACE INTO patients (
-                        id, name, age, sex, phone, phone_owner, village, hamlet_tola,
-                        household_id, relationship_to_head, abha_id, disability_access_needs,
-                        consent_obtained, created_at, updated_at, sync_status
-                    )
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """, (
-                    eid,
-                    payload.get("name", "Unknown"),
-                    payload.get("age"),
-                    payload.get("sex", "other"),
-                    payload.get("phone"),
-                    payload.get("phone_owner"),
-                    payload.get("village", "Unknown"),
-                    payload.get("hamlet_tola"),
-                    payload.get("household_id"),
-                    payload.get("relationship_to_head"),
-                    payload.get("abha_id"),
-                    payload.get("disability_access_needs"),
-                    0 if payload.get("consent_obtained") is False else 1,
-                    payload.get("created_at", now),
-                    now,
-                    rec_sync_status
-                ))
-                status_str = "updated" if existed else "created"
+                if op == "update" and existed:
+                    update_fields = []
+                    update_params = []
+                    for k in ("name", "age", "sex", "phone", "phone_owner", "village", "hamlet_tola", "household_id", "relationship_to_head", "abha_id", "disability_access_needs"):
+                        if k in payload:
+                            update_fields.append(f"{k} = ?")
+                            update_params.append(payload[k])
+                    if "consent_obtained" in payload:
+                        update_fields.append("consent_obtained = ?")
+                        update_params.append(0 if payload["consent_obtained"] is False else 1)
+                    update_fields.append("updated_at = ?")
+                    update_params.append(now)
+                    update_fields.append("sync_status = ?")
+                    update_params.append(rec_sync_status)
+                    update_params.append(eid)
+                    cursor.execute(f"UPDATE patients SET {', '.join(update_fields)} WHERE id = ?", update_params)
+                    status_str = "updated"
+                else:
+                    cursor.execute("""
+                        INSERT OR REPLACE INTO patients (
+                            id, name, age, sex, phone, phone_owner, village, hamlet_tola,
+                            household_id, relationship_to_head, abha_id, disability_access_needs,
+                            consent_obtained, created_at, updated_at, sync_status
+                        )
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """, (
+                        eid,
+                        payload.get("name", "Unknown"),
+                        payload.get("age"),
+                        payload.get("sex", "other"),
+                        payload.get("phone"),
+                        payload.get("phone_owner"),
+                        payload.get("village", "Unknown"),
+                        payload.get("hamlet_tola"),
+                        payload.get("household_id"),
+                        payload.get("relationship_to_head"),
+                        payload.get("abha_id"),
+                        payload.get("disability_access_needs"),
+                        0 if payload.get("consent_obtained") is False else 1,
+                        payload.get("created_at", now),
+                        now,
+                        rec_sync_status
+                    ))
+                    status_str = "updated" if existed else "created"
+
             elif entity == "screening":
-                pid = payload.get("patient_id")
-                cursor.execute("SELECT 1 FROM patients WHERE id = ?", (pid,))
-                if not cursor.fetchone():
-                    failed.append(SyncPushResponseItem(client_record_id=cid, status="error", error=f"Foreign key violation: patient_id '{pid}' does not exist"))
-                    continue
-
                 rec_sync_status = payload.get("sync_status", "synced")
                 if rec_sync_status not in ("pending", "synced", "failed"):
                     rec_sync_status = "synced"
 
-                cursor.execute("""
-                    INSERT OR REPLACE INTO screenings (id, patient_id, screening_type, transcript, structured_data, rule_results, summary, confirmed, created_at, updated_at, sync_status)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """, (
-                    eid,
-                    pid,
-                    payload.get("screening_type", "general"),
-                    payload.get("transcript", ""),
-                    json.dumps(payload.get("structured_data", {})),
-                    json.dumps(payload.get("rule_results", [])),
-                    payload.get("summary", ""),
-                    1 if payload.get("confirmed", True) else 0,
-                    payload.get("created_at", now),
-                    now,
-                    rec_sync_status
-                ))
-                status_str = "updated" if existed else "created"
-            elif entity == "followup":
-                pid = payload.get("patient_id")
-                cursor.execute("SELECT 1 FROM patients WHERE id = ?", (pid,))
-                if not cursor.fetchone():
-                    failed.append(SyncPushResponseItem(client_record_id=cid, status="error", error=f"Foreign key violation: patient_id '{pid}' does not exist"))
-                    continue
+                struct_data = payload.get("structured_data", {})
+                struct_data_str = struct_data if isinstance(struct_data, str) else json.dumps(struct_data)
+                rules_data = payload.get("rule_results", [])
+                rules_data_str = rules_data if isinstance(rules_data, str) else json.dumps(rules_data)
 
-                sid = payload.get("screening_id")
-                if sid:
-                    cursor.execute("SELECT 1 FROM screenings WHERE id = ?", (sid,))
+                if op == "update" and existed:
+                    update_fields = []
+                    update_params = []
+                    if "screening_type" in payload:
+                        update_fields.append("screening_type = ?")
+                        update_params.append(payload["screening_type"])
+                    if "transcript" in payload:
+                        update_fields.append("transcript = ?")
+                        update_params.append(payload["transcript"])
+                    if "structured_data" in payload:
+                        update_fields.append("structured_data = ?")
+                        update_params.append(struct_data_str)
+                    if "rule_results" in payload:
+                        update_fields.append("rule_results = ?")
+                        update_params.append(rules_data_str)
+                    if "summary" in payload:
+                        update_fields.append("summary = ?")
+                        update_params.append(payload["summary"])
+                    if "confirmed" in payload:
+                        update_fields.append("confirmed = ?")
+                        update_params.append(1 if payload["confirmed"] else 0)
+
+                    update_fields.append("updated_at = ?")
+                    update_params.append(now)
+                    update_fields.append("sync_status = ?")
+                    update_params.append(rec_sync_status)
+                    update_params.append(eid)
+                    cursor.execute(f"UPDATE screenings SET {', '.join(update_fields)} WHERE id = ?", update_params)
+                    status_str = "updated"
+                else:
+                    pid = payload.get("patient_id")
+                    cursor.execute("SELECT 1 FROM patients WHERE id = ?", (pid,))
                     if not cursor.fetchone():
-                        sid = None
+                        failed.append(SyncPushResponseItem(client_record_id=cid, status="error", error=f"Foreign key violation: patient_id '{pid}' does not exist"))
+                        continue
 
+                    cursor.execute("""
+                        INSERT OR REPLACE INTO screenings (id, patient_id, screening_type, transcript, structured_data, rule_results, summary, confirmed, created_at, updated_at, sync_status)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """, (
+                        eid,
+                        pid,
+                        payload.get("screening_type", "general"),
+                        payload.get("transcript", ""),
+                        struct_data_str,
+                        rules_data_str,
+                        payload.get("summary", ""),
+                        1 if payload.get("confirmed", True) else 0,
+                        payload.get("created_at", now),
+                        now,
+                        rec_sync_status
+                    ))
+                    status_str = "updated" if existed else "created"
+
+            elif entity == "followup":
                 rec_sync_status = payload.get("sync_status", "synced")
                 if rec_sync_status not in ("pending", "synced", "failed"):
                     rec_sync_status = "synced"
 
-                priority_val = payload.get("priority", "medium")
-                if priority_val not in ("low", "medium", "high", "critical"):
-                    priority_val = "medium"
+                if op == "update" and existed:
+                    update_fields = []
+                    update_params = []
+                    if "status" in payload:
+                        st = payload["status"]
+                        if st in ("pending", "completed", "cancelled"):
+                            update_fields.append("status = ?")
+                            update_params.append(st)
+                    if "destination" in payload:
+                        update_fields.append("destination = ?")
+                        update_params.append(payload["destination"])
+                    if "urgency" in payload:
+                        update_fields.append("urgency = ?")
+                        update_params.append(payload["urgency"])
+                    if "facility_reached" in payload:
+                        update_fields.append("facility_reached = ?")
+                        update_params.append(1 if payload["facility_reached"] else 0)
+                    if "responsible_person" in payload:
+                        update_fields.append("responsible_person = ?")
+                        update_params.append(payload["responsible_person"])
+                    if "outcome" in payload:
+                        update_fields.append("outcome = ?")
+                        update_params.append(payload["outcome"])
+                    if "notes" in payload:
+                        update_fields.append("notes = ?")
+                        update_params.append(payload["notes"])
+                    if "priority" in payload:
+                        p_val = payload["priority"]
+                        if p_val in ("low", "medium", "high", "critical"):
+                            update_fields.append("priority = ?")
+                            update_params.append(p_val)
+                    if "due_date" in payload:
+                        update_fields.append("due_date = ?")
+                        update_params.append(payload["due_date"])
+                    if "reason" in payload:
+                        update_fields.append("reason = ?")
+                        update_params.append(payload["reason"])
 
-                cursor.execute("""
-                    INSERT OR REPLACE INTO followups (
-                        id, patient_id, screening_id, reason, priority, due_date, status,
-                        destination, urgency, facility_reached, responsible_person, outcome,
-                        notes, created_at, updated_at, sync_status
-                    )
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """, (
-                    eid,
-                    pid,
-                    sid,
-                    payload.get("reason", "Follow-up due"),
-                    priority_val,
-                    payload.get("due_date", now[:10]),
-                    payload.get("status", "pending"),
-                    payload.get("destination"),
-                    payload.get("urgency"),
-                    1 if payload.get("facility_reached") else 0,
-                    payload.get("responsible_person"),
-                    payload.get("outcome"),
-                    payload.get("notes", ""),
-                    payload.get("created_at", now),
-                    now,
-                    rec_sync_status
-                ))
-                status_str = "updated" if existed else "created"
+                    update_fields.append("updated_at = ?")
+                    update_params.append(now)
+                    update_fields.append("sync_status = ?")
+                    update_params.append(rec_sync_status)
+                    update_params.append(eid)
+                    cursor.execute(f"UPDATE followups SET {', '.join(update_fields)} WHERE id = ?", update_params)
+                    status_str = "updated"
+                else:
+                    pid = payload.get("patient_id")
+                    cursor.execute("SELECT 1 FROM patients WHERE id = ?", (pid,))
+                    if not cursor.fetchone():
+                        failed.append(SyncPushResponseItem(client_record_id=cid, status="error", error=f"Foreign key violation: patient_id '{pid}' does not exist"))
+                        continue
+
+                    sid = payload.get("screening_id")
+                    if sid:
+                        cursor.execute("SELECT 1 FROM screenings WHERE id = ?", (sid,))
+                        if not cursor.fetchone():
+                            sid = None
+
+                    priority_val = payload.get("priority", "medium")
+                    if priority_val not in ("low", "medium", "high", "critical"):
+                        priority_val = "medium"
+
+                    cursor.execute("""
+                        INSERT OR REPLACE INTO followups (
+                            id, patient_id, screening_id, reason, priority, due_date, status,
+                            destination, urgency, facility_reached, responsible_person, outcome,
+                            notes, created_at, updated_at, sync_status
+                        )
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """, (
+                        eid,
+                        pid,
+                        sid,
+                        payload.get("reason", "Follow-up due"),
+                        priority_val,
+                        payload.get("due_date", now[:10]),
+                        payload.get("status", "pending"),
+                        payload.get("destination"),
+                        payload.get("urgency"),
+                        1 if payload.get("facility_reached") else 0,
+                        payload.get("responsible_person"),
+                        payload.get("outcome"),
+                        payload.get("notes", ""),
+                        payload.get("created_at", now),
+                        now,
+                        rec_sync_status
+                    ))
+                    status_str = "updated" if existed else "created"
+
             elif entity == "worker":
                 cursor.execute("""
                     INSERT OR REPLACE INTO workers (id, name, role, phone, village, sub_center, created_at)

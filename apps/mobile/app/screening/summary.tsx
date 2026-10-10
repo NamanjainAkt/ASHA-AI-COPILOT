@@ -290,7 +290,17 @@ export default function VisitSummaryScreen() {
           sync_status: 'pending'
         }, db);
 
-        // 2. Automatically generate required Follow-up if High Risk detected
+        // 2. Enqueue Screening in Sync Queue FIRST so backend foreign keys resolve
+        await syncQueueRepository.enqueue('screening', screeningId, 'create', {
+          patient_id: patientId,
+          screening_type: screeningType,
+          structured_data: currentStructuredData,
+          rule_results: dynamicRules,
+          summary: summaryText,
+          confirmed: true
+        }, db);
+
+        // 3. Automatically generate required Follow-up if High Risk detected
         const highRisk = dynamicRules.find(r => r.priority === 'high');
         if (highRisk) {
           const followupId = `fol-${Date.now()}`;
@@ -321,16 +331,6 @@ export default function VisitSummaryScreen() {
             urgency: referralUrgency
           }, db);
         }
-
-        // 3. Enqueue Screening in Sync Queue
-        await syncQueueRepository.enqueue('screening', screeningId, 'create', {
-          patient_id: patientId,
-          screening_type: screeningType,
-          structured_data: currentStructuredData,
-          rule_results: dynamicRules,
-          summary: summaryText,
-          confirmed: true
-        }, db);
       });
 
       setIsSaving(false);

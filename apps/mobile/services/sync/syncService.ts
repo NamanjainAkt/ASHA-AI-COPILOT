@@ -63,7 +63,7 @@ class SyncService {
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);
-      const res = await fetch(${targetUrl}/health, {
+      const res = await fetch(`${targetUrl}/health`, {
         method: 'GET',
         signal: controller.signal
       });
@@ -71,7 +71,7 @@ class SyncService {
       if (res.ok) {
         return { success: true, message: 'Server connected successfully' };
       }
-      return { success: false, message: \Server HTTP \ };
+      return { success: false, message: `Server HTTP ${res.status}` };
     } catch (err: any) {
       if (err.name === 'AbortError') {
         return { success: false, message: 'Connection timed out (5s)' };

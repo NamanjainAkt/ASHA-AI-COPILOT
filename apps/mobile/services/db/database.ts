@@ -95,6 +95,7 @@ export async function initDatabase(db: SQLite.SQLiteDatabase): Promise<void> {
       facility_reached INTEGER DEFAULT 0,
       responsible_person TEXT,
       outcome TEXT,
+      notes TEXT,
       created_at TEXT NOT NULL,
       updated_at TEXT NOT NULL,
       sync_status TEXT NOT NULL CHECK (sync_status IN ('pending', 'synced', 'failed')),
@@ -155,6 +156,7 @@ export async function initDatabase(db: SQLite.SQLiteDatabase): Promise<void> {
             ALTER TABLE followups ADD COLUMN facility_reached INTEGER DEFAULT 0;
             ALTER TABLE followups ADD COLUMN responsible_person TEXT;
             ALTER TABLE followups ADD COLUMN outcome TEXT;
+            ALTER TABLE followups ADD COLUMN notes TEXT;
           `);
         } catch (_) {}
         break;

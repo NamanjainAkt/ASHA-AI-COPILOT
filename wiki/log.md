@@ -862,3 +862,25 @@ Append-only chronological record. Entries are prefixed `## [YYYY-MM-DD] <op> | <
   - All test suites green (Clinical rules: 18/18, Sync idempotency: 13/13, Edge cases: 15/15, Route smoke: 4/4).
 
 
+
+## [2026-10-10] fix-sync | Supervisor Portal Integration & Mobile Sync 401 & Schema Harmonization
+
+- **Branch Integration**: Merged main into testing-supervisor. Harmonized mobile app configurable server endpoint card and connection health check with React 18 Supervisor Command Center SPA.
+- **Root Cause & Resolution for HTTP 401**:
+  - Mobile app syncService.ts was pushing unauthenticated requests to /sync/push, which requires get_current_user JWT validation.
+  - Implemented seamless ensureAuthToken() auto-login to /auth/login using ASHA worker credentials (asha / password123).
+  - Added proactive 401 retry handling with refreshed token in syncService.ts.
+  - Restored initBackendUrl() to persist configured remote endpoints across restarts.
+- **Schema & Foreign Key Harmonization**:
+  - Backend /sync/push in services/api/main.py: added dynamic partial UPDATE handling for followup, patient, and screening. Prevented foreign key rejection when mobile sends followup status updates (status: 'completed') without redundant patient_id.
+  - Corrected enqueue sequence in apps/mobile/app/screening/summary.tsx: screening is now enqueued before followup so server-side foreign keys never orphan follow-ups.
+  - Added missing notes TEXT column in apps/mobile/services/db/database.ts schema and migration v2, and updated followupRepo.ts INSERT statement.
+- **Verification**:
+  - python tests/sync_idempotency_test.py: 13/13 PASSED.
+  - python tests/supervisor_api_test.py: 15/15 PASSED.
+  - node tests/clinical_rules_test.js: 18/18 PASSED.
+  - node tests/edge_cases_test.js: 15/15 PASSED.
+  - node tests/route_smoke_test.js: 4/4 PASSED.
+  - npm run build --workspace=@asha/shared: Clean build.
+  - npm run build --workspace=@asha/dashboard: Clean Vite/Tailwind build into dist/.
+  - npx tsc --noEmit --project apps/mobile/tsconfig.json: Clean typecheck (0 errors).
