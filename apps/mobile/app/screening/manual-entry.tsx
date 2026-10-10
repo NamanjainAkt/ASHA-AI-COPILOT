@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -19,15 +19,43 @@ import { evaluateRules } from '../../services/rules/engine';
 import { screeningRepository } from '../../services/db/screeningRepo';
 import { syncQueueRepository } from '../../services/db/syncQueueRepo';
 import { followupRepository } from '../../services/db/followupRepo';
-import { StructuredScreeningData, ScreeningType } from '@asha/shared';
+import { patientRepository } from '../../services/db/patientRepo';
+import { StructuredScreeningData, ScreeningType, Patient } from '@asha/shared';
 
 export default function ManualEntryScreen() {
   const router = useRouter();
   const { language, t } = useLanguage();
-  const params = useLocalSearchParams<{ patientId?: string; patientName?: string }>();
+  const params = useLocalSearchParams<{ patientId?: string; patientName?: string; screeningType?: string }>();
 
-  const [patientName, setPatientName] = useState(params.patientName || '');
-  const [screeningType, setScreeningType] = useState<ScreeningType>('ncd');
+  const [resolvedPatientId, setResolvedPatientId] = useState<string>(params.patientId || '');
+  const [patientName, setPatientName] = useState<string>(params.patientName || '');
+  const [screeningType, setScreeningType] = useState<ScreeningType>(
+    (params.screeningType as ScreeningType) || 'ncd'
+  );
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchPatient = async () => {
+      if (params.patientId) {
+        try {
+          const p = await patientRepository.getById(params.patientId);
+          if (p && isMounted) {
+            setResolvedPatientId(p.id);
+            setPatientName(p.name);
+            if (p.sex === 'female' && p.age < 50 && !params.screeningType) {
+              setScreeningType('pregnancy');
+            }
+          }
+        } catch (err) {
+          console.warn('Error fetching patient in manual entry:', err);
+        }
+      }
+    };
+    fetchPatient();
+    return () => {
+      isMounted = false;
+    };
+  }, [params.patientId, params.patientName, params.screeningType]);
   const [mainComplaint, setMainComplaint] = useState('');
   const [complaintOnset, setComplaintOnset] = useState('');
   const [complaintCourse, setComplaintCourse] = useState<'worsening' | 'improving' | 'unchanged'>('unchanged');
@@ -98,7 +126,7 @@ export default function ManualEntryScreen() {
         }
       };
 
-      const patientId = params.patientId as string;
+      const patientId = resolvedPatientId || (params.patientId as string);
       if (!patientId || patientId === 'undefined') {
         setSaving(false);
         Alert.alert(

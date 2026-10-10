@@ -63,6 +63,32 @@ export default function VisitSummaryScreen() {
     }
   }, [params.patientId]);
 
+  useEffect(() => {
+    if (!initialResult && params.screeningId) {
+      screeningRepository.getById(params.screeningId).then((s: any) => {
+        if (s) {
+          const struct = typeof s.structured_data === 'string' ? JSON.parse(s.structured_data) : s.structured_data;
+          if (struct?.ncd?.bp_systolic != null) setSystolic(String(struct.ncd.bp_systolic));
+          if (struct?.ncd?.bp_diastolic != null) setDiastolic(String(struct.ncd.bp_diastolic));
+          if (struct?.ncd?.blood_glucose != null) setGlucose(String(struct.ncd.blood_glucose));
+          if (struct?.cbac?.waist_circumference_cm != null) setWaistCm(String(struct.cbac.waist_circumference_cm));
+          if (struct?.pregnancy?.gestational_age_weeks != null) setGestationalWeeks(String(struct.pregnancy.gestational_age_weeks));
+          if (struct?.pregnancy?.vaginal_bleeding != null) setHasBleeding(struct.pregnancy.vaginal_bleeding);
+          if (struct?.pregnancy?.convulsions != null) setHasConvulsions(struct.pregnancy.convulsions);
+          if (struct?.pregnancy?.leaking_fluid != null) setHasLeakingFluid(struct.pregnancy.leaking_fluid);
+          if (struct?.common_visit?.main_complaint) setMainComplaint(struct.common_visit.main_complaint);
+          if (struct?.common_visit?.complaint_onset) setComplaintOnset(struct.common_visit.complaint_onset);
+          if (struct?.common_visit?.complaint_course) setComplaintCourse(struct.common_visit.complaint_course);
+          if (struct?.common_visit?.missed_medication_doses != null) setMissedMeds(struct.common_visit.missed_medication_doses);
+          if (struct?.referral_action?.destination) setReferralDestination(struct.referral_action.destination);
+          if (struct?.referral_action?.urgency) setReferralUrgency(struct.referral_action.urgency);
+          if (s.summary) setSummaryText(s.summary);
+          setIsHumanConfirmed(true);
+        }
+      });
+    }
+  }, [params.screeningId]);
+
   const patientName = patientRecord?.name || params.patientName || (language === 'hi' ? 'लाभार्थी' : 'Beneficiary');
   const screeningType: ScreeningType = (params.screeningType as ScreeningType) || 'ncd';
 

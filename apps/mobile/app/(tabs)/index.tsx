@@ -288,7 +288,7 @@ export default function HomeDashboardScreen() {
           <View style={styles.sectionTitleCol}>
             <Text style={styles.sectionHeading}>{t.historySection}</Text>
             <Text style={styles.sectionSubHeading}>
-              {language === 'hi' ? 'स्थानीय SQLite में सुरक्षित रिकॉर्ड' : 'Offline Verified Health Records'}
+              {language === 'hi' ? 'सुरक्षित ऑफ़लाइन स्वास्थ्य रिकॉर्ड' : 'Offline Verified Health Records'}
             </Text>
           </View>
           <TouchableOpacity onPress={() => router.push('/patients')}>

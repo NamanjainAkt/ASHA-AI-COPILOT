@@ -279,7 +279,9 @@ export default function PatientDetailScreen() {
                 router.push({
                   pathname: '/screening/manual-entry',
                   params: {
-                    patientId: patient.id
+                    patientId: patient.id,
+                    patientName: patient.name,
+                    screeningType: patient.sex === 'female' && patient.age < 50 ? 'pregnancy' : 'ncd'
                   }
                 });
               }}

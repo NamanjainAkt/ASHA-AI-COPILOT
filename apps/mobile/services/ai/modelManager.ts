@@ -51,8 +51,8 @@ export interface ModelMetadata {
 export const MODEL_CATALOG: Record<ModelId, Omit<ModelMetadata, 'status' | 'progressPercent' | 'localPath' | 'nativeHandle' | 'sizeOnDisk' | 'error'>> = {
   'needle3': {
     id: 'needle3',
-    name: 'Needle 3 (Structured Extraction)',
-    name_hi: 'नीडल ३ (संरचित डेटा निष्कर्षण)',
+    name: 'Voice Data Extraction',
+    name_hi: 'आवाज़ से आंकड़े निष्कर्षण',
     version: '3.x',
     sizeBytes: 35_335_380,
     sizeFormatted: '34 MB',
@@ -64,8 +64,8 @@ export const MODEL_CATALOG: Record<ModelId, Omit<ModelMetadata, 'status' | 'prog
   },
   'qwen3-0.6b': {
     id: 'qwen3-0.6b',
-    name: 'Qwen3-0.6B Clinical Summary (Lightweight)',
-    name_hi: 'क्वेन ३ (हल्का मॉडल / ३७६ एमबी)',
+    name: 'Fast Screening Summary',
+    name_hi: 'त्वरित जांच सारांश',
     version: '0.6B-int4',
     sizeBytes: 376_414_357,
     sizeFormatted: '376 MB',
@@ -77,8 +77,8 @@ export const MODEL_CATALOG: Record<ModelId, Omit<ModelMetadata, 'status' | 'prog
   },
   'qwen3-1.7b': {
     id: 'qwen3-1.7b',
-    name: 'Qwen3-1.7B Clinical Summary (Full)',
-    name_hi: 'क्वेन ३ (गहन सारांश / १ जीबी)',
+    name: 'Detailed Screening Summary',
+    name_hi: 'विस्तृत जांच सारांश',
     version: '1.7B-int4',
     sizeBytes: 1_006_051_493,
     sizeFormatted: '1 GB',

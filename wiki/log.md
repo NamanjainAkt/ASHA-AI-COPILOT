@@ -826,3 +826,39 @@ Append-only chronological record. Entries are prefixed `## [YYYY-MM-DD] <op> | <
 - Isolated the supervisor API and sync test scripts to temporary SQLite databases to stop test fixtures from reappearing in the dashboard.
 - Removed fictional catchment/worker labels, fake KPI trends/status indicators, and location/facility fallbacks from the React dashboard. New patient/worker forms no longer prefill a sample catchment; patient sex now requires an explicit selection.
 - Verified the dashboard build and both backend API suites; see [[sources/supervisor-dashboard]] and [[entities/supervisor-backend-service]].
+## [2026-10-10] fix-ui | UI Technical Jargon Cleanup, Summary Hydration & Priority Badge Fix
+
+- **Elimination of Developer/ML Jargon Across UI**:
+  - `apps/mobile/app/(tabs)/profile.tsx`: Replaced "System Integrity", "On-Device Audio Pipeline", and "Human-in-the-Loop" cards with frontline-appropriate "सुरक्षा एवं गोपनीयता" / "Security & Privacy". Replaced "PRD §52-54" and build tag badges with clean worker info. Replaced raw quantization strings ("INT4 / Cactus", "CQ2 / Needle engine") and "Download Weights" buttons with friendly model names ("Voice Data Extraction", "Fast Screening Summary", "Detailed Screening Summary") and action buttons ("Download", "Remove").
+  - `apps/mobile/constants/translations.ts`: Replaced technical prompts ("100% On-Device Offline AI", "Run AI Extraction & Review", "Local Store-and-Forward Queue", "Clinical Validation & Human Approval", "Evaluate Protocol & Save") with clear, conversational Hindi and English strings.
+  - `apps/mobile/services/ai/modelManager.ts` & `services/api/main.py`: Aligned model metadata catalogs across frontend and backend with user-friendly names.
+  - `apps/dashboard/index.html`: Cleaned up supervisor dashboard status badges and footer (removed "Monorepo Architecture", "FastAPI Synchronization", "Live Sync Engine Active").
+- **UI Bug Fixes**:
+  - `apps/mobile/app/screening/summary.tsx`: Fixed missing vitals and questions when viewing historical screenings from beneficiary profile or home list. Added database hydration fallback via `screeningRepository.getById(params.screeningId)` when orchestrator memory is empty.
+  - `apps/mobile/app/(tabs)/followups.tsx`: Fixed `medium` priority status badges falling through to green normal; properly renders warning chip with "सावधानी" / "Attention".
+- **Verification**:
+  - TypeScript type check clean (0 errors).
+  - All 18 clinical rules passed (`tests/clinical_rules_test.js`).
+  - All 13 sync idempotency & authentication tests passed (`tests/sync_idempotency_test.py`).
+  - All 15 edge cases passed (`tests/edge_cases_test.js`).
+  - All 32 multilingual model harness tests passed (`tests/model_harness_test.js`).
+  - All 4 route smoke tests passed (`tests/route_smoke_test.js`).
+
+## [2026-10-10] feat | Manual Configurable Server Endpoint & Connection Test on Sync Screen
+
+- **Mobile Sync Screen (`apps/mobile/app/(tabs)/sync.tsx`)**:
+  - Added dedicated Server Endpoint Configuration Card (`serverCard`) above the Sync action button.
+  - Interactive `TextInput` with auto-capitalization disabled and URL keyboard allowing workers or testers to configure any local IP (e.g., `http://192.168.1.100:8000`) or remote supervisor endpoint.
+  - Action buttons: "Test Connection" (`testConnectionBtn`) with live health check against `/health`, "Reset Default" (`resetUrlBtn`) restoring `http://127.0.0.1:8000`, and "Save" (`saveUrlBtn`).
+  - Automatic persistence to SQLite `app_state` table (`backend_url` key) so the customized URL survives app restarts.
+- **Sync Service (`apps/mobile/services/sync/syncService.ts`)**:
+  - Added `initBackendUrl()` to asynchronously hydrate persisted `backend_url` on service startup and prior to queue pulls/pushes.
+  - Implemented `testConnection(url?)` with 5-second `AbortController` timeout to prevent UI freezes.
+  - Auto-normalizes URLs by trimming leading/trailing whitespace and trailing slashes.
+- **Bilingual Translations (`apps/mobile/constants/translations.ts`)**:
+  - Added Hindi and English keys for `serverConfigTitle`, `serverConfigSub`, `serverUrlPlaceholder`, `saveUrlBtn`, `resetUrlBtn`, `testConnectionBtn`, `urlSavedSuccess`, `connectionSuccess`, and `connectionFailed`.
+- **Verification**:
+  - `npx tsc --noEmit --project apps/mobile/tsconfig.json` clean (0 errors).
+  - All test suites green (Clinical rules: 18/18, Sync idempotency: 13/13, Edge cases: 15/15, Route smoke: 4/4).
+
+

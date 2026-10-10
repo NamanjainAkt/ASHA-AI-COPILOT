@@ -145,7 +145,10 @@ export default function FollowupsScreen() {
         contentContainerStyle={styles.listContent}
         renderItem={({ item }) => {
           const isHigh = item.priority === 'high';
-          const accent = isHigh ? Colors.danger : Colors.accent;
+          const isMed = item.priority === 'medium';
+          const accent = isHigh ? Colors.danger : isMed ? Colors.warning : Colors.accent;
+          const bgPill = isHigh ? Colors.dangerLight : isMed ? Colors.warningLight : Colors.accentLight;
+          const label = isHigh ? t.riskStatus.high : isMed ? t.riskStatus.medium : t.riskStatus.normal;
 
           return (
             <View style={[styles.card, { borderLeftColor: accent }]}>
@@ -158,9 +161,9 @@ export default function FollowupsScreen() {
                     {item.patient_village || (language === 'hi' ? 'रामपुर' : 'Rampur')}
                   </Text>
                 </View>
-                <View style={[styles.priorityPill, { backgroundColor: isHigh ? Colors.dangerLight : Colors.accentLight }]}>
+                <View style={[styles.priorityPill, { backgroundColor: bgPill }]}>
                   <Text style={[styles.priorityText, { color: accent }]}>
-                    {isHigh ? t.riskStatus.high : t.riskStatus.normal}
+                    {label}
                   </Text>
                 </View>
               </View>
